@@ -16,6 +16,12 @@ export async function validateWorkspaceAccess(
     throw badRequest('No workspace context. Include workspaceId in token or x-workspace-id header.');
   }
 
+  // Validate UUID format to prevent injection
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!UUID_RE.test(workspaceId)) {
+    throw badRequest('Invalid workspace ID format');
+  }
+
   const members = await queryNoRLS<WorkspaceMember>(
     'SELECT role FROM workspace_members WHERE workspace_id = $1 AND user_id = $2',
     [workspaceId, user.sub]

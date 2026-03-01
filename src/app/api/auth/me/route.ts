@@ -37,8 +37,8 @@ export async function GET(req: NextRequest) {
       },
       workspaces: memberships.map((m) => ({
         id: m.workspace_id,
-        name: (m as unknown as { workspace_name: string }).workspace_name,
-        slug: (m as unknown as { workspace_slug: string }).workspace_slug,
+        name: m.workspace_name,
+        slug: m.workspace_slug,
         role: m.role,
       })),
     });

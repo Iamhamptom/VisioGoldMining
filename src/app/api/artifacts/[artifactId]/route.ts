@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createHandler } from '@/lib/handler';
 import { readFile } from '@/lib/storage';
+import { decrypt, decryptDEK } from '@/lib/crypto';
 import { notFound } from '@/lib/errors';
 
 // GET /api/artifacts/:artifactId — get artifact detail + download
@@ -21,7 +22,14 @@ export const GET = createHandler({
     // Check if download requested
     const download = req.nextUrl.searchParams.get('download');
     if (download === 'true') {
-      const buffer = await readFile(artifact.storage_path);
+      let buffer = await readFile(artifact.storage_path);
+
+      // Decrypt if the artifact was stored encrypted
+      if (artifact.encrypted_dek) {
+        const dek = decryptDEK(artifact.encrypted_dek);
+        buffer = decrypt(buffer, dek);
+      }
+
       return new NextResponse(new Uint8Array(buffer), {
         headers: {
           'Content-Type': artifact.mime_type || 'application/octet-stream',

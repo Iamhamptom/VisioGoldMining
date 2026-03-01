@@ -62,6 +62,21 @@ function getMultiplier(dept: string, multiplierMap: Record<string, number>): num
   return multiplierMap[dept] ?? 1.0;
 }
 
+/**
+ * Compute confidence based on the coefficient of variation (CV).
+ * Lower CV = tighter distribution = higher confidence.
+ */
+function computeConfidence(values: number[]): number {
+  const n = values.length;
+  if (n === 0) return 0;
+  const mean = values.reduce((s, v) => s + v, 0) / n;
+  if (mean === 0) return 0;
+  const variance = values.reduce((s, v) => s + (v - mean) ** 2, 0) / n;
+  const cv = Math.sqrt(variance) / mean;
+  // Map CV to confidence: CV of 0 → 1.0, CV of 1+ → ~0.1
+  return Math.max(0.1, Math.min(1.0, 1.0 - cv * 0.7));
+}
+
 export function computeCosts(input: CostInput, iterations: number = 1000): CostEngineOutput {
   const rng = createSeededRng(input.seed);
   const baseCosts = PRIORS.base_costs[input.project_type];
@@ -151,7 +166,7 @@ export function computeCosts(input: CostInput, iterations: number = 1000): CostE
         min: Math.round(percentile(sorted, 0.10)),
         p50: Math.round(percentile(sorted, 0.50)),
         p90: Math.round(percentile(sorted, 0.90)),
-        confidence: 0.3,
+        confidence: Math.round(computeConfidence(iterationResults[dept]) * 100) / 100,
       },
       drivers,
       notes: 'Based on calibrated DRC priors. Replace with vendor quotes for higher confidence.',
@@ -166,7 +181,7 @@ export function computeCosts(input: CostInput, iterations: number = 1000): CostE
       min: Math.round(percentile(sortedTotals, 0.10)),
       p50: Math.round(percentile(sortedTotals, 0.50)),
       p90: Math.round(percentile(sortedTotals, 0.90)),
-      confidence: 0.3,
+      confidence: Math.round(computeConfidence(totalIterations) * 100) / 100,
     },
   };
 }

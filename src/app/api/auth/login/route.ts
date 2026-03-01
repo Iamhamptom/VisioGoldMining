@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { queryNoRLS } from '@/lib/db';
-import { signToken, comparePassword } from '@/lib/auth';
+import { signToken, signRefreshToken, comparePassword } from '@/lib/auth';
 import { loginSchema } from '@/lib/validation';
 import { errorResponse, unauthorized, badRequest } from '@/lib/errors';
 import type { User, WorkspaceMember } from '@/types';
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       throw unauthorized('User has no workspace memberships');
     }
 
-    // Sign JWT
+    // Sign JWT + refresh token
     const token = await signToken({
       sub: user.id,
       email: user.email,
@@ -56,8 +56,14 @@ export async function POST(req: NextRequest) {
       role: defaultMembership.role,
     });
 
+    const refreshToken = await signRefreshToken({
+      sub: user.id,
+      email: user.email,
+    });
+
     return NextResponse.json({
       token,
+      refreshToken,
       user: {
         id: user.id,
         email: user.email,
@@ -65,7 +71,7 @@ export async function POST(req: NextRequest) {
       },
       workspaces: memberships.map((m) => ({
         id: m.workspace_id,
-        name: (m as unknown as { workspace_name: string }).workspace_name,
+        name: m.workspace_name,
         role: m.role,
       })),
       currentWorkspace: {

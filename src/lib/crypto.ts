@@ -40,24 +40,26 @@ export function decrypt(encryptedData: Buffer, key: Buffer): Buffer {
   return Buffer.concat([decipher.update(ciphertext), decipher.final()]);
 }
 
+function getRootKey(): Buffer {
+  const key = process.env.ROOT_ENCRYPTION_KEY;
+  if (!key || key.length < 32) {
+    throw new Error(
+      'ROOT_ENCRYPTION_KEY environment variable is required and must be at least 32 characters.'
+    );
+  }
+  return Buffer.from(key, 'utf-8').subarray(0, 32);
+}
+
 /**
  * Encrypt a DEK with the root encryption key (from env var).
  */
 export function encryptDEK(dek: Buffer): Buffer {
-  const rootKey = Buffer.from(
-    process.env.ROOT_ENCRYPTION_KEY || 'dev-root-key-32-bytes-long!!!!!',
-    'utf-8'
-  ).subarray(0, 32);
-  return encrypt(dek, rootKey);
+  return encrypt(dek, getRootKey());
 }
 
 /**
  * Decrypt a DEK using the root encryption key.
  */
 export function decryptDEK(encryptedDek: Buffer): Buffer {
-  const rootKey = Buffer.from(
-    process.env.ROOT_ENCRYPTION_KEY || 'dev-root-key-32-bytes-long!!!!!',
-    'utf-8'
-  ).subarray(0, 32);
-  return decrypt(encryptedDek, rootKey);
+  return decrypt(encryptedDek, getRootKey());
 }

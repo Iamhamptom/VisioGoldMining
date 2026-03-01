@@ -7,7 +7,9 @@ const pool = new Pool({
   database: process.env.DB_NAME || 'visiogold_dev',
   user: process.env.DB_APP_USER || 'visiogold_app',
   password: process.env.DB_APP_PASSWORD || 'app_password',
-  max: 10,
+  max: parseInt(process.env.DB_POOL_MAX || '20'),
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 5000,
 });
 
 // Admin pool — uses visiogold_admin role (bypasses RLS, for seed/migration only)
@@ -17,7 +19,9 @@ const adminPool = new Pool({
   database: process.env.DB_NAME || 'visiogold_dev',
   user: process.env.DB_ADMIN_USER || 'visiogold_admin',
   password: process.env.DB_ADMIN_PASSWORD || 'admin_password',
-  max: 3,
+  max: parseInt(process.env.DB_ADMIN_POOL_MAX || '5'),
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 5000,
 });
 
 /**

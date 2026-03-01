@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react';
 import { LAYER_DEFINITIONS } from '../lib/layers-registry';
-import type { LayerState } from '../lib/types/layers';
+import type { LayerState, MapLayerSpec } from '../lib/types/layers';
 import { useMapContext } from './useMap';
+import type { LayerSpecification } from 'maplibre-gl';
 
 // Lazy import for fixture data
 const fixtureImports: Record<string, () => Promise<{ default: GeoJSON.FeatureCollection }>> = {
@@ -61,15 +62,16 @@ export function useLayers() {
         // Add source + layers to map
         if (!map.getSource(layerId)) {
           map.addSource(layerId, { type: 'geojson', data });
-          def.mapLayers.forEach((ml) => {
-            map.addLayer({
+          def.mapLayers.forEach((ml: MapLayerSpec) => {
+            const layerSpec = {
               id: ml.id,
               source: layerId,
-              type: ml.type as any,
-              paint: ml.paint as any,
-              layout: ml.layout as any,
-              ...(ml.filter ? { filter: ml.filter as any } : {}),
-            });
+              type: ml.type,
+              paint: ml.paint,
+              ...(ml.layout ? { layout: ml.layout } : {}),
+              ...(ml.filter ? { filter: ml.filter } : {}),
+            } as LayerSpecification;
+            map.addLayer(layerSpec);
           });
         }
       } catch (err) {
