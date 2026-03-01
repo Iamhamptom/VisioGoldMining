@@ -1,0 +1,80 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "PR-8832", "name": "Mongbwalu North", "permit_number": "PR-8832", "holder": "Kibali Gold Mines SA", "status": "granted", "commodity": "Gold", "area_km2": 245, "granted_date": "2021-03-15", "expiry_date": "2026-03-15" },
+      "geometry": { "type": "Polygon", "coordinates": [[[29.5, 1.8], [29.8, 1.8], [29.8, 2.1], [29.5, 2.1], [29.5, 1.8]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "PE-4102", "name": "Twangiza Deep", "permit_number": "PE-4102", "holder": "Banro Corp", "status": "granted", "commodity": "Gold", "area_km2": 180, "granted_date": "2020-07-20", "expiry_date": "2025-07-20" },
+      "geometry": { "type": "Polygon", "coordinates": [[[28.6, -3.0], [28.95, -3.0], [28.95, -2.7], [28.6, -2.7], [28.6, -3.0]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "PR-9921", "name": "Kibali South Extension", "permit_number": "PR-9921", "holder": "AngloGold Ashanti", "status": "granted", "commodity": "Gold", "area_km2": 310, "granted_date": "2022-01-10", "expiry_date": "2027-01-10" },
+      "geometry": { "type": "Polygon", "coordinates": [[[29.8, 2.5], [30.2, 2.5], [30.2, 2.9], [29.8, 2.9], [29.8, 2.5]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "PE-5510", "name": "Kamituga Gold Zone", "permit_number": "PE-5510", "holder": "Loncor Gold Inc", "status": "pending", "commodity": "Gold", "area_km2": 150, "granted_date": null, "expiry_date": null },
+      "geometry": { "type": "Polygon", "coordinates": [[[28.0, -3.3], [28.3, -3.3], [28.3, -3.0], [28.0, -3.0], [28.0, -3.3]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "PR-10492", "name": "Ituri North Prospect", "permit_number": "PR-10492", "holder": "Loncor Resources", "status": "granted", "commodity": "Gold", "area_km2": 420, "granted_date": "2019-11-01", "expiry_date": "2024-11-01" },
+      "geometry": { "type": "Polygon", "coordinates": [[[30.0, 1.2], [30.5, 1.2], [30.5, 1.7], [30.0, 1.7], [30.0, 1.2]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "PE-6230", "name": "Kolwezi Copper Belt", "permit_number": "PE-6230", "holder": "Glencore plc", "status": "granted", "commodity": "Copper", "area_km2": 520, "granted_date": "2021-06-01", "expiry_date": "2026-06-01" },
+      "geometry": { "type": "Polygon", "coordinates": [[[25.3, -10.8], [25.8, -10.8], [25.8, -10.4], [25.3, -10.4], [25.3, -10.8]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "PR-7744", "name": "Tenke Fungurume South", "permit_number": "PR-7744", "holder": "CMOC Group", "status": "granted", "commodity": "Copper", "area_km2": 380, "granted_date": "2020-09-15", "expiry_date": "2025-09-15" },
+      "geometry": { "type": "Polygon", "coordinates": [[[26.0, -10.7], [26.5, -10.7], [26.5, -10.3], [26.0, -10.3], [26.0, -10.7]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "PE-8855", "name": "Manono Lithium Belt", "permit_number": "PE-8855", "holder": "AVZ Minerals", "status": "pending", "commodity": "Tin", "area_km2": 600, "granted_date": null, "expiry_date": null },
+      "geometry": { "type": "Polygon", "coordinates": [[[27.0, -7.5], [27.5, -7.5], [27.5, -7.0], [27.0, -7.0], [27.0, -7.5]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "PR-3321", "name": "Bisie Tin Mine Ext", "permit_number": "PR-3321", "holder": "Alphamin Resources", "status": "granted", "commodity": "Tin", "area_km2": 190, "granted_date": "2022-04-01", "expiry_date": "2027-04-01" },
+      "geometry": { "type": "Polygon", "coordinates": [[[26.8, -1.5], [27.2, -1.5], [27.2, -1.2], [26.8, -1.2], [26.8, -1.5]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "PE-4921", "name": "Kilo-Moto Belt Open", "permit_number": "PE-4921", "holder": null, "status": "expired", "commodity": "Gold", "area_km2": 275, "granted_date": "2018-01-01", "expiry_date": "2023-01-01" },
+      "geometry": { "type": "Polygon", "coordinates": [[[29.2, 1.5], [29.6, 1.5], [29.6, 1.9], [29.2, 1.9], [29.2, 1.5]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "PR-1188", "name": "Lubumbashi South", "permit_number": "PR-1188", "holder": "Ivanhoe Mines", "status": "granted", "commodity": "Copper", "area_km2": 450, "granted_date": "2021-12-01", "expiry_date": "2026-12-01" },
+      "geometry": { "type": "Polygon", "coordinates": [[[27.4, -11.8], [27.9, -11.8], [27.9, -11.4], [27.4, -11.4], [27.4, -11.8]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "PE-2299", "name": "Maniema Central", "permit_number": "PE-2299", "holder": "Lualaba Mining", "status": "granted", "commodity": "Gold", "area_km2": 340, "granted_date": "2022-08-15", "expiry_date": "2027-08-15" },
+      "geometry": { "type": "Polygon", "coordinates": [[[25.8, -3.5], [26.3, -3.5], [26.3, -3.1], [25.8, -3.1], [25.8, -3.5]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "PR-6677", "name": "Kasai Diamond Field", "permit_number": "PR-6677", "holder": "MIBA SA", "status": "granted", "commodity": "Gold", "area_km2": 800, "granted_date": "2020-03-01", "expiry_date": "2025-03-01" },
+      "geometry": { "type": "Polygon", "coordinates": [[[22.0, -5.5], [22.6, -5.5], [22.6, -5.0], [22.0, -5.0], [22.0, -5.5]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "PE-9100", "name": "Sakania Cobalt Zone", "permit_number": "PE-9100", "holder": "ERG Africa", "status": "pending", "commodity": "Cobalt", "area_km2": 280, "granted_date": null, "expiry_date": null },
+      "geometry": { "type": "Polygon", "coordinates": [[[28.5, -12.0], [28.9, -12.0], [28.9, -11.7], [28.5, -11.7], [28.5, -12.0]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "PR-5555", "name": "Walikale Coltan Belt", "permit_number": "PR-5555", "holder": "SMB Group", "status": "granted", "commodity": "Coltan", "area_km2": 210, "granted_date": "2023-02-01", "expiry_date": "2028-02-01" },
+      "geometry": { "type": "Polygon", "coordinates": [[[28.0, -1.5], [28.4, -1.5], [28.4, -1.1], [28.0, -1.1], [28.0, -1.5]]] }
+    }
+  ]
+}
