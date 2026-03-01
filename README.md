@@ -9,6 +9,7 @@ Secure multi-tenant platform for managing gold mining project data in the DRC.
 - **Database**: PostgreSQL 16 + PostGIS
 - **Auth**: Custom JWT (jose + bcryptjs)
 - **Security**: Postgres Row-Level Security (RLS) for tenant isolation
+- **Map**: MapLibre GL + Turf.js for geospatial visualization
 
 ## Quick Start
 
