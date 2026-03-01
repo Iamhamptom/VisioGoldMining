@@ -43,7 +43,7 @@ export default function InfrastructureCard({ properties }: Props) {
           <span className="text-text-muted text-xs w-16">Type</span>
           <span className="text-white capitalize">{type}</span>
         </div>
-        {properties.surface && (
+        {!!properties.surface && (
           <div className="flex items-center gap-2 text-gray-300">
             <Wrench size={14} strokeWidth={1} style={{ color }} className="icon-shine" />
             <span className="text-text-muted text-xs w-16">Surface</span>
