@@ -15,6 +15,7 @@ export default defineConfig(({mode}) => {
         '@': path.resolve(__dirname, '.'),
       },
     },
+    assetsInclude: ['**/*.geojson'],
     server: {
       hmr: process.env.DISABLE_HMR !== 'true',
       proxy: {
