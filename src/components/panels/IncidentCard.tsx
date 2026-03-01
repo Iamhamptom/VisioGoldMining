@@ -42,7 +42,7 @@ export default function IncidentCard({ properties }: Props) {
           <span className="text-text-muted text-xs w-16">Source</span>
           <span className="text-white">{String(properties.source || 'unknown')}</span>
         </div>
-        {properties.description && (
+        {!!properties.description && (
           <div className="mt-2 text-xs text-gray-400 leading-relaxed">
             <AlertTriangle size={12} strokeWidth={1} className="inline mr-1 text-red-400" />
             {String(properties.description)}

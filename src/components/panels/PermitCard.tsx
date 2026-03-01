@@ -24,35 +24,35 @@ export default function PermitCard({ properties }: Props) {
       </div>
 
       <div className="flex flex-col gap-3 text-sm">
-        {properties.holder && (
+        {!!properties.holder && (
           <div className="flex items-center gap-2 text-gray-300">
             <User size={14} strokeWidth={1} className="text-gold icon-shine" />
             <span className="text-text-muted text-xs w-16">Holder</span>
             <span className="text-white">{String(properties.holder)}</span>
           </div>
         )}
-        {properties.commodity && (
+        {!!properties.commodity && (
           <div className="flex items-center gap-2 text-gray-300">
             <Pickaxe size={14} strokeWidth={1} className="text-gold icon-shine" />
             <span className="text-text-muted text-xs w-16">Commodity</span>
             <span className="text-white">{String(properties.commodity)}</span>
           </div>
         )}
-        {properties.area_km2 && (
+        {!!properties.area_km2 && (
           <div className="flex items-center gap-2 text-gray-300">
             <SquareStack size={14} strokeWidth={1} className="text-gold icon-shine" />
             <span className="text-text-muted text-xs w-16">Area</span>
             <span className="text-white">{String(properties.area_km2)} km²</span>
           </div>
         )}
-        {properties.granted_date && (
+        {!!properties.granted_date && (
           <div className="flex items-center gap-2 text-gray-300">
             <Calendar size={14} strokeWidth={1} className="text-gold icon-shine" />
             <span className="text-text-muted text-xs w-16">Granted</span>
             <span className="text-white">{String(properties.granted_date)}</span>
           </div>
         )}
-        {properties.expiry_date && (
+        {!!properties.expiry_date && (
           <div className="flex items-center gap-2 text-gray-300">
             <Calendar size={14} strokeWidth={1} className="text-gold icon-shine" />
             <span className="text-text-muted text-xs w-16">Expires</span>
