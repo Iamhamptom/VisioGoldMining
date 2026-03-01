@@ -47,7 +47,7 @@ export default function OccurrenceCard({ properties }: Props) {
           <span className="text-text-muted text-xs w-20">Source</span>
           <span className="text-white">{String(properties.source || 'unknown')}</span>
         </div>
-        {properties.last_sampled && (
+        {!!properties.last_sampled && (
           <div className="flex items-center gap-2 text-gray-300">
             <Calendar size={14} strokeWidth={1} style={{ color }} className="icon-shine" />
             <span className="text-text-muted text-xs w-20">Sampled</span>

@@ -29,7 +29,7 @@ export default function LithologyCard({ properties }: Props) {
           <span className="text-text-muted text-xs w-16">Age</span>
           <span className="text-white">{String(properties.age || 'unknown')}</span>
         </div>
-        {properties.description && (
+        {!!properties.description && (
           <div className="mt-2 text-xs text-gray-400 leading-relaxed">
             <FileText size={12} strokeWidth={1} className="inline mr-1 text-[#8B7355]" />
             {String(properties.description)}
