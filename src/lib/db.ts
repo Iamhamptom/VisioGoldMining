@@ -1,28 +1,51 @@
 import { Pool, PoolClient } from 'pg';
 
+const sslConfig = process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost')
+  ? { rejectUnauthorized: false }
+  : false;
+
 // Application pool — uses the visiogold_app role (RLS enforced)
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  database: process.env.DB_NAME || 'visiogold_dev',
-  user: process.env.DB_APP_USER || 'visiogold_app',
-  password: process.env.DB_APP_PASSWORD || 'app_password',
-  max: parseInt(process.env.DB_POOL_MAX || '20'),
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
-});
+// Supports DATABASE_URL for managed Postgres (Vercel, Neon, Supabase)
+const pool = process.env.DATABASE_URL
+  ? new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: sslConfig,
+      max: parseInt(process.env.DB_POOL_MAX || '20'),
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 5000,
+    })
+  : new Pool({
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || '5432'),
+      database: process.env.DB_NAME || 'visiogold_dev',
+      user: process.env.DB_APP_USER || 'visiogold_app',
+      password: process.env.DB_APP_PASSWORD || 'app_password',
+      max: parseInt(process.env.DB_POOL_MAX || '20'),
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 5000,
+    });
 
 // Admin pool — uses visiogold_admin role (bypasses RLS, for seed/migration only)
-const adminPool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  database: process.env.DB_NAME || 'visiogold_dev',
-  user: process.env.DB_ADMIN_USER || 'visiogold_admin',
-  password: process.env.DB_ADMIN_PASSWORD || 'admin_password',
-  max: parseInt(process.env.DB_ADMIN_POOL_MAX || '5'),
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
-});
+// In managed Postgres (DATABASE_URL), this uses the same connection since the
+// managed user typically has full privileges.
+const adminPool = process.env.DATABASE_URL
+  ? new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: sslConfig,
+      max: parseInt(process.env.DB_ADMIN_POOL_MAX || '5'),
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 5000,
+    })
+  : new Pool({
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || '5432'),
+      database: process.env.DB_NAME || 'visiogold_dev',
+      user: process.env.DB_ADMIN_USER || 'visiogold_admin',
+      password: process.env.DB_ADMIN_PASSWORD || 'admin_password',
+      max: parseInt(process.env.DB_ADMIN_POOL_MAX || '5'),
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 5000,
+    });
 
 /**
  * Execute a callback within an RLS-scoped transaction.
