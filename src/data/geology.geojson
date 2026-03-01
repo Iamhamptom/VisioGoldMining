@@ -1,0 +1,55 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "geo-01", "unit_name": "Kilo-Moto Greenstone Belt", "age": "Archean", "rock_type": "Greenstone", "lithology": "greenstone", "color": "#2E8B57", "description": "Archean greenstone belt hosting major gold deposits including Kibali" },
+      "geometry": { "type": "Polygon", "coordinates": [[[29.0, 1.0], [30.5, 1.0], [30.5, 2.8], [29.0, 2.8], [29.0, 1.0]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "geo-02", "unit_name": "Kibaran Belt", "age": "Mesoproterozoic", "rock_type": "Metasediment", "lithology": "schist", "color": "#8B6914", "description": "Tin-tantalum-tungsten bearing metasedimentary belt" },
+      "geometry": { "type": "Polygon", "coordinates": [[[26.5, -4.0], [28.5, -4.0], [28.5, -1.0], [26.5, -1.0], [26.5, -4.0]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "geo-03", "unit_name": "Lufilian Arc - Copper Belt", "age": "Neoproterozoic", "rock_type": "Sedimentary", "lithology": "shale", "color": "#CD853F", "description": "Host to world-class copper-cobalt deposits in the Katanga Supergroup" },
+      "geometry": { "type": "Polygon", "coordinates": [[[25.0, -12.0], [29.0, -12.0], [29.0, -10.0], [25.0, -10.0], [25.0, -12.0]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "geo-04", "unit_name": "Itombwe Synclinorium", "age": "Proterozoic", "rock_type": "Metavolcanic", "lithology": "granite", "color": "#BC8F8F", "description": "Gold-bearing metavolcanic sequences in South Kivu" },
+      "geometry": { "type": "Polygon", "coordinates": [[[27.5, -3.5], [29.0, -3.5], [29.0, -2.0], [27.5, -2.0], [27.5, -3.5]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "geo-05", "unit_name": "Congo Basin Sediments", "age": "Phanerozoic", "rock_type": "Sedimentary", "lithology": "sandstone", "color": "#DEB887", "description": "Thick sedimentary cover of the Congo Basin interior" },
+      "geometry": { "type": "Polygon", "coordinates": [[[19.0, -4.0], [25.0, -4.0], [25.0, 1.0], [19.0, 1.0], [19.0, -4.0]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "geo-06", "unit_name": "Kasai Craton", "age": "Archean", "rock_type": "Granite-Gneiss", "lithology": "granite", "color": "#A0522D", "description": "Ancient cratonic nucleus hosting diamond-bearing kimberlites" },
+      "geometry": { "type": "Polygon", "coordinates": [[[20.0, -6.5], [24.0, -6.5], [24.0, -4.0], [20.0, -4.0], [20.0, -6.5]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "geo-07", "unit_name": "Ruzizi Belt", "age": "Paleoproterozoic", "rock_type": "Gneiss", "lithology": "schist", "color": "#6B8E23", "description": "Gold and base metal bearing metamorphic belt along the western Rift" },
+      "geometry": { "type": "Polygon", "coordinates": [[[28.5, -3.5], [29.5, -3.5], [29.5, -1.5], [28.5, -1.5], [28.5, -3.5]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "geo-08", "unit_name": "Kundelungu Plateau", "age": "Neoproterozoic", "rock_type": "Carbonate", "lithology": "limestone", "color": "#D2B48C", "description": "Tabular plateau of the upper Katanga Supergroup" },
+      "geometry": { "type": "Polygon", "coordinates": [[[27.0, -11.0], [29.0, -11.0], [29.0, -9.5], [27.0, -9.5], [27.0, -11.0]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "geo-09", "unit_name": "Maniema Schist Belt", "age": "Proterozoic", "rock_type": "Schist", "lithology": "schist", "color": "#708090", "description": "Tin- and gold-bearing schist zone in central-eastern DRC" },
+      "geometry": { "type": "Polygon", "coordinates": [[[25.0, -4.5], [27.0, -4.5], [27.0, -2.5], [25.0, -2.5], [25.0, -4.5]]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "geo-10", "unit_name": "Virunga Volcanic Province", "age": "Quaternary", "rock_type": "Volcanic", "lithology": "basalt", "color": "#4A4A4A", "description": "Active volcanic zone along the East African Rift, including Nyiragongo" },
+      "geometry": { "type": "Polygon", "coordinates": [[[29.0, -2.0], [29.5, -2.0], [29.5, -1.0], [29.0, -1.0], [29.0, -2.0]]] }
+    }
+  ]
+}

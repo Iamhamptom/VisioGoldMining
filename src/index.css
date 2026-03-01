@@ -184,3 +184,31 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-gold);
 }
+
+/* MapLibre Dark Theme Overrides */
+.maplibregl-popup-content {
+  background: rgba(10, 10, 10, 0.9) !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+.maplibregl-popup-tip {
+  border-top-color: rgba(10, 10, 10, 0.9) !important;
+}
+.maplibregl-ctrl-group {
+  background: rgba(10, 10, 10, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.maplibregl-ctrl-group button {
+  color: white !important;
+}
+.maplibregl-ctrl-attrib {
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.3) !important;
+  font-size: 10px !important;
+}
+.maplibregl-ctrl-attrib a {
+  color: rgba(212, 175, 55, 0.5) !important;
+}
