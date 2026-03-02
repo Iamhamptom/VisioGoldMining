@@ -5,6 +5,8 @@ import OpportunityExplorer from './screens/OpportunityExplorer';
 import ProjectEvaluator from './screens/ProjectEvaluator';
 import ProjectBuilder from './screens/ProjectBuilder';
 import SimulationStudio from './screens/SimulationStudio';
+import ProjectPursuit from './screens/ProjectPursuit';
+import AgentCommandCenter from './screens/AgentCommandCenter';
 import FeatureContextPanel from './panels/FeatureContextPanel';
 import RepoMapPanel from './repos/RepoMapPanel';
 
@@ -46,6 +48,8 @@ export default function RightPanel({ activeScreen, selectedRepo, setActiveScreen
           {activeScreen === 'evaluator' && <ProjectEvaluator />}
           {activeScreen === 'builder' && <ProjectBuilder />}
           {activeScreen === 'simulation' && <SimulationStudio />}
+          {activeScreen === 'pursuit' && <ProjectPursuit />}
+          {activeScreen === 'agents' && <AgentCommandCenter />}
           {activeScreen === 'feature' && <FeatureContextPanel />}
           {activeScreen === 'repo' && selectedRepo && <RepoMapPanel repoId={selectedRepo} />}
         </motion.div>

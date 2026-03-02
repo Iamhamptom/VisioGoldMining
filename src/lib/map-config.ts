@@ -25,6 +25,22 @@ export const LAYER_IDS = {
   OCCURRENCES: 'occurrences',
   SECURITY_EVENTS: 'security-events',
   INFRASTRUCTURE: 'infrastructure',
+  DRC_PROJECTS: 'drc-projects',
+  MINERAL_HEATMAP: 'mineral-heatmap',
 } as const;
 
 export const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+
+// Terrain configuration for 3D visualization
+export const TERRAIN_SOURCE = {
+  url: 'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png',
+  tileSize: 256,
+  encoding: 'terrarium' as const,
+  maxzoom: 14,
+};
+
+export const TERRAIN_DEFAULTS = {
+  exaggeration: 1.5,
+  minExaggeration: 1.0,
+  maxExaggeration: 3.0,
+};

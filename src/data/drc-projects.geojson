@@ -1,0 +1,139 @@
+{
+  "type": "FeatureCollection",
+  "name": "DRC Gold Projects",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [29.58, 3.13]
+      },
+      "properties": {
+        "id": "drc_kibali_001",
+        "name": "Kibali Gold Mine",
+        "operator": "Barrick Gold Corporation",
+        "status": "producing",
+        "totalResourceMoz": 24.0,
+        "averageGrade": 3.6,
+        "annualProductionKoz": 750,
+        "belt": "Kilo-Moto Greenstone Belt",
+        "province": "Haut-Uele / Ituri",
+        "miningMethod": "Combined open pit + underground (sub-level caving)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [28.74333, -2.87275]
+      },
+      "properties": {
+        "id": "drc_twangiza_002",
+        "name": "Twangiza Mine",
+        "operator": "Twangiza Mining SA / Shomka Resources",
+        "status": "producing_disrupted",
+        "totalResourceMoz": 3.7,
+        "averageGrade": 2.8,
+        "annualProductionKoz": 120,
+        "belt": "Twangiza-Namoya Gold Belt",
+        "province": "South Kivu",
+        "miningMethod": "Open pit"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [27.55139, -4.00833]
+      },
+      "properties": {
+        "id": "drc_namoya_003",
+        "name": "Namoya Mine",
+        "operator": "Namoya Mining SARL / Shomka Resources",
+        "status": "care_and_maintenance",
+        "totalResourceMoz": 2.1,
+        "averageGrade": 1.8,
+        "annualProductionKoz": 80,
+        "belt": "Twangiza-Namoya Gold Belt",
+        "province": "Maniema",
+        "miningMethod": "Open pit (oxide)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [28.725, -4.76667]
+      },
+      "properties": {
+        "id": "drc_misisi_004",
+        "name": "Misisi Gold Project (Akyanga)",
+        "operator": "Avanti Gold Corp.",
+        "status": "advanced_exploration",
+        "totalResourceMoz": 3.11,
+        "averageGrade": 2.37,
+        "annualProductionKoz": null,
+        "belt": "Kibara Belt (Proterozoic intracontinental mobile belt)",
+        "province": "South Kivu",
+        "miningMethod": "TBD — advanced exploration / development drilling"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [27.86778, 1.73299]
+      },
+      "properties": {
+        "id": "drc_adumbi_005",
+        "name": "Imbo Project (Adumbi)",
+        "operator": "Loncor Gold Inc.",
+        "status": "development",
+        "totalResourceMoz": 3.97,
+        "averageGrade": 4.38,
+        "annualProductionKoz": null,
+        "belt": "Ngayu Greenstone Belt",
+        "province": "Ituri",
+        "miningMethod": "Open pit + underground (planned)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [28.16667, -3.05]
+      },
+      "properties": {
+        "id": "drc_kamituga_009",
+        "name": "Kamituga-Mobale",
+        "operator": "ASM (multi-actor)",
+        "status": "artisanal",
+        "totalResourceMoz": null,
+        "averageGrade": 3.4,
+        "annualProductionKoz": null,
+        "belt": "Twangiza-Namoya Gold Belt",
+        "province": "South Kivu",
+        "miningMethod": "Artisanal — underground tunnels + surface workings"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [30.02959, 1.93516]
+      },
+      "properties": {
+        "id": "drc_mongbwalu_010",
+        "name": "Mongbwalu Gold Mine",
+        "operator": "ASM (multi-actor)",
+        "status": "artisanal",
+        "totalResourceMoz": 3.9,
+        "averageGrade": 4.5,
+        "annualProductionKoz": null,
+        "belt": "Kilo-Moto Greenstone Belt",
+        "province": "Ituri",
+        "miningMethod": "Artisanal — historical industrial references"
+      }
+    }
+  ]
+}
