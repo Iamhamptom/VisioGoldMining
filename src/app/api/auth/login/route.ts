@@ -80,6 +80,14 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
+    // Temporary: expose error detail for debugging (remove after fixing)
+    if (!(error instanceof Error && 'statusCode' in error)) {
+      console.error('Login route error:', error);
+      return NextResponse.json(
+        { error: 'Internal server error', _debug: error instanceof Error ? error.message : String(error) },
+        { status: 500 }
+      );
+    }
     return errorResponse(error);
   }
 }
