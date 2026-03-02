@@ -2,13 +2,14 @@
 
 import dynamic from 'next/dynamic';
 import { useAuth } from '@/context/auth-provider';
+import { useRouter } from 'next/navigation';
 
 const LandingPage = dynamic(() => import('@/components/LandingPage'), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-screen w-screen bg-black">
-      <div className="text-gold font-display text-lg tracking-widest animate-pulse">
-        Loading...
+      <div className="text-gold font-display text-lg tracking-widest animate-pulse gold-text-glow">
+        Initializing VisioGold...
       </div>
     </div>
   ),
@@ -16,12 +17,13 @@ const LandingPage = dynamic(() => import('@/components/LandingPage'), {
 
 export default function Home() {
   const { token } = useAuth();
+  const router = useRouter();
 
   const handleEnter = () => {
     if (token) {
-      window.location.href = '/explorer';
+      router.push('/explorer');
     } else {
-      window.location.href = '/login';
+      router.push('/login');
     }
   };
 
