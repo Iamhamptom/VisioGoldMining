@@ -1,9 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { queryNoRLS } from '@/lib/db';
 import { signToken, signRefreshToken, comparePassword } from '@/lib/auth';
 import { loginSchema } from '@/lib/validation';
 import { errorResponse, unauthorized, badRequest } from '@/lib/errors';
-import type { User, WorkspaceMember } from '@/types';
+import { supabaseRpc } from '@/lib/supabase-rest';
+import type { MemberRole } from '@/types';
+
+interface AuthResult {
+  id: string;
+  email: string;
+  display_name: string;
+  password_hash: string;
+  memberships: Array<{
+    workspace_id: string;
+    role: MemberRole;
+    workspace_name: string;
+  }>;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,34 +27,22 @@ export async function POST(req: NextRequest) {
 
     const { email, password } = parsed.data;
 
-    // Find user
-    const users = await queryNoRLS<User>(
-      'SELECT * FROM users WHERE email = $1 AND is_active = true',
-      [email]
-    );
+    // Authenticate via Supabase RPC (HTTPS, no direct pg connection)
+    const userData = await supabaseRpc<AuthResult | null>('vg_authenticate', {
+      p_email: email,
+    });
 
-    if (users.length === 0) {
+    if (!userData) {
       throw unauthorized('Invalid email or password');
     }
 
-    const user = users[0];
-
-    // Verify password
-    const valid = await comparePassword(password, user.password_hash);
+    // Verify password with bcrypt
+    const valid = await comparePassword(password, userData.password_hash);
     if (!valid) {
       throw unauthorized('Invalid email or password');
     }
 
-    // Get user's workspace memberships
-    const memberships = await queryNoRLS<WorkspaceMember & { workspace_name: string }>(
-      `SELECT wm.*, w.name as workspace_name
-       FROM workspace_members wm
-       JOIN workspaces w ON w.id = wm.workspace_id
-       WHERE wm.user_id = $1`,
-      [user.id]
-    );
-
-    // Default to first workspace
+    const memberships = userData.memberships || [];
     const defaultMembership = memberships[0];
     if (!defaultMembership) {
       throw unauthorized('User has no workspace memberships');
@@ -50,24 +50,24 @@ export async function POST(req: NextRequest) {
 
     // Sign JWT + refresh token
     const token = await signToken({
-      sub: user.id,
-      email: user.email,
+      sub: userData.id,
+      email: userData.email,
       workspaceId: defaultMembership.workspace_id,
       role: defaultMembership.role,
     });
 
     const refreshToken = await signRefreshToken({
-      sub: user.id,
-      email: user.email,
+      sub: userData.id,
+      email: userData.email,
     });
 
     return NextResponse.json({
       token,
       refreshToken,
       user: {
-        id: user.id,
-        email: user.email,
-        displayName: user.display_name,
+        id: userData.id,
+        email: userData.email,
+        displayName: userData.display_name,
       },
       workspaces: memberships.map((m) => ({
         id: m.workspace_id,
@@ -80,14 +80,6 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
-    // Temporary: expose error detail for debugging (remove after fixing)
-    if (!(error instanceof Error && 'statusCode' in error)) {
-      console.error('Login route error:', error);
-      return NextResponse.json(
-        { error: 'Internal server error', _debug: error instanceof Error ? error.message : String(error) },
-        { status: 500 }
-      );
-    }
     return errorResponse(error);
   }
 }

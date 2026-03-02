@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyRefreshToken, signToken, signRefreshToken } from '@/lib/auth';
-import { queryNoRLS } from '@/lib/db';
 import { errorResponse, unauthorized, badRequest } from '@/lib/errors';
-import type { User, WorkspaceMember } from '@/types';
+import { supabaseRpc } from '@/lib/supabase-rest';
+import type { MemberRole } from '@/types';
+
+interface RefreshUser {
+  id: string;
+  email: string;
+  display_name: string;
+  memberships: Array<{
+    workspace_id: string;
+    role: MemberRole;
+  }>;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,43 +23,31 @@ export async function POST(req: NextRequest) {
       throw badRequest('refreshToken is required');
     }
 
-    // Verify the refresh token
-    const { sub, email } = await verifyRefreshToken(refreshToken);
+    const { sub } = await verifyRefreshToken(refreshToken);
 
-    // Verify user still exists and is active
-    const users = await queryNoRLS<User>(
-      'SELECT id, email, display_name, is_active FROM users WHERE id = $1 AND is_active = true',
-      [sub]
-    );
+    const userData = await supabaseRpc<RefreshUser | null>('vg_get_user_for_refresh', {
+      p_user_id: sub,
+    });
 
-    if (users.length === 0) {
+    if (!userData) {
       throw unauthorized('User not found or inactive');
     }
 
-    const user = users[0];
-
-    // Get workspace memberships for new access token
-    const memberships = await queryNoRLS<WorkspaceMember>(
-      'SELECT workspace_id, role FROM workspace_members WHERE user_id = $1',
-      [user.id]
-    );
-
-    const defaultMembership = memberships[0];
+    const defaultMembership = userData.memberships[0];
     if (!defaultMembership) {
       throw unauthorized('User has no workspace memberships');
     }
 
-    // Issue new access token and refresh token
     const newToken = await signToken({
-      sub: user.id,
-      email: user.email,
+      sub: userData.id,
+      email: userData.email,
       workspaceId: defaultMembership.workspace_id,
       role: defaultMembership.role,
     });
 
     const newRefreshToken = await signRefreshToken({
-      sub: user.id,
-      email: user.email,
+      sub: userData.id,
+      email: userData.email,
     });
 
     return NextResponse.json({
