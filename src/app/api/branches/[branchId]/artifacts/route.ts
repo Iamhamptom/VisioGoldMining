@@ -71,7 +71,7 @@ export const POST = createHandler({
     const fileHash = sha256(buffer);
 
     // Encrypt the file with a per-artifact DEK when ROOT_ENCRYPTION_KEY is available
-    let storedBuffer = buffer;
+    let storedBuffer: Buffer = buffer;
     let encryptedDekBytes: Buffer | null = null;
     let encryptionKeyId: string | null = null;
 

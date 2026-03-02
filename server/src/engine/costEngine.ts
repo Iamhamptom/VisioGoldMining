@@ -133,7 +133,7 @@ export function computeCosts(input: CostInput, iterations: number = 1000): CostE
         cost = input.drilling_meters > 0 ? (input.drilling_meters * perMeter + mobCost) : 0;
       } else {
         // Base cost with multipliers
-        const base = baseCosts[dept as keyof typeof baseCosts] as number[];
+        const base = baseCosts[dept as keyof typeof baseCosts] as readonly number[];
         cost = sampleTriangular(rng, base[0], base[1], base[2]) * effectiveMult[dept];
       }
 
