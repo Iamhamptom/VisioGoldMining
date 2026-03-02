@@ -10,6 +10,8 @@ import {
   DRC_CENTER,
   DRC_ZOOM,
   LAYER_IDS,
+  TERRAIN_SOURCE,
+  TERRAIN_DEFAULTS,
 } from '../../lib/map-config';
 import drcBoundary from '../../data/drc-boundary.geojson';
 
@@ -65,11 +67,26 @@ export default function GlobeMap() {
         },
       });
 
+      // Add 3D terrain source
+      map.addSource('terrain-dem', {
+        type: 'raster-dem',
+        tiles: [TERRAIN_SOURCE.url],
+        tileSize: TERRAIN_SOURCE.tileSize,
+        maxzoom: TERRAIN_SOURCE.maxzoom,
+      });
+
+      // Enable 3D terrain by default
+      map.setTerrain({
+        source: 'terrain-dem',
+        exaggeration: TERRAIN_DEFAULTS.exaggeration,
+      });
+
       // Fly to DRC after globe renders
       setTimeout(() => {
         map.flyTo({
           center: DRC_CENTER,
           zoom: DRC_ZOOM,
+          pitch: 45,
           speed: 0.8,
           essential: true,
         });
@@ -86,6 +103,7 @@ export default function GlobeMap() {
         'occurrences-circle',
         'security-events-circle',
         'infrastructure-lines', 'infrastructure-points',
+        'drc-projects-circle', 'drc-projects-glow',
       ];
 
       const existingLayers = interactiveLayerIds.filter(id => {
@@ -97,7 +115,7 @@ export default function GlobeMap() {
       const features = map.queryRenderedFeatures(e.point, { layers: existingLayers });
       if (features.length > 0) {
         const feature = features[0];
-        const layerBaseId = feature.layer.id.replace(/-fill$|-outline$|-circle$|-lines$|-points$/, '');
+        const layerBaseId = feature.layer.id.replace(/-fill$|-outline$|-circle$|-lines$|-points$|-glow$|-label$/, '');
         setSelectedFeature({
           layerId: layerBaseId,
           properties: feature.properties || {},
@@ -111,6 +129,7 @@ export default function GlobeMap() {
       const interactiveLayerIds = [
         'tenements-fill', 'geology-fill', 'occurrences-circle',
         'security-events-circle', 'infrastructure-lines', 'infrastructure-points',
+        'drc-projects-circle',
       ];
 
       const existingLayers = interactiveLayerIds.filter(id => {

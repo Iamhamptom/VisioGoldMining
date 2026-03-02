@@ -11,6 +11,8 @@ const fixtureImports: Record<string, () => Promise<{ default: GeoJSON.FeatureCol
   'occurrences': () => import('../data/occurrences.geojson'),
   'security-events': () => import('../data/security-events.geojson'),
   'infrastructure': () => import('../data/infrastructure.geojson'),
+  'drc-projects': () => import('../data/drc-projects.geojson'),
+  'mineral-heatmap': () => import('../data/mineral-heatmap.geojson'),
 };
 
 export function useLayers() {

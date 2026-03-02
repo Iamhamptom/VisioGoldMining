@@ -1,5 +1,5 @@
 import React from 'react';
-import { Globe, Compass, FileSearch, HardHat, LineChart, Settings } from 'lucide-react';
+import { Globe, Compass, FileSearch, HardHat, LineChart, Crosshair, Brain, Settings } from 'lucide-react';
 import { motion } from 'motion/react';
 import { ScreenType } from '@/lib/types/screen';
 
@@ -16,6 +16,8 @@ export default function Sidebar({ activeScreen, setActiveScreen, onOpenSettings 
     { id: 'evaluator', icon: FileSearch, label: 'Project Evaluator' },
     { id: 'builder', icon: HardHat, label: 'Project Builder' },
     { id: 'simulation', icon: LineChart, label: 'Simulation Studio' },
+    { id: 'pursuit', icon: Crosshair, label: 'Project Pursuit' },
+    { id: 'agents', icon: Brain, label: 'Agent Command' },
   ];
 
   return (

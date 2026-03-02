@@ -4,6 +4,7 @@ import { ScreenType } from '@/lib/types/screen';
 import GlobeMap from './map/GlobeMap';
 import MapControls from './map/MapControls';
 import LayerToggle from './map/LayerToggle';
+import TerrainControls from './map/TerrainControls';
 
 export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) {
   return (
@@ -16,6 +17,9 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
 
       {/* Layer Toggle Panel */}
       <LayerToggle />
+
+      {/* 3D Terrain Controls */}
+      <TerrainControls />
 
       {/* Search Bar Overlay */}
       <motion.div
@@ -42,11 +46,15 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
         className="absolute bottom-6 right-6 bg-black/60 backdrop-blur-md p-5 rounded-2xl text-xs flex flex-col gap-3 border border-white/10 shadow-2xl z-10"
       >
         <h4 className="text-white font-semibold mb-1 uppercase tracking-widest text-[10px]">Map Legend</h4>
+        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#00FF88] shadow-[0_0_8px_rgba(0,255,136,0.6)]"></div> Producing</div>
+        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#4488FF] shadow-[0_0_8px_rgba(68,136,255,0.6)]"></div> Development</div>
+        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#A78BFA] shadow-[0_0_8px_rgba(167,139,250,0.6)]"></div> Exploration</div>
+        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#FFD700] shadow-[0_0_8px_rgba(255,215,0,0.6)]"></div> Artisanal</div>
+        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#FF4444] shadow-[0_0_8px_rgba(255,68,68,0.6)]"></div> Care & Maintenance</div>
+        <div className="w-full h-px bg-white/10 my-1" />
         <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-gold shadow-[0_0_8px_rgba(212,175,55,0.6)]"></div> Tenements</div>
         <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#8B7355] shadow-[0_0_8px_rgba(139,115,85,0.6)]"></div> Geology</div>
-        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#FFD700] shadow-[0_0_8px_rgba(255,215,0,0.6)]"></div> Occurrences</div>
         <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]"></div> Security Events</div>
-        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#4488FF] shadow-[0_0_8px_rgba(68,136,255,0.6)]"></div> Infrastructure</div>
       </motion.div>
     </div>
   );

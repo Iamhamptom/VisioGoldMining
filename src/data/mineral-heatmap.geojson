@@ -1,0 +1,2512 @@
+{
+  "type": "FeatureCollection",
+  "name": "DRC Gold Mineral Potential Heatmap",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.62183,
+          2.9875
+        ]
+      },
+      "properties": {
+        "concentration": 0.965,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.49696,
+          3.20094
+        ]
+      },
+      "properties": {
+        "concentration": 0.999,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.69765,
+          3.00608
+        ]
+      },
+      "properties": {
+        "concentration": 0.968,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.43894,
+          3.04559
+        ]
+      },
+      "properties": {
+        "concentration": 0.975,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.43796,
+          3.03965
+        ]
+      },
+      "properties": {
+        "concentration": 0.982,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.59348,
+          3.04613
+        ]
+      },
+      "properties": {
+        "concentration": 0.998,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.67283,
+          2.98195
+        ]
+      },
+      "properties": {
+        "concentration": 0.989,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.63944,
+          3.08208
+        ]
+      },
+      "properties": {
+        "concentration": 0.974,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.16716,
+          1.89098
+        ]
+      },
+      "properties": {
+        "concentration": 0.808,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.90901,
+          2.04425
+        ]
+      },
+      "properties": {
+        "concentration": 0.836,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12214,
+          2.00892
+        ]
+      },
+      "properties": {
+        "concentration": 0.841,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.17193,
+          1.90356
+        ]
+      },
+      "properties": {
+        "concentration": 0.836,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12882,
+          1.97556
+        ]
+      },
+      "properties": {
+        "concentration": 0.863,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.05321,
+          2.00137
+        ]
+      },
+      "properties": {
+        "concentration": 0.819,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.15646,
+          1.1663
+        ]
+      },
+      "properties": {
+        "concentration": 0.203,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.15725,
+          1.43616
+        ]
+      },
+      "properties": {
+        "concentration": 0.306,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.22171,
+          1.77837
+        ]
+      },
+      "properties": {
+        "concentration": 0.433,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.15352,
+          2.06272
+        ]
+      },
+      "properties": {
+        "concentration": 0.425,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.22369,
+          2.41746
+        ]
+      },
+      "properties": {
+        "concentration": 0.522,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.23666,
+          2.64614
+        ]
+      },
+      "properties": {
+        "concentration": 0.705,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.27832,
+          3.0224
+        ]
+      },
+      "properties": {
+        "concentration": 0.909,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.22954,
+          3.35486
+        ]
+      },
+      "properties": {
+        "concentration": 0.863,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.45665,
+          1.12514
+        ]
+      },
+      "properties": {
+        "concentration": 0.315,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.46284,
+          1.45376
+        ]
+      },
+      "properties": {
+        "concentration": 0.522,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.56022,
+          1.77035
+        ]
+      },
+      "properties": {
+        "concentration": 0.677,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.4833,
+          2.16633
+        ]
+      },
+      "properties": {
+        "concentration": 0.604,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.46238,
+          2.35946
+        ]
+      },
+      "properties": {
+        "concentration": 0.56,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.46204,
+          2.71353
+        ]
+      },
+      "properties": {
+        "concentration": 0.858,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.7839,
+          1.15509
+        ]
+      },
+      "properties": {
+        "concentration": 0.472,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.80152,
+          1.43455
+        ]
+      },
+      "properties": {
+        "concentration": 0.604,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.73754,
+          1.82039
+        ]
+      },
+      "properties": {
+        "concentration": 0.789,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.78755,
+          2.03016
+        ]
+      },
+      "properties": {
+        "concentration": 0.79,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.87938,
+          2.40466
+        ]
+      },
+      "properties": {
+        "concentration": 0.703,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.85772,
+          2.62184
+        ]
+      },
+      "properties": {
+        "concentration": 0.737,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.82907,
+          3.00592
+        ]
+      },
+      "properties": {
+        "concentration": 0.914,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.82255,
+          3.23785
+        ]
+      },
+      "properties": {
+        "concentration": 0.93,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0926,
+          1.27261
+        ]
+      },
+      "properties": {
+        "concentration": 0.573,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.06214,
+          1.50009
+        ]
+      },
+      "properties": {
+        "concentration": 0.685,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.16602,
+          2.45928
+        ]
+      },
+      "properties": {
+        "concentration": 0.631,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.12223,
+          2.71744
+        ]
+      },
+      "properties": {
+        "concentration": 0.618,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.142,
+          3.0063
+        ]
+      },
+      "properties": {
+        "concentration": 0.744,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.10486,
+          3.22009
+        ]
+      },
+      "properties": {
+        "concentration": 0.75,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.32312,
+          1.26866
+        ]
+      },
+      "properties": {
+        "concentration": 0.529,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.45307,
+          1.4692
+        ]
+      },
+      "properties": {
+        "concentration": 0.551,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.46048,
+          1.87151
+        ]
+      },
+      "properties": {
+        "concentration": 0.683,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.39776,
+          2.03107
+        ]
+      },
+      "properties": {
+        "concentration": 0.756,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.44253,
+          2.34054
+        ]
+      },
+      "properties": {
+        "concentration": 0.616,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.40797,
+          2.66241
+        ]
+      },
+      "properties": {
+        "concentration": 0.47,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.3877,
+          2.95389
+        ]
+      },
+      "properties": {
+        "concentration": 0.52,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.43679,
+          3.25218
+        ]
+      },
+      "properties": {
+        "concentration": 0.475,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.77922,
+          1.22398
+        ]
+      },
+      "properties": {
+        "concentration": 0.298,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.70281,
+          1.43936
+        ]
+      },
+      "properties": {
+        "concentration": 0.415,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.67409,
+          1.81413
+        ]
+      },
+      "properties": {
+        "concentration": 0.545,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.65523,
+          2.03136
+        ]
+      },
+      "properties": {
+        "concentration": 0.586,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.65663,
+          2.46487
+        ]
+      },
+      "properties": {
+        "concentration": 0.468,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.63134,
+          2.65808
+        ]
+      },
+      "properties": {
+        "concentration": 0.375,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.65428,
+          2.94117
+        ]
+      },
+      "properties": {
+        "concentration": 0.344,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.71137,
+          3.29563
+        ]
+      },
+      "properties": {
+        "concentration": 0.301,
+        "belt": "Kilo-Moto"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.9438,
+          1.6557
+        ]
+      },
+      "properties": {
+        "concentration": 0.718,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.85345,
+          1.71166
+        ]
+      },
+      "properties": {
+        "concentration": 0.748,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.92498,
+          1.77161
+        ]
+      },
+      "properties": {
+        "concentration": 0.776,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.77362,
+          1.70663
+        ]
+      },
+      "properties": {
+        "concentration": 0.733,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.9568,
+          1.66968
+        ]
+      },
+      "properties": {
+        "concentration": 0.723,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.85767,
+          1.71125
+        ]
+      },
+      "properties": {
+        "concentration": 0.736,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.25079,
+          0.99318
+        ]
+      },
+      "properties": {
+        "concentration": 0.328,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.14607,
+          1.35991
+        ]
+      },
+      "properties": {
+        "concentration": 0.416,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.49828,
+          0.96565
+        ]
+      },
+      "properties": {
+        "concentration": 0.367,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.48548,
+          1.35824
+        ]
+      },
+      "properties": {
+        "concentration": 0.555,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.49076,
+          1.95488
+        ]
+      },
+      "properties": {
+        "concentration": 0.651,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.52621,
+          2.15858
+        ]
+      },
+      "properties": {
+        "concentration": 0.548,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.80506,
+          1.32976
+        ]
+      },
+      "properties": {
+        "concentration": 0.613,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.80034,
+          1.94233
+        ]
+      },
+      "properties": {
+        "concentration": 0.694,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.0623,
+          1.0114
+        ]
+      },
+      "properties": {
+        "concentration": 0.45,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.05439,
+          1.34683
+        ]
+      },
+      "properties": {
+        "concentration": 0.615,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.11433,
+          1.59031
+        ]
+      },
+      "properties": {
+        "concentration": 0.7,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.15216,
+          1.86451
+        ]
+      },
+      "properties": {
+        "concentration": 0.695,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.08749,
+          2.2206
+        ]
+      },
+      "properties": {
+        "concentration": 0.556,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.43022,
+          0.94871
+        ]
+      },
+      "properties": {
+        "concentration": 0.305,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.36558,
+          1.87182
+        ]
+      },
+      "properties": {
+        "concentration": 0.606,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.65893,
+          1.34005
+        ]
+      },
+      "properties": {
+        "concentration": 0.367,
+        "belt": "Ngayu"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.62188,
+          -2.7939
+        ]
+      },
+      "properties": {
+        "concentration": 0.822,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.77921,
+          -2.76466
+        ]
+      },
+      "properties": {
+        "concentration": 0.818,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.6477,
+          -2.96431
+        ]
+      },
+      "properties": {
+        "concentration": 0.839,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.68536,
+          -2.84484
+        ]
+      },
+      "properties": {
+        "concentration": 0.86,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.66886,
+          -2.83778
+        ]
+      },
+      "properties": {
+        "concentration": 0.831,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.73725,
+          -2.77272
+        ]
+      },
+      "properties": {
+        "concentration": 0.863,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.07215,
+          -3.06834
+        ]
+      },
+      "properties": {
+        "concentration": 0.779,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.05085,
+          -2.98493
+        ]
+      },
+      "properties": {
+        "concentration": 0.794,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.11287,
+          -2.9921
+        ]
+      },
+      "properties": {
+        "concentration": 0.798,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.15264,
+          -3.16768
+        ]
+      },
+      "properties": {
+        "concentration": 0.764,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.26195,
+          -2.95306
+        ]
+      },
+      "properties": {
+        "concentration": 0.789,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.6303,
+          -3.9902
+        ]
+      },
+      "properties": {
+        "concentration": 0.674,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.46059,
+          -4.05602
+        ]
+      },
+      "properties": {
+        "concentration": 0.717,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.62107,
+          -3.92343
+        ]
+      },
+      "properties": {
+        "concentration": 0.716,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.48042,
+          -4.07011
+        ]
+      },
+      "properties": {
+        "concentration": 0.67,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.61723,
+          -3.91781
+        ]
+      },
+      "properties": {
+        "concentration": 0.686,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.35159,
+          -2.25625
+        ]
+      },
+      "properties": {
+        "concentration": 0.257,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.32839,
+          -3.22014
+        ]
+      },
+      "properties": {
+        "concentration": 0.419,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.33448,
+          -4.44703
+        ]
+      },
+      "properties": {
+        "concentration": 0.579,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.63799,
+          -2.30476
+        ]
+      },
+      "properties": {
+        "concentration": 0.344,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.54284,
+          -2.93682
+        ]
+      },
+      "properties": {
+        "concentration": 0.531,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.61698,
+          -3.81204
+        ]
+      },
+      "properties": {
+        "concentration": 0.7,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.65271,
+          -4.44616
+        ]
+      },
+      "properties": {
+        "concentration": 0.605,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.9555,
+          -2.02814
+        ]
+      },
+      "properties": {
+        "concentration": 0.256,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.92743,
+          -2.32236
+        ]
+      },
+      "properties": {
+        "concentration": 0.46,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.88622,
+          -2.59081
+        ]
+      },
+      "properties": {
+        "concentration": 0.589,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.95107,
+          -3.19539
+        ]
+      },
+      "properties": {
+        "concentration": 0.762,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.8484,
+          -4.08029
+        ]
+      },
+      "properties": {
+        "concentration": 0.629,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.94176,
+          -4.37363
+        ]
+      },
+      "properties": {
+        "concentration": 0.52,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.18901,
+          -2.01171
+        ]
+      },
+      "properties": {
+        "concentration": 0.299,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.19045,
+          -2.24716
+        ]
+      },
+      "properties": {
+        "concentration": 0.447,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.20575,
+          -3.55995
+        ]
+      },
+      "properties": {
+        "concentration": 0.609,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.2096,
+          -3.78144
+        ]
+      },
+      "properties": {
+        "concentration": 0.474,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.16564,
+          -4.10322
+        ]
+      },
+      "properties": {
+        "concentration": 0.506,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.45018,
+          -1.99815
+        ]
+      },
+      "properties": {
+        "concentration": 0.384,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.53821,
+          -2.26986
+        ]
+      },
+      "properties": {
+        "concentration": 0.588,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.4639,
+          -2.65707
+        ]
+      },
+      "properties": {
+        "concentration": 0.741,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.54197,
+          -2.95126
+        ]
+      },
+      "properties": {
+        "concentration": 0.808,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.52356,
+          -3.50067
+        ]
+      },
+      "properties": {
+        "concentration": 0.568,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.53012,
+          -4.06759
+        ]
+      },
+      "properties": {
+        "concentration": 0.365,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.46111,
+          -4.34504
+        ]
+      },
+      "properties": {
+        "concentration": 0.51,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.7699,
+          -1.9582
+        ]
+      },
+      "properties": {
+        "concentration": 0.378,
+        "belt": "Twangiza-Namoya"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.78263,
+          -4.76885
+        ]
+      },
+      "properties": {
+        "concentration": 0.668,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.74149,
+          -4.67467
+        ]
+      },
+      "properties": {
+        "concentration": 0.659,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.72392,
+          -4.82779
+        ]
+      },
+      "properties": {
+        "concentration": 0.633,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.76304,
+          -4.7062
+        ]
+      },
+      "properties": {
+        "concentration": 0.648,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.76042,
+          -4.8241
+        ]
+      },
+      "properties": {
+        "concentration": 0.622,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.97261,
+          -4.22163
+        ]
+      },
+      "properties": {
+        "concentration": 0.567,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.96775,
+          -4.47673
+        ]
+      },
+      "properties": {
+        "concentration": 0.492,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.98891,
+          -4.79489
+        ]
+      },
+      "properties": {
+        "concentration": 0.379,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.99042,
+          -5.05142
+        ]
+      },
+      "properties": {
+        "concentration": 0.361,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.24071,
+          -4.81779
+        ]
+      },
+      "properties": {
+        "concentration": 0.531,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.6297,
+          -4.19446
+        ]
+      },
+      "properties": {
+        "concentration": 0.474,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.56633,
+          -4.5077
+        ]
+      },
+      "properties": {
+        "concentration": 0.565,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.6215,
+          -5.11148
+        ]
+      },
+      "properties": {
+        "concentration": 0.554,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.55532,
+          -5.38533
+        ]
+      },
+      "properties": {
+        "concentration": 0.41,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.90773,
+          -4.25675
+        ]
+      },
+      "properties": {
+        "concentration": 0.497,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.8954,
+          -4.55397
+        ]
+      },
+      "properties": {
+        "concentration": 0.598,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.87922,
+          -4.76865
+        ]
+      },
+      "properties": {
+        "concentration": 0.629,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.14983,
+          -4.25767
+        ]
+      },
+      "properties": {
+        "concentration": 0.428,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.21802,
+          -4.76625
+        ]
+      },
+      "properties": {
+        "concentration": 0.526,
+        "belt": "Kibara"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.31962,
+          -4.58777
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.57573,
+          -2.99832
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.33078,
+          -1.68032
+        ]
+      },
+      "properties": {
+        "concentration": 0.016,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          17.10067,
+          -2.43565
+        ]
+      },
+      "properties": {
+        "concentration": 0.015,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          21.26872,
+          0.69158
+        ]
+      },
+      "properties": {
+        "concentration": 0.028,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.76486,
+          0.91541
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.10641,
+          2.7749
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          18.12901,
+          0.0456
+        ]
+      },
+      "properties": {
+        "concentration": 0.011,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          23.57635,
+          -2.23886
+        ]
+      },
+      "properties": {
+        "concentration": 0.016,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          24.21018,
+          -0.43975
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          22.29031,
+          -3.33042
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          24.95703,
+          -1.07766
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          24.40474,
+          1.20975
+        ]
+      },
+      "properties": {
+        "concentration": 0.019,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          22.76332,
+          0.77647
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          22.69722,
+          -4.87561
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          25.64028,
+          -2.72072
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.18492,
+          -6.4771
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.96134,
+          -6.86138
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.71103,
+          -6.30156
+        ]
+      },
+      "properties": {
+        "concentration": 0.043,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.72898,
+          -8.15368
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.5662,
+          -9.57261
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.21057,
+          -8.1909
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          25.6787,
+          -10.0958
+        ]
+      },
+      "properties": {
+        "concentration": 0.023,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.12071,
+          -11.13424
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          22.26884,
+          2.75137
+        ]
+      },
+      "properties": {
+        "concentration": 0.013,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          23.99315,
+          3.6549
+        ]
+      },
+      "properties": {
+        "concentration": 0.011,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.08754,
+          2.49449
+        ]
+      },
+      "properties": {
+        "concentration": 0.037,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.75583,
+          3.83296
+        ]
+      },
+      "properties": {
+        "concentration": 0.012,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          24.88372,
+          3.04893
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          23.51855,
+          4.4553
+        ]
+      },
+      "properties": {
+        "concentration": 0.015,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.39847,
+          -0.87829
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.85084,
+          -0.22761
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.97173,
+          -5.47848
+        ]
+      },
+      "properties": {
+        "concentration": 0.394,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.31109,
+          -7.67017
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.13475,
+          -5.21404
+        ]
+      },
+      "properties": {
+        "concentration": 0.148,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.3698,
+          -4.23968
+        ]
+      },
+      "properties": {
+        "concentration": 0.156,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          25.83649,
+          -1.69234
+        ]
+      },
+      "properties": {
+        "concentration": 0.01,
+        "belt": "Background"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.52048,
+          0.36459
+        ]
+      },
+      "properties": {
+        "concentration": 0.139,
+        "belt": "Background"
+      }
+    }
+  ]
+}

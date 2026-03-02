@@ -1,1 +1,1 @@
-export type ScreenType = 'home' | 'explorer' | 'evaluator' | 'builder' | 'simulation' | 'feature' | 'repo';
+export type ScreenType = 'home' | 'explorer' | 'evaluator' | 'builder' | 'simulation' | 'feature' | 'repo' | 'pursuit' | 'agents';

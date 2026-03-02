@@ -32,7 +32,7 @@ export interface LayerState {
 
 export interface MapLayerSpec {
   id: string;
-  type: 'fill' | 'line' | 'circle' | 'symbol';
+  type: 'fill' | 'line' | 'circle' | 'symbol' | 'heatmap' | 'fill-extrusion' | 'sky';
   paint: Record<string, unknown>;
   layout?: Record<string, unknown>;
   filter?: unknown[];
