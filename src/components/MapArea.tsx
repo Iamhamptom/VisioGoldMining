@@ -1,6 +1,6 @@
 import { Search } from 'lucide-react';
 import { motion } from 'motion/react';
-import { ScreenType } from '../App';
+import { ScreenType } from '@/lib/types/screen';
 import GlobeMap from './map/GlobeMap';
 import MapControls from './map/MapControls';
 import LayerToggle from './map/LayerToggle';

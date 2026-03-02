@@ -10,7 +10,8 @@ import { MapProvider } from './hooks/useMap';
 import { SelectionProvider } from './hooks/useFeatureSelection';
 import type { SelectedFeature } from './lib/types/layers';
 
-export type ScreenType = 'home' | 'explorer' | 'evaluator' | 'builder' | 'simulation' | 'feature' | 'repo';
+import type { ScreenType } from './lib/types/screen';
+export type { ScreenType };
 
 const BackgroundEffects = () => {
   const particles = useMemo(() => Array.from({ length: 40 }).map((_, i) => ({

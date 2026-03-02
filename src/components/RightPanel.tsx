@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { ScreenType } from '../App';
+import { ScreenType } from '@/lib/types/screen';
 import GlobeHome from './screens/GlobeHome';
 import OpportunityExplorer from './screens/OpportunityExplorer';
 import ProjectEvaluator from './screens/ProjectEvaluator';

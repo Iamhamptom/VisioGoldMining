@@ -3,9 +3,7 @@ import type { Config } from 'tailwindcss';
 const config: Config = {
   darkMode: ['class'],
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -43,6 +41,20 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        gold: {
+          DEFAULT: '#D4AF37',
+          glow: 'rgba(212, 175, 55, 0.5)',
+        },
+        'bg-dark': '#000000',
+        'bg-panel': 'rgba(10, 10, 10, 0.4)',
+        'border-panel': 'rgba(255, 255, 255, 0.08)',
+        'text-main': '#FFFFFF',
+        'text-muted-explorer': '#888888',
+      },
+      fontFamily: {
+        sans: ['Rajdhani', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Orbitron', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       borderRadius: {
         lg: 'var(--radius)',

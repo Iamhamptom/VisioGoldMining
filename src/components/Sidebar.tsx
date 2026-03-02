@@ -1,7 +1,7 @@
 import React from 'react';
 import { Globe, Compass, FileSearch, HardHat, LineChart, Settings } from 'lucide-react';
 import { motion } from 'motion/react';
-import { ScreenType } from '../App';
+import { ScreenType } from '@/lib/types/screen';
 
 interface SidebarProps {
   activeScreen: ScreenType;

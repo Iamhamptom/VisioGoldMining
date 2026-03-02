@@ -3,10 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/auth-provider';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowRight } from 'lucide-react';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -23,7 +20,7 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
-      router.push('/repos');
+      router.push('/explorer');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
@@ -32,42 +29,68 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-muted/30">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl">VisioGold DRC</CardTitle>
-          <CardDescription>Sign in to your account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="flex items-center justify-center min-h-screen bg-black relative overflow-hidden">
+      {/* Ambient background */}
+      <div className="ambient-energy" />
+
+      <div className="relative z-10 w-full max-w-md px-6">
+        {/* Logo */}
+        <div className="flex items-center justify-center gap-4 mb-10">
+          <div className="w-14 h-14 relative flex items-center justify-center">
+            <div className="absolute inset-0 border border-gold/50 rotate-45 gold-glow bg-gold/5"></div>
+            <div className="absolute inset-2 border border-gold/20 rotate-45"></div>
+            <span className="text-gold font-display font-bold text-xl tracking-tighter relative z-10 icon-shine">VG</span>
+          </div>
+          <div>
+            <h1 className="text-2xl font-display font-bold text-white tracking-wider">VisioGold</h1>
+            <p className="text-xs text-gray-500 uppercase tracking-widest font-display">Secure Access</p>
+          </div>
+        </div>
+
+        {/* Login Card */}
+        <div className="glass-panel rounded-2xl p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
+              <label htmlFor="email" className="text-sm text-gray-400 uppercase tracking-wider font-display">
+                Email
+              </label>
+              <input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@visiogold.com"
                 required
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-600 outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/30 transition-all"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
+              <label htmlFor="password" className="text-sm text-gray-400 uppercase tracking-wider font-display">
+                Password
+              </label>
+              <input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-600 outline-none focus:border-gold/50 focus:ring-1 focus:ring-gold/30 transition-all"
               />
             </div>
-            {error && <p className="text-sm text-destructive">{error}</p>}
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In'}
-            </Button>
+            {error && (
+              <p className="text-sm text-red-400 bg-red-400/10 px-3 py-2 rounded-lg border border-red-400/20">{error}</p>
+            )}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-gold text-black font-display font-bold uppercase tracking-widest text-sm gold-glow hover:bg-yellow-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Authenticating...' : 'Sign In'}
+              {!loading && <ArrowRight size={16} strokeWidth={2} />}
+            </button>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

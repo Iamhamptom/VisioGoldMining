@@ -6,6 +6,13 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.geojson$/,
+      type: 'json',
+    });
+    return config;
+  },
   // Proxy Express-specific API routes that Next.js doesn't handle.
   // Next.js file-based API routes (auth, repos, branches, commits, artifacts,
   // workspaces) are matched first. Any unmatched /api/* path falls through to

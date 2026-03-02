@@ -1,22 +1,34 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { useAuth } from '@/context/auth-provider';
 
-export default function Home() {
-  const { token, isLoading } = useAuth();
-  const router = useRouter();
+const LandingPage = dynamic(() => import('@/components/LandingPage'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-screen w-screen bg-black">
+      <div className="text-gold font-display text-lg tracking-widest animate-pulse">
+        Loading...
+      </div>
+    </div>
+  ),
+});
 
-  useEffect(() => {
-    if (!isLoading) {
-      router.replace(token ? '/repos' : '/login');
+export default function Home() {
+  const { token } = useAuth();
+
+  const handleEnter = () => {
+    if (token) {
+      window.location.href = '/explorer';
+    } else {
+      window.location.href = '/login';
     }
-  }, [token, isLoading, router]);
+  };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <p className="text-muted-foreground">Loading...</p>
+    <div className="bg-black w-screen h-screen overflow-hidden relative">
+      <div className="ambient-energy" />
+      <LandingPage onEnter={handleEnter} />
     </div>
   );
 }
