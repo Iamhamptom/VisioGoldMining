@@ -6,6 +6,12 @@ import pool from './pool.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export async function runMigrations() {
+  // Ensure search_path is set for this session (covers serverless cold starts)
+  const schema = process.env.DB_SCHEMA || 'visiogold';
+  if (process.env.DATABASE_URL) {
+    await pool.query(`SET search_path TO ${schema}, extensions, public`);
+  }
+
   await pool.query(`
     CREATE TABLE IF NOT EXISTS _migrations (
       name TEXT PRIMARY KEY,

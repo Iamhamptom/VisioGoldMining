@@ -4,6 +4,13 @@ const sslConfig = process.env.DATABASE_URL && !process.env.DATABASE_URL.includes
   ? { rejectUnauthorized: false }
   : false;
 
+// When using a managed DB (Supabase), route all queries to the visiogold schema
+// so tables are isolated from other apps sharing the same database.
+const SCHEMA_SEARCH_PATH = process.env.DB_SCHEMA || 'visiogold';
+const searchPathOption = process.env.DATABASE_URL
+  ? { options: `-c search_path=${SCHEMA_SEARCH_PATH},extensions,public` }
+  : {};
+
 // Application pool — uses the visiogold_app role (RLS enforced)
 // Supports DATABASE_URL for managed Postgres (Vercel, Neon, Supabase)
 const pool = process.env.DATABASE_URL
@@ -13,6 +20,7 @@ const pool = process.env.DATABASE_URL
       max: parseInt(process.env.DB_POOL_MAX || '20'),
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 5000,
+      ...searchPathOption,
     })
   : new Pool({
       host: process.env.DB_HOST || 'localhost',
@@ -35,6 +43,7 @@ const adminPool = process.env.DATABASE_URL
       max: parseInt(process.env.DB_ADMIN_POOL_MAX || '5'),
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 5000,
+      ...searchPathOption,
     })
   : new Pool({
       host: process.env.DB_HOST || 'localhost',
