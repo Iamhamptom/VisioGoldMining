@@ -6,25 +6,24 @@ import { ArrowRight, Globe, Compass, HardHat, LineChart, Sparkles, Shield } from
 export default function LandingPage({ onEnter }: { onEnter: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Gold dust / star particles
-  const stars = useMemo(() => Array.from({ length: 60 }).map((_, i) => ({
+  // Twinkling gold stars — bigger, brighter
+  const stars = useMemo(() => Array.from({ length: 80 }).map((_, i) => ({
     id: i,
     left: `${Math.random() * 100}%`,
     top: `${Math.random() * 100}%`,
-    size: `${1 + Math.random() * 3}px`,
-    animationDuration: `${3 + Math.random() * 6}s`,
-    animationDelay: `${Math.random() * 5}s`,
-    opacity: 0.2 + Math.random() * 0.6,
+    size: 2 + Math.random() * 4,
+    animationDuration: `${2 + Math.random() * 5}s`,
+    animationDelay: `${Math.random() * 4}s`,
+    opacity: 0.3 + Math.random() * 0.7,
   })), []);
 
-  // Floating particles (rising gold dust)
-  const floatingDust = useMemo(() => Array.from({ length: 30 }).map((_, i) => ({
+  // Rising gold dust
+  const floatingDust = useMemo(() => Array.from({ length: 40 }).map((_, i) => ({
     id: i,
     left: `${Math.random() * 100}%`,
-    animationDuration: `${12 + Math.random() * 20}s`,
-    animationDelay: `-${Math.random() * 20}s`,
-    width: `${1 + Math.random() * 2}px`,
-    height: `${1 + Math.random() * 2}px`,
+    animationDuration: `${10 + Math.random() * 18}s`,
+    animationDelay: `-${Math.random() * 18}s`,
+    size: 2 + Math.random() * 3,
   })), []);
 
   useEffect(() => {
@@ -53,16 +52,16 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
       mapBrightness: 6,
       baseColor: [0.1, 0.1, 0.1],
       markerColor: [0.83, 0.68, 0.21],
-      glowColor: [0.08, 0.06, 0.02],
+      glowColor: [0.12, 0.09, 0.03],
       markers: [
-        { location: [-4.0383, 21.7587], size: 0.12 }, // DRC center
-        { location: [-3.43, 29.22], size: 0.06 },     // Kibali region
-        { location: [-11.67, 27.47], size: 0.06 },    // Katanga
-        { location: [-2.5, 28.86], size: 0.06 },      // North Kivu
+        { location: [-4.0383, 21.7587], size: 0.12 },
+        { location: [-3.43, 29.22], size: 0.06 },
+        { location: [-11.67, 27.47], size: 0.06 },
+        { location: [-2.5, 28.86], size: 0.06 },
       ],
       onRender: (state) => {
         state.phi = phi;
-        phi += 0.003;
+        phi += 0.004;
         state.width = width * 2;
         state.height = width * 2;
       }
@@ -83,8 +82,9 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
 
   return (
     <div className="relative w-screen h-screen bg-transparent overflow-hidden">
-      {/* ── Gold dust stars ── */}
-      <div className="absolute inset-0 pointer-events-none z-0">
+
+      {/* ── Twinkling gold stars / dust ── */}
+      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 2 }}>
         {stars.map(s => (
           <div
             key={s.id}
@@ -92,77 +92,78 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
             style={{
               left: s.left,
               top: s.top,
-              width: s.size,
-              height: s.size,
+              width: `${s.size}px`,
+              height: `${s.size}px`,
               background: `rgba(212, 175, 55, ${s.opacity})`,
-              boxShadow: `0 0 ${parseInt(s.size) * 4}px rgba(212, 175, 55, ${s.opacity * 0.8})`,
+              boxShadow: `0 0 ${s.size * 6}px rgba(212, 175, 55, ${s.opacity}), 0 0 ${s.size * 2}px rgba(212, 175, 55, ${s.opacity * 0.5})`,
               animation: `star-twinkle ${s.animationDuration} ${s.animationDelay} infinite alternate ease-in-out`,
             }}
           />
         ))}
       </div>
 
-      {/* ── Floating gold dust (rising) ── */}
-      <div className="particles-container">
+      {/* ── Rising gold particles ── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 2 }}>
         {floatingDust.map(p => (
           <div
             key={p.id}
-            className="particle"
+            className="absolute rounded-full"
             style={{
               left: p.left,
-              width: p.width,
-              height: p.height,
-              animationDuration: p.animationDuration,
-              animationDelay: p.animationDelay,
+              width: `${p.size}px`,
+              height: `${p.size}px`,
+              background: 'rgba(212, 175, 55, 0.6)',
+              boxShadow: `0 0 ${p.size * 5}px rgba(212, 175, 55, 0.7), 0 0 ${p.size * 10}px rgba(212, 175, 55, 0.3)`,
+              animation: `float-up ${p.animationDuration} ${p.animationDelay} infinite linear`,
             }}
           />
         ))}
       </div>
 
       {/* ── Sonic wave rings ── */}
-      <div className="sonic-waves-container">
+      <div className="sonic-waves-container" style={{ zIndex: 1 }}>
         <div className="sonic-wave" />
         <div className="sonic-wave" />
         <div className="sonic-wave" />
         <div className="sonic-wave" />
       </div>
 
-      {/* ── Background Globe — right side, 50% more visible ── */}
+      {/* ── Globe — centered right, large & visible ── */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.85 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 2, ease: 'easeOut' }}
-        className="absolute inset-0 flex items-center pointer-events-none"
-        style={{ justifyContent: 'flex-end', paddingRight: '5%' }}
+        transition={{ duration: 2.5, ease: 'easeOut' }}
+        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        style={{ zIndex: 1, transform: 'translateX(18%)' }}
       >
         <div className="relative">
           <canvas
             ref={canvasRef}
-            style={{ width: '750px', height: '750px', maxWidth: '55vw', aspectRatio: '1' }}
+            style={{ width: '800px', height: '800px', maxWidth: '60vw', aspectRatio: '1' }}
           />
-          {/* Gold glow behind globe */}
+          {/* Gold glow aura behind globe */}
           <div
             className="absolute inset-0 rounded-full"
             style={{
-              background: 'radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 60%)',
-              transform: 'scale(1.3)',
+              background: 'radial-gradient(circle, rgba(212,175,55,0.12) 0%, rgba(212,175,55,0.04) 40%, transparent 65%)',
+              transform: 'scale(1.5)',
             }}
           />
         </div>
       </motion.div>
 
       {/* ── Main Content ── */}
-      <div className="relative z-10 w-full h-full flex">
-        {/* Left side content */}
+      <div className="relative w-full h-full flex" style={{ zIndex: 10 }}>
         <div className="w-full lg:w-[55%] h-full flex flex-col justify-center px-8 lg:px-16">
+
           {/* Logo badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
             className="flex items-center gap-5 mb-8"
           >
-            <div className="w-16 h-16 relative flex items-center justify-center group">
+            <div className="w-16 h-16 relative flex items-center justify-center group cursor-pointer">
               <div className="absolute inset-0 border border-gold/50 rotate-45 gold-glow bg-gold/5 group-hover:rotate-90 transition-transform duration-700"></div>
               <div className="absolute inset-2 border border-gold/20 rotate-45 group-hover:-rotate-45 transition-transform duration-700"></div>
               <span className="text-gold font-display font-bold text-2xl tracking-tighter relative z-10 icon-shine gold-text-alive">VG</span>
@@ -181,17 +182,17 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.4 }}
+            transition={{ duration: 1, delay: 0.5 }}
             className="text-6xl md:text-8xl font-display font-light tracking-widest text-white mb-6 leading-none uppercase text-alive"
           >
-            Visio<span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-gold to-yellow-200 icon-shine gold-text-alive">Gold</span>
+            Visio<span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-gold to-yellow-200 gold-text-alive">Gold</span>
           </motion.h1>
 
           {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
             className="text-lg text-gray-400 mb-10 max-w-xl leading-relaxed font-medium"
           >
             The premier AI-powered mining intelligence platform for the Democratic Republic of the Congo.
@@ -199,12 +200,7 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
           </motion.p>
 
           {/* Journey steps */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-            className="grid grid-cols-2 gap-4 mb-10 max-w-xl"
-          >
+          <div className="grid grid-cols-2 gap-4 mb-10 max-w-xl">
             {journeySteps.map((step, i) => {
               const Icon = step.icon;
               return (
@@ -213,27 +209,27 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: 1.0 + i * 0.15 }}
-                  className="glass-panel rounded-xl p-4 group hover:border-gold/30 transition-all duration-500"
+                  className="glass-panel synthetic-energy rounded-xl p-4 group hover:border-gold/30 transition-all duration-500 cursor-default"
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <Icon size={18} className="text-gold icon-shine group-hover:scale-110 transition-transform" strokeWidth={1.5} />
-                    <span className="text-white font-display font-semibold text-sm uppercase tracking-wider">{step.title}</span>
+                    <span className="text-white font-display font-semibold text-sm uppercase tracking-wider gold-text-alive">{step.title}</span>
                   </div>
                   <p className="text-gray-500 text-xs leading-relaxed">{step.desc}</p>
                 </motion.div>
               );
             })}
-          </motion.div>
+          </div>
 
           {/* CTA */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.6 }}
-            className="flex items-center gap-6"
+            transition={{ duration: 0.8, delay: 1.7 }}
+            className="flex items-center gap-6 flex-wrap"
           >
             <motion.button
-              whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(212, 175, 55, 0.4)' }}
+              whileHover={{ scale: 1.05, boxShadow: '0 0 50px rgba(212, 175, 55, 0.5)' }}
               whileTap={{ scale: 0.95 }}
               onClick={onEnter}
               className="group relative inline-flex items-center gap-4 px-10 py-5 bg-gold text-black rounded-none font-display font-bold uppercase tracking-widest text-sm overflow-hidden gold-glow transition-all hover:bg-yellow-400"
@@ -258,24 +254,24 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 1 }}
-        className="absolute bottom-8 left-8 right-8 flex justify-between items-center z-10"
+        transition={{ delay: 2.2, duration: 1 }}
+        className="absolute bottom-8 left-8 right-8 flex justify-between items-center"
+        style={{ zIndex: 10 }}
       >
         <div className="flex gap-8">
           <div className="flex items-center gap-2 text-xs text-gray-500 uppercase tracking-widest font-mono">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]"></span>
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></span>
             Satellites Linked
           </div>
           <div className="flex items-center gap-2 text-xs text-gray-500 uppercase tracking-widest font-mono">
-            <span className="w-2 h-2 rounded-full bg-gold animate-pulse shadow-[0_0_8px_rgba(212,175,55,0.5)]"></span>
+            <span className="w-2 h-2 rounded-full bg-gold animate-pulse shadow-[0_0_8px_rgba(212,175,55,0.6)]"></span>
             AI Core Active
           </div>
           <div className="flex items-center gap-2 text-xs text-gray-500 uppercase tracking-widest font-mono">
-            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.5)]"></span>
+            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.6)]"></span>
             GIS Layers Ready
           </div>
         </div>
-
         <div className="text-xs text-gray-600 font-mono uppercase tracking-wider">
           v2.0 • DRC Mining Intelligence
         </div>
