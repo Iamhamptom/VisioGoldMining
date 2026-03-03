@@ -1,6 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Sparkles, ChevronDown, Crosshair, Eye, Radio, FileCheck, Plane, Languages } from 'lucide-react';
+import { Send, User, Sparkles, ChevronDown, Crosshair, Eye, Radio, FileCheck, Plane, Languages } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { usePursuit } from '../hooks/usePursuitContext';
+import { DRC_PROJECTS } from '../data/drc-projects';
+import { getProjectPursuitResponse } from '../lib/agents/project-pursuit-agent';
+import { getLocalIntelResponse } from '../lib/agents/local-intel-agent';
+import { getResearchDispatchResponse } from '../lib/agents/research-dispatch-agent';
+import { getPaperworkResponse } from '../lib/agents/paperwork-agent';
+import { getTripPlanningResponse } from '../lib/agents/trip-planning-agent';
+import { getLanguageResponse } from '../lib/agents/language-agent';
+import { extractContext } from '../lib/agents/agent-framework';
 
 type AgentId = 'general' | 'pursuit' | 'local-intel' | 'research' | 'paperwork' | 'trip' | 'language';
 
@@ -22,51 +31,51 @@ const AGENTS: AgentDef[] = [
   { id: 'language', name: 'Language', icon: Languages, color: '#FF6B9D', greeting: 'I can translate between French, Swahili, Lingala, and English. I also provide cultural communication guidance for DRC engagement.' },
 ];
 
+const GENERAL_RESPONSES = [
+  'Analyzing regional geological surveys and permit data for the requested area. I can see several active exploration permits in this zone.',
+  'Based on current market intelligence, the DRC gold sector shows strong growth potential. Shall I pull up specific project data?',
+  'I can see multiple layers of data for this region. Would you like me to focus on tenements, geology, or security events?',
+];
+
 interface Message {
   role: 'user' | 'assistant';
   text: string;
   agentId: AgentId;
 }
 
-const AGENT_RESPONSES: Record<AgentId, string[]> = {
-  general: [
-    'Analyzing regional geological surveys and permit data for the requested area. I can see several active exploration permits in this zone.',
-    'Based on current market intelligence, the DRC gold sector shows strong growth potential. Shall I pull up specific project data?',
-    'I can see multiple layers of data for this region. Would you like me to focus on tenements, geology, or security events?',
-  ],
-  pursuit: [
-    'For this project, I recommend starting with Phase 1: Reconnaissance & Desktop Study. This involves a CAMI cadastre search, satellite imagery analysis, and initial security assessment. Budget: $50K-$200K over 1-3 months.',
-    'Based on the project\'s current status, the next critical milestone is completing the NI 43-101 resource estimate. This typically requires 6-12 months of drilling and costs $5-15M.',
-    'Key risk for this phase: Community engagement must begin early. The DRC Mining Code requires a cahier des charges before exploitation permits can be granted.',
-  ],
-  'local-intel': [
-    'Intelligence report for this region: Security level is MEDIUM. Primary languages: French (official), Swahili (widely spoken), plus local Nande/Lendu dialects. Infrastructure: Limited road access, nearest airstrip 45km away.',
-    'Artisanal mining assessment: Approximately 12,000-18,000 artisanal miners operate in this area, organized into 5-7 cooperatives. Primary minerals: alluvial gold, some coltan. Conflict risk: MEDIUM-HIGH.',
-    'Key companies operating nearby: Three drilling contractors, two environmental consultancies, and several logistics firms. I can provide contact details and service reviews.',
-  ],
-  research: [
-    'Research dispatch order created: 3-person field team deployed. Team includes local geologist (Swahili/French bilingual), community liaison officer, and security escort. ETA: 48 hours. Budget: $8,500 for 2-week deployment.',
-    'Field research update: Team has collected 45 soil samples, photographed 12 artisanal sites, and interviewed 23 local miners. Preliminary results show anomalous gold values in stream sediments. Full report in 5 days.',
-    'I can commission additional ground work: options include detailed geological mapping ($5,000/week), geochemical sampling ($3,000/campaign), or community census ($2,500/territory).',
-  ],
-  paperwork: [
-    'PR (Permis de Recherches) application via CAMI: Required documents include technical exploration program, financial capability proof, environmental commitment letter, and company registration (DRC entity required). Processing time: 60-90 days. Total fees: ~$15,000-$30,000.',
-    'DRC Mining Code 2018 key obligations: 3.5% royalty on gold (paid quarterly), 30% corporate income tax, 10% free-carried State interest, 0.3% turnover to community development fund, ESIA required before exploitation.',
-    'For PE conversion, you need: completed ESIA, bankable feasibility study, proof of financial capacity, cahier des charges signed with local communities, and endorsement from provincial mining division.',
-  ],
-  trip: [
-    'Trip itinerary planned: Day 1: Kinshasa → Bunia (CAA/Congo Airways, departs 06:00, arrives 09:30). Day 2: Bunia → project site (4x4 convoy, 4-5 hours). Accommodation: Hotel Ituri in Bunia ($85/night). Security escort arranged through local provider.',
-    'Alternative route via Goma: Kinshasa → Goma (daily flights), then Goma → Bunia overland (8 hours, security escort mandatory). This route gives option to visit South Kivu projects en route. Total trip cost estimate: $15,000-$22,000 for 5-person team, 7 days.',
-    'Travel advisory: Carry copies of mining permits at all times. Register with MONUSCO if entering high-security zones. Satellite phone recommended. Malaria prophylaxis essential. Yellow fever certificate required.',
-  ],
-  language: [
-    'Community greeting in Swahili: "Habari za asubuhi, wazee na viongozi wetu. Tunashukuru kwa nafasi ya kuongea nanyi leo." (Good morning, elders and leaders. We are grateful for the opportunity to speak with you today.)',
-    'Cultural protocol: When addressing the chef de localité, use "Bwana Mkubwa" (respected chief). Present a small gift (locally sourced). Allow elders to speak first. Never rush to business — the greeting ceremony is essential for building trust.',
-    'Employment announcement template in French: "Avis de recrutement — La société [Company] recherche des travailleurs qualifiés pour son projet minier situé à [Location]. Postes disponibles: [roles]. Candidatures ouvertes du [date] au [date]."',
-  ],
-};
+function getAgentResponse(agentId: AgentId, message: string, projectId?: string | null, phase?: number): string {
+  const ctx = extractContext(message);
+
+  if (projectId) ctx.projectId = projectId;
+  if (phase !== undefined) ctx.currentPhase = phase;
+
+  if (ctx.projectId) {
+    const proj = DRC_PROJECTS.find(p => p.projectId === ctx.projectId);
+    if (proj && !ctx.province) {
+      ctx.province = proj.location.province;
+    }
+  }
+
+  switch (agentId) {
+    case 'pursuit':
+      return getProjectPursuitResponse(message, { projectId: ctx.projectId, currentPhase: ctx.currentPhase }).content;
+    case 'local-intel':
+      return getLocalIntelResponse(message, { province: ctx.province, territory: ctx.province }).content;
+    case 'research':
+      return getResearchDispatchResponse(message, { activeTaskCount: ctx.activeTaskCount }).content;
+    case 'paperwork':
+      return getPaperworkResponse(message, { permitType: ctx.permitType, currentStep: ctx.currentStep }).content;
+    case 'trip':
+      return getTripPlanningResponse(message, { destination: ctx.destination || ctx.province, teamSize: ctx.teamSize }).content;
+    case 'language':
+      return getLanguageResponse(message, { targetLanguage: ctx.targetLanguage }).content;
+    default:
+      return GENERAL_RESPONSES[Math.floor(Math.random() * GENERAL_RESPONSES.length)];
+  }
+}
 
 export default function ChatAgent() {
+  const { pursuit } = usePursuit();
   const [activeAgent, setActiveAgent] = useState<AgentId>('general');
   const [agentMenuOpen, setAgentMenuOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -81,26 +90,66 @@ export default function ChatAgent() {
     }
   }, [messages]);
 
+  // When pursuit becomes active, inject a context message
+  useEffect(() => {
+    if (pursuit.pursuitActive && pursuit.activeProjectId) {
+      const project = DRC_PROJECTS.find(p => p.projectId === pursuit.activeProjectId);
+      if (project) {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          text: `Pursuit mode active for **${project.name}** (${project.location.province}). All agents now have context on this project. Phase ${pursuit.activePhase + 1} — ${project.status.replace(/_/g, ' ')}. Ask me anything about this project.`,
+          agentId: 'general',
+        }]);
+      }
+    }
+  }, [pursuit.pursuitActive, pursuit.activeProjectId]);
+
   const currentAgent = AGENTS.find(a => a.id === activeAgent)!;
 
   const switchAgent = (id: AgentId) => {
     setActiveAgent(id);
     setAgentMenuOpen(false);
     const agent = AGENTS.find(a => a.id === id)!;
-    setMessages(prev => [...prev, { role: 'assistant', text: agent.greeting, agentId: id }]);
+
+    let greeting = agent.greeting;
+    if (pursuit.pursuitActive && pursuit.activeProjectId) {
+      const project = DRC_PROJECTS.find(p => p.projectId === pursuit.activeProjectId);
+      if (project) {
+        const contextGreetings: Record<string, string> = {
+          pursuit: `Active pursuit: ${project.name}. Currently in Phase ${pursuit.activePhase + 1}. I can advise on tasks, costs, risks, and next steps for this phase.`,
+          'local-intel': `Intelligence loaded for ${project.location.province}. ${project.name} is located near ${project.accessInfo.nearestCity}. Ask me about security, culture, or infrastructure in this area.`,
+          research: `Ready to deploy research teams near ${project.name} in ${project.location.province}. What field data do you need collected?`,
+          paperwork: `Regulatory context: ${project.name} has permits: ${project.permits.length > 0 ? project.permits.join(', ') : 'none on file'}. Current status: ${project.status.replace(/_/g, ' ')}. How can I help with regulatory matters?`,
+          trip: `Trip planning ready for ${project.name} in ${project.location.province}. Nearest city: ${project.accessInfo.nearestCity}${project.accessInfo.distanceKm ? ` (${project.accessInfo.distanceKm} km)` : ''}. Airstrip: ${project.accessInfo.airstrip ? 'Available' : 'Not available'}.`,
+          language: `Languages spoken near ${project.name}: ${project.localContext.languages.join(', ')}. I can help with translations, greetings, and cultural protocols for engagement in this area.`,
+        };
+        greeting = contextGreetings[id] || greeting;
+      }
+    }
+
+    setMessages(prev => [...prev, { role: 'assistant', text: greeting, agentId: id }]);
   };
 
   const handleSend = () => {
     if (!input.trim()) return;
-    setMessages(prev => [...prev, { role: 'user', text: input, agentId: activeAgent }]);
+    const userMsg = input.trim();
+    setMessages(prev => [...prev, { role: 'user', text: userMsg, agentId: activeAgent }]);
     setInput('');
 
     setTimeout(() => {
-      const responses = AGENT_RESPONSES[activeAgent];
-      const response = responses[Math.floor(Math.random() * responses.length)];
+      const response = getAgentResponse(
+        activeAgent,
+        userMsg,
+        pursuit.activeProjectId,
+        pursuit.activePhase,
+      );
       setMessages(prev => [...prev, { role: 'assistant', text: response, agentId: activeAgent }]);
-    }, 600 + Math.random() * 800);
+    }, 400 + Math.random() * 600);
   };
+
+  const pursuitProject = pursuit.pursuitActive && pursuit.activeProjectId
+    ? DRC_PROJECTS.find(p => p.projectId === pursuit.activeProjectId)
+    : null;
 
   return (
     <div className="flex flex-col h-full bg-transparent">
@@ -161,6 +210,24 @@ export default function ChatAgent() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Pursuit Context Bar */}
+      <AnimatePresence>
+        {pursuitProject && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="px-4 py-2 bg-gold/5 border-b border-gold/20 flex items-center gap-2">
+              <Crosshair size={10} className="text-gold" />
+              <span className="text-[10px] text-gold font-medium truncate">{pursuitProject.name}</span>
+              <span className="text-[9px] text-gray-500">Phase {pursuit.activePhase + 1}</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">

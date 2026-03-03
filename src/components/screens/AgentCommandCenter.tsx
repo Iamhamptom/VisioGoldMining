@@ -5,6 +5,15 @@ import {
   ChevronRight, Circle, Clock, CheckCircle2, AlertCircle,
   Send, Activity, Zap,
 } from 'lucide-react';
+import { usePursuit } from '../../hooks/usePursuitContext';
+import { DRC_PROJECTS } from '../../data/drc-projects';
+import { getProjectPursuitResponse } from '../../lib/agents/project-pursuit-agent';
+import { getLocalIntelResponse } from '../../lib/agents/local-intel-agent';
+import { getResearchDispatchResponse } from '../../lib/agents/research-dispatch-agent';
+import { getPaperworkResponse } from '../../lib/agents/paperwork-agent';
+import { getTripPlanningResponse } from '../../lib/agents/trip-planning-agent';
+import { getLanguageResponse } from '../../lib/agents/language-agent';
+import { extractContext } from '../../lib/agents/agent-framework';
 
 type AgentId = 'pursuit' | 'local-intel' | 'research' | 'paperwork' | 'trip' | 'language';
 
@@ -84,12 +93,17 @@ const AGENT_DEFS: AgentDef[] = [
 ];
 
 export default function AgentCommandCenter() {
+  const { pursuit } = usePursuit();
   const [selectedAgent, setSelectedAgent] = useState<AgentId | null>(null);
   const [tasks] = useState<Task[]>([
     { id: '1', agentId: 'research', description: 'Survey artisanal sites near Kamituga', status: 'in_progress', createdAt: '2024-12-15' },
     { id: '2', agentId: 'local-intel', description: 'Security assessment for Ituri province', status: 'completed', createdAt: '2024-12-14' },
     { id: '3', agentId: 'paperwork', description: 'PR application document review', status: 'pending', createdAt: '2024-12-16' },
   ]);
+
+  const pursuitProject = pursuit.pursuitActive && pursuit.activeProjectId
+    ? DRC_PROJECTS.find(p => p.projectId === pursuit.activeProjectId)
+    : null;
 
   const agent = AGENT_DEFS.find(a => a.id === selectedAgent);
 
@@ -109,6 +123,15 @@ export default function AgentCommandCenter() {
             </p>
           </div>
         </div>
+
+        {/* Pursuit Context */}
+        {pursuitProject && (
+          <div className="mt-3 px-3 py-2 rounded-lg bg-gold/5 border border-gold/20 flex items-center gap-2">
+            <Crosshair size={10} className="text-gold" />
+            <span className="text-[10px] text-gold font-medium truncate">Pursuit: {pursuitProject.name}</span>
+            <span className="text-[9px] text-gray-500 ml-auto">Phase {pursuit.activePhase + 1}</span>
+          </div>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto">
@@ -208,14 +231,14 @@ export default function AgentCommandCenter() {
             )}
           </div>
         ) : (
-          <AgentDetail agent={agent} onBack={() => setSelectedAgent(null)} tasks={tasks.filter(t => t.agentId === agent.id)} />
+          <AgentDetail agent={agent} onBack={() => setSelectedAgent(null)} tasks={tasks.filter(t => t.agentId === agent.id)} projectId={pursuit.activeProjectId} phase={pursuit.activePhase} />
         )}
       </div>
     </div>
   );
 }
 
-function AgentDetail({ agent, onBack, tasks }: { agent: AgentDef; onBack: () => void; tasks: Task[] }) {
+function AgentDetail({ agent, onBack, tasks, projectId, phase }: { agent: AgentDef; onBack: () => void; tasks: Task[]; projectId?: string | null; phase?: number }) {
   const [chatInput, setChatInput] = useState('');
   const [messages, setMessages] = useState<{ role: 'user' | 'agent'; text: string }[]>([
     { role: 'agent', text: `I'm the ${agent.name} agent. ${agent.role}. How can I assist you today?` },
@@ -229,39 +252,42 @@ function AgentDetail({ agent, onBack, tasks }: { agent: AgentDef; onBack: () => 
     setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
     setChatInput('');
 
-    // Simulate response
     setTimeout(() => {
-      const responses: Record<AgentId, string[]> = {
-        pursuit: [
-          'Based on the current project parameters, I recommend starting with Phase 1: Reconnaissance & Desktop Study. This typically takes 1-3 months and costs $50K-$200K. Let me outline the key deliverables...',
-          'For this phase, you will need a team of 3: an Exploration Manager, GIS Analyst, and Desktop Geologist. The primary focus will be CAMI cadastre search, satellite imagery review, and security assessment.',
-        ],
-        'local-intel': [
-          'Based on intelligence gathered for this region: Security level is assessed as MEDIUM. Main language is French (official) with Swahili widely spoken. There are approximately 15,000-20,000 artisanal miners operating in the area.',
-          'Key infrastructure: The nearest airport is in Bunia (regional flights from Kinshasa via CAA). Road conditions are poor during rainy season (Oct-May). Mobile network coverage is limited to town centers.',
-        ],
-        research: [
-          'Research dispatch order created. I will deploy a 3-person field team including a local geologist, community liaison, and security escort. Estimated timeline: 2-3 weeks. Budget: $8,500 USD.',
-          'Task dispatched. The local research team will collect soil samples, interview artisanal miners, and photograph access routes. Reports will be delivered in French with English translation.',
-        ],
-        paperwork: [
-          'For a PR (Permis de Recherches) in DRC, you need to apply through CAMI. The process involves: 1) Submit application with technical program, 2) Pay cadastral fees, 3) Await technical review (60-90 days), 4) Receive approval. Total cost: ~$15,000-$30,000.',
-          'The DRC Mining Code 2018 requires a 3.5% royalty on gold production, 30% corporate income tax, and 0.3% community development contribution. The State holds a 10% free-carried interest.',
-        ],
-        trip: [
-          'Trip plan from Kinshasa to the project site: Day 1: Kinshasa → Bunia (CAA flight, ~3hrs). Day 2: Bunia → site (4x4, ~4hrs). Accommodation: Hotel Ituri ($85/night) or Samaritan Lodge ($120/night). Security escort recommended.',
-          'I recommend a team of 4 for this trip: Project Manager, Geologist, Community Liaison, and Security Advisor. Total estimated trip cost: $12,000-$18,000 for a 5-day field visit including flights, vehicles, accommodation, and security.',
-        ],
-        language: [
-          'Key phrases for community engagement in Swahili:\n- "Habari" = Hello\n- "Tunakuja kwa amani" = We come in peace\n- "Tunataka kushirikiana na jamii" = We want to partner with the community\n- "Mkuu wa kijiji" = Village chief',
-          'Cultural note: When meeting with the chef de localité (local chief), it is customary to bring a small gift and greet elders first. Always address the chief formally. Allow time for traditional welcome ceremony before business discussions.',
-        ],
-      };
+      const ctx = extractContext(userMsg);
+      if (projectId) ctx.projectId = projectId;
+      if (phase !== undefined) ctx.currentPhase = phase;
 
-      const agentResponses = responses[agent.id] || ['Processing your request...'];
-      const response = agentResponses[Math.floor(Math.random() * agentResponses.length)];
+      if (ctx.projectId) {
+        const proj = DRC_PROJECTS.find(p => p.projectId === ctx.projectId);
+        if (proj && !ctx.province) ctx.province = proj.location.province;
+      }
+
+      let response: string;
+      switch (agent.id) {
+        case 'pursuit':
+          response = getProjectPursuitResponse(userMsg, { projectId: ctx.projectId, currentPhase: ctx.currentPhase }).content;
+          break;
+        case 'local-intel':
+          response = getLocalIntelResponse(userMsg, { province: ctx.province, territory: ctx.province }).content;
+          break;
+        case 'research':
+          response = getResearchDispatchResponse(userMsg, { activeTaskCount: ctx.activeTaskCount }).content;
+          break;
+        case 'paperwork':
+          response = getPaperworkResponse(userMsg, { permitType: ctx.permitType, currentStep: ctx.currentStep }).content;
+          break;
+        case 'trip':
+          response = getTripPlanningResponse(userMsg, { destination: ctx.destination || ctx.province, teamSize: ctx.teamSize }).content;
+          break;
+        case 'language':
+          response = getLanguageResponse(userMsg, { targetLanguage: ctx.targetLanguage }).content;
+          break;
+        default:
+          response = 'Processing your request...';
+      }
+
       setMessages(prev => [...prev, { role: 'agent', text: response }]);
-    }, 800);
+    }, 400 + Math.random() * 600);
   };
 
   return (
@@ -322,7 +348,7 @@ function AgentDetail({ agent, onBack, tasks }: { agent: AgentDef; onBack: () => 
                 onClick={() => { setChatInput(q); }}
                 className="block w-full text-left text-xs text-gray-400 hover:text-gold p-2 rounded-lg hover:bg-white/5 transition-colors"
               >
-                "{q}"
+                &ldquo;{q}&rdquo;
               </button>
             ))}
           </div>
