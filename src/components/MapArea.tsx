@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ScreenType } from '@/lib/types/screen';
 import { DRC_PROJECTS } from '@/data/drc-projects';
 import { useMapContext } from '@/hooks/useMap';
+import { useLayers } from '@/hooks/useLayers';
 import GlobeMap from './map/GlobeMap';
 import MapControls from './map/MapControls';
 import LayerToggle from './map/LayerToggle';
@@ -28,6 +29,10 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
   const [showResults, setShowResults] = useState(false);
   const [isSatellite, setIsSatellite] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+
+  // Layer management — lifted here so GlobeMap can read visibility
+  const { layerStates, toggleLayer, definitions } = useLayers();
+  const showProjectMarkers = layerStates.get('drc-projects')?.visible ?? true;
 
   // Filter projects as user types
   const handleSearch = useCallback((query: string) => {
@@ -79,13 +84,13 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
   return (
     <div className="absolute inset-0 bg-bg-dark overflow-hidden">
       {/* MapLibre Globe */}
-      <GlobeMap isSatellite={isSatellite} />
+      <GlobeMap isSatellite={isSatellite} showProjectMarkers={showProjectMarkers} />
 
       {/* Map Controls */}
       <MapControls isSatellite={isSatellite} onToggleSatellite={() => setIsSatellite(s => !s)} />
 
-      {/* Layer Toggle Panel */}
-      <LayerToggle />
+      {/* Layer Toggle Panel — receives layer state as props */}
+      <LayerToggle layerStates={layerStates} toggleLayer={toggleLayer} definitions={definitions} />
 
       {/* 3D Terrain Controls */}
       <TerrainControls />
@@ -96,7 +101,7 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="absolute top-6 left-1/2 -translate-x-1/2 w-[420px] z-20"
+        className="absolute top-6 left-1/2 -translate-x-1/2 w-[380px] max-w-[50vw] z-20"
       >
         <div className="premium-glass rounded-2xl border border-gold-400/20 shadow-gold-sm overflow-hidden">
           <div className="flex items-center px-4 py-3">
@@ -182,19 +187,14 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
-        className="absolute bottom-6 right-6 premium-glass p-5 rounded-2xl text-xs flex flex-col gap-3 border border-white/10 shadow-gold-sm z-10"
+        className="absolute bottom-6 right-6 premium-glass p-4 rounded-2xl text-xs flex flex-col gap-2.5 border border-white/10 shadow-gold-sm z-10 max-w-[200px]"
       >
-        <h4 className="text-white font-semibold mb-1 uppercase tracking-widest text-[10px]">Project Status</h4>
-        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#00FF88] shadow-[0_0_8px_rgba(0,255,136,0.6)]"></div> Producing</div>
-        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#4488FF] shadow-[0_0_8px_rgba(68,136,255,0.6)]"></div> Development</div>
-        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#A78BFA] shadow-[0_0_8px_rgba(167,139,250,0.6)]"></div> Exploration</div>
-        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#FFD700] shadow-[0_0_8px_rgba(255,215,0,0.6)]"></div> Artisanal</div>
-        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#FF4444] shadow-[0_0_8px_rgba(255,68,68,0.6)]"></div> Care & Maintenance</div>
-        <div className="w-full h-px bg-white/10 my-1" />
-        <h4 className="text-white font-semibold mb-1 uppercase tracking-widest text-[10px]">Layers</h4>
-        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-gold-400 shadow-[0_0_8px_rgba(212,175,55,0.6)]"></div> Tenements</div>
-        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#8B7355] shadow-[0_0_8px_rgba(139,115,85,0.6)]"></div> Geology</div>
-        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]"></div> Security Events</div>
+        <h4 className="text-white font-semibold uppercase tracking-widest text-[10px]">Project Status</h4>
+        <div className="flex items-center gap-2.5 text-gray-300"><div className="w-2 h-2 rounded-full bg-[#00FF88] shadow-[0_0_6px_rgba(0,255,136,0.6)]"></div><span className="truncate">Producing</span></div>
+        <div className="flex items-center gap-2.5 text-gray-300"><div className="w-2 h-2 rounded-full bg-[#4488FF] shadow-[0_0_6px_rgba(68,136,255,0.6)]"></div><span className="truncate">Development</span></div>
+        <div className="flex items-center gap-2.5 text-gray-300"><div className="w-2 h-2 rounded-full bg-[#A78BFA] shadow-[0_0_6px_rgba(167,139,250,0.6)]"></div><span className="truncate">Exploration</span></div>
+        <div className="flex items-center gap-2.5 text-gray-300"><div className="w-2 h-2 rounded-full bg-[#FFD700] shadow-[0_0_6px_rgba(255,215,0,0.6)]"></div><span className="truncate">Artisanal</span></div>
+        <div className="flex items-center gap-2.5 text-gray-300"><div className="w-2 h-2 rounded-full bg-[#FF4444] shadow-[0_0_6px_rgba(255,68,68,0.6)]"></div><span className="truncate">Care & Maint.</span></div>
       </motion.div>
     </div>
   );

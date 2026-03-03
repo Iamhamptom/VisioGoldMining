@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
+import { PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen } from 'lucide-react';
 import Sidebar from './Sidebar';
 import ChatAgent from './ChatAgent';
 import MapArea from './MapArea';
@@ -13,6 +14,13 @@ import { SelectionProvider } from '@/hooks/useFeatureSelection';
 import { PursuitProvider } from '@/hooks/usePursuitContext';
 import type { ScreenType } from '@/lib/types/screen';
 import type { SelectedFeature } from '@/lib/types/layers';
+
+const LEFT_MIN = 240;
+const LEFT_MAX = 520;
+const LEFT_DEFAULT = 320;
+const RIGHT_MIN = 300;
+const RIGHT_MAX = 700;
+const RIGHT_DEFAULT = 450;
 
 const BackgroundEffects = () => {
   const particles = useMemo(() => Array.from({ length: 40 }).map((_, i) => ({
@@ -57,11 +65,61 @@ export default function ExplorerShell() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [selectedRepo, setSelectedRepo] = useState<string | null>(null);
 
+  // --- Resizable panel state ---
+  const [leftWidth, setLeftWidth] = useState(LEFT_DEFAULT);
+  const [rightWidth, setRightWidth] = useState(RIGHT_DEFAULT);
+  const [leftCollapsed, setLeftCollapsed] = useState(false);
+  const [rightCollapsed, setRightCollapsed] = useState(false);
+
+  // Drag resize handling
+  const dragging = useRef<'left' | 'right' | null>(null);
+  const dragStart = useRef({ x: 0, width: 0 });
+
+  const onResizeStart = useCallback((side: 'left' | 'right', e: React.MouseEvent) => {
+    e.preventDefault();
+    dragging.current = side;
+    dragStart.current = {
+      x: e.clientX,
+      width: side === 'left' ? leftWidth : rightWidth,
+    };
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  }, [leftWidth, rightWidth]);
+
+  useEffect(() => {
+    const onMouseMove = (e: MouseEvent) => {
+      if (!dragging.current) return;
+      const delta = e.clientX - dragStart.current.x;
+      if (dragging.current === 'left') {
+        setLeftWidth(Math.max(LEFT_MIN, Math.min(LEFT_MAX, dragStart.current.width + delta)));
+      } else {
+        setRightWidth(Math.max(RIGHT_MIN, Math.min(RIGHT_MAX, dragStart.current.width - delta)));
+      }
+    };
+    const onMouseUp = () => {
+      if (dragging.current) {
+        dragging.current = null;
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      }
+    };
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }, []);
+
+  const effectiveLeft = leftCollapsed ? 0 : leftWidth;
+  const effectiveRight = rightCollapsed ? 0 : rightWidth;
+
   const handleSelectionChange = useCallback((feature: SelectedFeature | null) => {
     if (feature) {
       setActiveScreen('feature');
+      if (rightCollapsed) setRightCollapsed(false);
     }
-  }, []);
+  }, [rightCollapsed]);
 
   const handleSetActiveScreen = useCallback((screen: ScreenType) => {
     setActiveScreen(screen);
@@ -91,19 +149,50 @@ export default function ExplorerShell() {
               />
 
               {/* Left Panel: AI Chat Agent */}
-              <div className="w-80 h-full border-r border-white/10 bg-bg-surface/40 backdrop-blur-2xl flex flex-col z-10 relative shadow-[4px_0_24px_rgba(0,0,0,0.5)]">
-                <ErrorBoundary fallback={
-                  <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-                    <div className="text-gold-400 text-sm font-medium mb-2">Agent Offline</div>
-                    <p className="text-xs text-gray-500">The AI chat agent encountered an error. Refresh to reconnect.</p>
-                  </div>
-                }>
-                  <ChatAgent />
-                </ErrorBoundary>
+              <div
+                style={{ width: effectiveLeft, minWidth: leftCollapsed ? 0 : LEFT_MIN }}
+                className="h-full border-r border-white/10 bg-bg-surface/40 backdrop-blur-2xl flex flex-col z-10 relative shadow-[4px_0_24px_rgba(0,0,0,0.5)] overflow-hidden"
+              >
+                {!leftCollapsed && (
+                  <ErrorBoundary fallback={
+                    <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+                      <div className="text-gold-400 text-sm font-medium mb-2">Agent Offline</div>
+                      <p className="text-xs text-gray-500">The AI chat agent encountered an error. Refresh to reconnect.</p>
+                    </div>
+                  }>
+                    <ChatAgent />
+                  </ErrorBoundary>
+                )}
               </div>
 
+              {/* Left Resize Handle */}
+              {!leftCollapsed && (
+                <div
+                  onMouseDown={(e) => onResizeStart('left', e)}
+                  className="w-1.5 h-full cursor-col-resize hover:bg-gold-400/20 active:bg-gold-400/40 transition-colors z-20 flex items-center justify-center group shrink-0"
+                >
+                  <div className="w-0.5 h-12 bg-white/10 group-hover:bg-gold-400/60 rounded-full transition-colors" />
+                </div>
+              )}
+
               {/* Center Panel: Interactive Map */}
-              <div className="flex-1 h-full relative bg-transparent">
+              <div className="flex-1 h-full relative bg-transparent min-w-[300px]">
+                {/* Collapse/Expand toggle buttons */}
+                <button
+                  onClick={() => setLeftCollapsed(c => !c)}
+                  className="absolute top-3 left-3 z-30 p-2 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 text-gray-400 hover:text-gold-400 hover:bg-gold-400/10 transition-all shadow-lg"
+                  title={leftCollapsed ? 'Show Chat Panel' : 'Hide Chat Panel'}
+                >
+                  {leftCollapsed ? <PanelLeftOpen size={16} strokeWidth={1.5} /> : <PanelLeftClose size={16} strokeWidth={1.5} />}
+                </button>
+                <button
+                  onClick={() => setRightCollapsed(c => !c)}
+                  className="absolute top-3 right-3 z-30 p-2 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 text-gray-400 hover:text-gold-400 hover:bg-gold-400/10 transition-all shadow-lg"
+                  title={rightCollapsed ? 'Show Details Panel' : 'Hide Details Panel'}
+                >
+                  {rightCollapsed ? <PanelRightOpen size={16} strokeWidth={1.5} /> : <PanelRightClose size={16} strokeWidth={1.5} />}
+                </button>
+
                 <ErrorBoundary fallback={
                   <div className="flex flex-col items-center justify-center h-full bg-bg-dark">
                     <div className="text-gold-400 text-lg font-light mb-2">Map Unavailable</div>
@@ -114,21 +203,36 @@ export default function ExplorerShell() {
                 </ErrorBoundary>
               </div>
 
+              {/* Right Resize Handle */}
+              {!rightCollapsed && (
+                <div
+                  onMouseDown={(e) => onResizeStart('right', e)}
+                  className="w-1.5 h-full cursor-col-resize hover:bg-gold-400/20 active:bg-gold-400/40 transition-colors z-20 flex items-center justify-center group shrink-0"
+                >
+                  <div className="w-0.5 h-12 bg-white/10 group-hover:bg-gold-400/60 rounded-full transition-colors" />
+                </div>
+              )}
+
               {/* Right Panel: Context / Details */}
-              <div className="w-[450px] h-full border-l border-white/10 bg-bg-surface/40 backdrop-blur-2xl flex flex-col z-10 relative shadow-[-4px_0_24px_rgba(0,0,0,0.5)]">
-                <ErrorBoundary fallback={
-                  <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-                    <div className="text-gold-400 text-sm font-medium mb-2">Panel Error</div>
-                    <p className="text-xs text-gray-500">This panel encountered an error. Try switching to a different view.</p>
-                  </div>
-                }>
-                  <RightPanel
-                    activeScreen={activeScreen}
-                    selectedRepo={selectedRepo}
-                    setActiveScreen={setActiveScreen}
-                    setSelectedRepo={setSelectedRepo}
-                  />
-                </ErrorBoundary>
+              <div
+                style={{ width: effectiveRight, minWidth: rightCollapsed ? 0 : RIGHT_MIN }}
+                className="h-full border-l border-white/10 bg-bg-surface/40 backdrop-blur-2xl flex flex-col z-10 relative shadow-[-4px_0_24px_rgba(0,0,0,0.5)] overflow-hidden"
+              >
+                {!rightCollapsed && (
+                  <ErrorBoundary fallback={
+                    <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+                      <div className="text-gold-400 text-sm font-medium mb-2">Panel Error</div>
+                      <p className="text-xs text-gray-500">This panel encountered an error. Try switching to a different view.</p>
+                    </div>
+                  }>
+                    <RightPanel
+                      activeScreen={activeScreen}
+                      selectedRepo={selectedRepo}
+                      setActiveScreen={setActiveScreen}
+                      setSelectedRepo={setSelectedRepo}
+                    />
+                  </ErrorBoundary>
+                )}
               </div>
             </motion.div>
 

@@ -53,6 +53,22 @@ export function useAgentChat({ agentId, context, initialMessages, fallbackFn }: 
     const streamingMsg: ChatMessage = { role: 'assistant', text: '', agentId, streaming: true };
     setMessages(prev => [...prev, streamingMsg]);
 
+    // If no API key and we have a fallback, use it immediately (no network round-trip)
+    const hasEnvKey = true; // Server may have ANTHROPIC_API_KEY; try API first
+    if (!storedApiKey && !hasEnvKey && fallbackFn) {
+      const fallbackResponse = fallbackFn(agentId, text.trim());
+      setMessages(prev => {
+        const updated = [...prev];
+        const lastIdx = updated.length - 1;
+        if (lastIdx >= 0 && updated[lastIdx].streaming) {
+          updated[lastIdx] = { role: 'assistant', text: fallbackResponse, agentId, streaming: false };
+        }
+        return updated;
+      });
+      setIsStreaming(false);
+      return;
+    }
+
     try {
       abortRef.current = new AbortController();
 

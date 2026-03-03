@@ -4,7 +4,7 @@ import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import Map, { Source, Layer, Marker, Popup, AttributionControl } from 'react-map-gl/maplibre';
 import type { MapRef, ViewStateChangeEvent, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { Brain, Crosshair, Plane, Sparkles, Loader2 } from 'lucide-react';
+import { Crosshair, Sparkles, Loader2 } from 'lucide-react';
 import { useMapContext } from '../../hooks/useMap';
 import { useSelection } from '../../hooks/useFeatureSelection';
 import { usePursuit } from '../../hooks/usePursuitContext';
@@ -45,9 +45,10 @@ interface HoveredProject {
 
 interface Props {
   isSatellite?: boolean;
+  showProjectMarkers?: boolean;
 }
 
-export default function GlobeMap({ isSatellite = false }: Props) {
+export default function GlobeMap({ isSatellite = false, showProjectMarkers = true }: Props) {
   const mapRef = useRef<MapRef>(null);
   const { setMap } = useMapContext();
   const { setSelectedFeature } = useSelection();
@@ -204,7 +205,7 @@ export default function GlobeMap({ isSatellite = false }: Props) {
     setAiBriefLoading(true);
     setAiBrief(null);
     try {
-      const settings = JSON.parse(localStorage.getItem('visiogold_settings') || '{}');
+      const settings = JSON.parse(localStorage.getItem('visiogold-settings') || '{}');
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (settings.anthropicApiKey) headers['x-anthropic-key'] = settings.anthropicApiKey;
 
@@ -239,13 +240,22 @@ export default function GlobeMap({ isSatellite = false }: Props) {
       }
       setAiBrief(text || 'Unable to generate brief.');
     } catch {
-      setAiBrief('AI brief unavailable — check your API key in Settings.');
+      // Generate a local fallback brief from project data
+      const statusLabel = project.status.replace(/_/g, ' ');
+      const resource = project.totalResourceMoz ? `${project.totalResourceMoz} Moz Au resource` : 'unquantified resource';
+      const security = project.localContext.securityLevel;
+      setAiBrief(
+        `${project.name} is a ${statusLabel} gold project operated by ${project.operator} in ${project.location.province}, ` +
+        `located in the ${project.location.belt}. The project has a ${resource}` +
+        `${project.averageGrade ? ` at ${project.averageGrade} g/t` : ''}. ` +
+        `Security level is ${security}. For AI-powered analysis, configure your Anthropic API key in Settings.`
+      );
     } finally {
       setAiBriefLoading(false);
     }
   }, []);
 
-  // Handle click on other layers
+  // Handle click on other layers — highlight and select
   const handleMapClick = useCallback((e: MapLayerMouseEvent) => {
     const map = mapRef.current?.getMap();
     if (!map) return;
@@ -268,11 +278,69 @@ export default function GlobeMap({ isSatellite = false }: Props) {
     if (features.length > 0) {
       const feature = features[0];
       const layerBaseId = feature.layer.id.replace(/-fill$|-outline$|-circle$|-lines$|-points$|-glow$|-label$/, '');
+
+      // Add visual highlight for clicked feature
+      try {
+        // Remove previous highlight
+        if (map.getLayer('click-highlight')) map.removeLayer('click-highlight');
+        if (map.getSource('click-highlight')) map.removeSource('click-highlight');
+
+        // Add highlight source with clicked feature geometry
+        map.addSource('click-highlight', {
+          type: 'geojson',
+          data: { type: 'FeatureCollection', features: [feature] },
+        });
+
+        const geoType = feature.geometry.type;
+        if (geoType === 'Point' || geoType === 'MultiPoint') {
+          map.addLayer({
+            id: 'click-highlight',
+            source: 'click-highlight',
+            type: 'circle',
+            paint: {
+              'circle-radius': 16,
+              'circle-color': '#D4AF37',
+              'circle-opacity': 0.3,
+              'circle-stroke-color': '#D4AF37',
+              'circle-stroke-width': 2,
+            },
+          });
+        } else if (geoType === 'Polygon' || geoType === 'MultiPolygon') {
+          map.addLayer({
+            id: 'click-highlight',
+            source: 'click-highlight',
+            type: 'line',
+            paint: {
+              'line-color': '#D4AF37',
+              'line-width': 3,
+              'line-opacity': 0.9,
+            },
+          });
+        } else {
+          map.addLayer({
+            id: 'click-highlight',
+            source: 'click-highlight',
+            type: 'line',
+            paint: {
+              'line-color': '#D4AF37',
+              'line-width': 4,
+              'line-opacity': 0.8,
+            },
+          });
+        }
+      } catch { /* highlight is best-effort */ }
+
       setSelectedFeature({
         layerId: layerBaseId,
         properties: feature.properties || {},
         geometry: feature.geometry,
       });
+    } else {
+      // Clear highlight when clicking on empty map area
+      try {
+        if (map.getLayer('click-highlight')) map.removeLayer('click-highlight');
+        if (map.getSource('click-highlight')) map.removeSource('click-highlight');
+      } catch {}
     }
   }, [setSelectedFeature]);
 
@@ -346,8 +414,8 @@ export default function GlobeMap({ isSatellite = false }: Props) {
         />
       </Source>
 
-      {/* Project Markers */}
-      {mappableProjects.map((project) => {
+      {/* Project Markers — controlled by layer toggle */}
+      {showProjectMarkers && mappableProjects.map((project) => {
         const lat = project.location.lat!;
         const lon = project.location.lon!;
         const color = STATUS_COLORS[project.status] || '#888888';
@@ -419,7 +487,7 @@ export default function GlobeMap({ isSatellite = false }: Props) {
       })}
 
       {/* Hover Tooltip */}
-      {hoveredProject && hoveredProject.project.location.lat && hoveredProject.project.location.lon && (
+      {showProjectMarkers && hoveredProject && hoveredProject.project.location.lat && hoveredProject.project.location.lon && (
         <Popup
           longitude={hoveredProject.project.location.lon}
           latitude={hoveredProject.project.location.lat}
@@ -462,7 +530,7 @@ export default function GlobeMap({ isSatellite = false }: Props) {
       )}
 
       {/* Selected Project Popup — with AI Brief + Quick Actions */}
-      {selectedProject && selectedProject.location.lat && selectedProject.location.lon && (
+      {showProjectMarkers && selectedProject && selectedProject.location.lat && selectedProject.location.lon && (
         <Popup
           longitude={selectedProject.location.lon}
           latitude={selectedProject.location.lat}
