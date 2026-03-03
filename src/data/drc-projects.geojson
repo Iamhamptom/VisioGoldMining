@@ -4,10 +4,7 @@
   "features": [
     {
       "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [29.58, 3.13]
-      },
+      "geometry": { "type": "Point", "coordinates": [29.58, 3.13] },
       "properties": {
         "id": "drc_kibali_001",
         "name": "Kibali Gold Mine",
@@ -23,10 +20,7 @@
     },
     {
       "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [28.74333, -2.87275]
-      },
+      "geometry": { "type": "Point", "coordinates": [28.74333, -2.87275] },
       "properties": {
         "id": "drc_twangiza_002",
         "name": "Twangiza Mine",
@@ -42,10 +36,7 @@
     },
     {
       "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [27.55139, -4.00833]
-      },
+      "geometry": { "type": "Point", "coordinates": [27.55139, -4.00833] },
       "properties": {
         "id": "drc_namoya_003",
         "name": "Namoya Mine",
@@ -61,10 +52,7 @@
     },
     {
       "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [28.725, -4.76667]
-      },
+      "geometry": { "type": "Point", "coordinates": [28.725, -4.76667] },
       "properties": {
         "id": "drc_misisi_004",
         "name": "Misisi Gold Project (Akyanga)",
@@ -73,17 +61,14 @@
         "totalResourceMoz": 3.11,
         "averageGrade": 2.37,
         "annualProductionKoz": null,
-        "belt": "Kibara Belt (Proterozoic intracontinental mobile belt)",
+        "belt": "Kibara Belt",
         "province": "South Kivu",
         "miningMethod": "TBD — advanced exploration / development drilling"
       }
     },
     {
       "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [27.86778, 1.73299]
-      },
+      "geometry": { "type": "Point", "coordinates": [27.86778, 1.73299] },
       "properties": {
         "id": "drc_adumbi_005",
         "name": "Imbo Project (Adumbi)",
@@ -99,15 +84,44 @@
     },
     {
       "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [28.16667, -3.05]
-      },
+      "geometry": { "type": "Point", "coordinates": [29.42, 3.48] },
+      "properties": {
+        "id": "drc_giro_006",
+        "name": "Giro Gold Project",
+        "operator": "DRC Gold Corp.",
+        "status": "advanced_exploration",
+        "totalResourceMoz": 0.31,
+        "averageGrade": 1.21,
+        "annualProductionKoz": null,
+        "belt": "Kilo-Moto Greenstone Belt",
+        "province": "Haut-Uele",
+        "miningMethod": "TBD — exploration/development"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [30.05, 2.10] },
+      "properties": {
+        "id": "drc_nizi_008",
+        "name": "Nizi Gold Project",
+        "operator": "DRC Gold Corp.",
+        "status": "early_exploration",
+        "totalResourceMoz": null,
+        "averageGrade": null,
+        "annualProductionKoz": null,
+        "belt": "Kilo-Moto Greenstone Belt",
+        "province": "Haut-Uele / Ituri",
+        "miningMethod": "TBD — early exploration"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [28.16667, -3.05] },
       "properties": {
         "id": "drc_kamituga_009",
         "name": "Kamituga-Mobale",
         "operator": "ASM (multi-actor)",
-        "status": "artisanal",
+        "status": "artisanal_alluvial",
         "totalResourceMoz": null,
         "averageGrade": 3.4,
         "annualProductionKoz": null,
@@ -118,21 +132,50 @@
     },
     {
       "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [30.02959, 1.93516]
-      },
+      "geometry": { "type": "Point", "coordinates": [30.02959, 1.93516] },
       "properties": {
         "id": "drc_mongbwalu_010",
         "name": "Mongbwalu Gold Mine",
         "operator": "ASM (multi-actor)",
-        "status": "artisanal",
+        "status": "artisanal_alluvial",
         "totalResourceMoz": 3.9,
         "averageGrade": 4.5,
         "annualProductionKoz": null,
         "belt": "Kilo-Moto Greenstone Belt",
         "province": "Ituri",
         "miningMethod": "Artisanal — historical industrial references"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [25.98, -4.32] },
+      "properties": {
+        "id": "drc_mccr_011",
+        "name": "MCCR Industrial Gold Operations",
+        "operator": "MCCR",
+        "status": "producing_small",
+        "totalResourceMoz": null,
+        "averageGrade": null,
+        "annualProductionKoz": null,
+        "belt": "Unspecified",
+        "province": "Unspecified",
+        "miningMethod": "Industrial (small scale)"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [28.58, 1.41] },
+      "properties": {
+        "id": "drc_kimia_okapi_012",
+        "name": "Okapi Area Gold Operations",
+        "operator": "Kimia Mining Investment",
+        "status": "producing_small",
+        "totalResourceMoz": null,
+        "averageGrade": null,
+        "annualProductionKoz": null,
+        "belt": "Unspecified",
+        "province": "Ituri",
+        "miningMethod": "Industrial (small/unclear)"
       }
     }
   ]
