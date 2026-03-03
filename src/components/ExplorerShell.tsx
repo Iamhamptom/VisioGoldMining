@@ -75,12 +75,12 @@ export default function ExplorerShell() {
     <MapProvider>
       <SelectionProvider onSelectionChange={handleSelectionChange}>
         <PursuitProvider onPursuitStart={handlePursuitStart}>
-          <div className="bg-black text-white overflow-hidden font-sans w-screen h-screen relative">
+          <div className="bg-bg-dark text-white overflow-hidden font-sans w-screen h-screen relative">
             <BackgroundEffects />
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, ease: 'easeInOut' }}
+              transition={{ duration: 1.2, ease: 'easeInOut' }}
               className="flex h-screen w-screen relative z-10"
             >
               <Sidebar
@@ -90,7 +90,7 @@ export default function ExplorerShell() {
               />
 
               {/* Left Panel: AI Chat Agent */}
-              <div className="w-80 h-full border-r border-white/10 bg-black/40 backdrop-blur-2xl flex flex-col z-10 relative shadow-[4px_0_24px_rgba(0,0,0,0.5)]">
+              <div className="w-80 h-full border-r border-white/10 bg-bg-surface/40 backdrop-blur-2xl flex flex-col z-10 relative shadow-[4px_0_24px_rgba(0,0,0,0.5)]">
                 <ChatAgent />
               </div>
 
@@ -100,7 +100,7 @@ export default function ExplorerShell() {
               </div>
 
               {/* Right Panel: Context / Details */}
-              <div className="w-[450px] h-full border-l border-white/10 bg-black/40 backdrop-blur-2xl flex flex-col z-10 relative shadow-[-4px_0_24px_rgba(0,0,0,0.5)]">
+              <div className="w-[450px] h-full border-l border-white/10 bg-bg-surface/40 backdrop-blur-2xl flex flex-col z-10 relative shadow-[-4px_0_24px_rgba(0,0,0,0.5)]">
                 <RightPanel
                   activeScreen={activeScreen}
                   selectedRepo={selectedRepo}

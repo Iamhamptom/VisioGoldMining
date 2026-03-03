@@ -17,7 +17,7 @@ function SliderControl({ label, value, min, max, step, unit, onChange }: {
     <div className="flex flex-col gap-1.5">
       <div className="flex justify-between text-xs">
         <span className="text-gray-300">{label}</span>
-        <span className="text-gold font-mono">{value.toLocaleString()}{unit}</span>
+        <span className="text-gold-400 font-mono">{value.toLocaleString()}{unit}</span>
       </div>
       <input type="range" min={min} max={max} step={step} value={value}
         onChange={(e) => onChange(Number(e.target.value))}
@@ -34,7 +34,7 @@ function SelectControl({ label, value, options, onChange }: {
     <div className="flex flex-col gap-1.5">
       <span className="text-xs text-gray-300">{label}</span>
       <select value={value} onChange={(e) => onChange(e.target.value)}
-        className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white appearance-none cursor-pointer focus:border-gold/50 focus:outline-none">
+        className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-sm text-white appearance-none cursor-pointer focus:border-gold-400/50 focus:outline-none">
         {options.map(o => <option key={o.value} value={o.value} className="bg-black">{o.label}</option>)}
       </select>
     </div>
@@ -48,7 +48,7 @@ export default function ScenarioSliders({ inputs, onChange, onRun, loading }: Pr
   return (
     <div className="glass-panel synthetic-energy p-5 rounded-xl border-white/10 flex flex-col gap-5">
       <h3 className="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
-        <Sliders size={16} strokeWidth={1} className="text-gold icon-shine" /> Scenario Inputs
+        <Sliders size={16} strokeWidth={1} className="text-gold-400 icon-shine" /> Scenario Inputs
       </h3>
 
       <div className="grid grid-cols-2 gap-4 relative z-10">
@@ -132,7 +132,7 @@ export default function ScenarioSliders({ inputs, onChange, onRun, loading }: Pr
       </div>
 
       <button onClick={onRun} disabled={loading}
-        className="w-full py-3 bg-gold text-black rounded-lg font-semibold text-sm hover:bg-yellow-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed relative z-10 flex items-center justify-center gap-2">
+        className="w-full py-3 bg-gold-400 text-black rounded-lg font-semibold text-sm hover:bg-yellow-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed relative z-10 flex items-center justify-center gap-2">
         {loading ? (
           <><div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" /> Running Simulation...</>
         ) : 'Run Simulation'}

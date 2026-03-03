@@ -6,7 +6,7 @@ const ExplorerShell = dynamic(() => import('@/components/ExplorerShell'), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-screen w-screen bg-black">
-      <div className="text-gold font-display text-lg tracking-widest animate-pulse">
+      <div className="text-gold-400 font-display text-lg tracking-widest animate-pulse">
         Initializing Explorer...
       </div>
     </div>

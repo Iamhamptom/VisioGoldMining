@@ -132,7 +132,7 @@ export default function RepoMapPanel({ repoId }: Props) {
     <div className="p-6 flex flex-col gap-5">
       {/* Header */}
       <header>
-        <div className="text-xs text-gold font-mono mb-1">{repo.id}</div>
+        <div className="text-xs text-gold-400 font-mono mb-1">{repo.id}</div>
         <h1 className="text-xl font-light tracking-tight text-white mb-1">{repo.name}</h1>
         <p className="text-xs text-text-muted">{repo.description}</p>
         <div className="flex items-center gap-2 mt-2">
@@ -146,7 +146,7 @@ export default function RepoMapPanel({ repoId }: Props) {
       {/* Branch Selector */}
       <div className="glass-panel rounded-xl p-3">
         <div className="flex items-center gap-2 mb-2">
-          <GitBranch size={14} strokeWidth={1.5} className="text-gold" />
+          <GitBranch size={14} strokeWidth={1.5} className="text-gold-400" />
           <span className="text-xs text-text-muted uppercase tracking-wider">Branch</span>
         </div>
         <div className="flex gap-2">
@@ -156,7 +156,7 @@ export default function RepoMapPanel({ repoId }: Props) {
               onClick={() => handleBranchChange(branch.id)}
               className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-colors ${
                 activeBranch === branch.id
-                  ? 'bg-gold/20 text-gold border border-gold/30'
+                  ? 'bg-gold-400/20 text-gold-400 border border-gold-400/30'
                   : 'bg-white/5 text-gray-400 hover:text-white border border-transparent'
               }`}
             >

@@ -15,11 +15,11 @@ export default function ProjectEvaluator() {
       <div className="p-6 pb-0">
         <div className="flex justify-between items-start mb-6">
           <div>
-            <div className="text-xs text-gold font-mono mb-1 tracking-widest">PE-4102</div>
+            <div className="text-xs text-gold-400 font-mono mb-1 tracking-widest">PE-4102</div>
             <h1 className="text-3xl font-light tracking-tight text-white mb-1">Twangiza Deep</h1>
             <p className="text-sm text-text-muted">South Kivu • Advanced Exploration</p>
           </div>
-          <div className="w-12 h-12 rounded-full border border-gold/30 flex items-center justify-center text-gold font-mono text-lg gold-glow bg-gold/5">
+          <div className="w-12 h-12 rounded-full border border-gold-400/30 flex items-center justify-center text-gold-400 font-mono text-lg gold-glow bg-gold-400/5">
             85
           </div>
         </div>
@@ -31,7 +31,7 @@ export default function ProjectEvaluator() {
               onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all duration-300 relative overflow-hidden ${
                 activeTab === tab.id 
-                  ? 'bg-gold/10 text-gold border border-gold/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]' 
+                  ? 'bg-gold-400/10 text-gold-400 border border-gold-400/30 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]' 
                   : 'bg-white/5 text-text-muted hover:text-white border border-white/5 hover:bg-white/10'
               }`}
             >
@@ -47,7 +47,7 @@ export default function ProjectEvaluator() {
           <div className="flex flex-col gap-6">
             <div className="glass-panel synthetic-energy p-5 rounded-xl">
               <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-                <Calendar size={16} strokeWidth={1} className="text-gold icon-shine" /> Compliance Cockpit
+                <Calendar size={16} strokeWidth={1} className="text-gold-400 icon-shine" /> Compliance Cockpit
               </h3>
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg border border-white/10">
@@ -60,23 +60,23 @@ export default function ProjectEvaluator() {
                   </div>
                   <div className="text-xs font-mono text-gray-400">Mar 15, 2025</div>
                 </div>
-                <div className="flex justify-between items-center p-3 bg-gold/10 rounded-lg border border-gold/30 relative overflow-hidden">
+                <div className="flex justify-between items-center p-3 bg-gold-400/10 rounded-lg border border-gold-400/30 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold/5 to-transparent synthetic-energy" />
                   <div className="flex items-center gap-3 relative z-10">
-                    <div className="w-4 h-4 rounded-full border-2 border-gold border-t-transparent animate-spin"></div>
+                    <div className="w-4 h-4 rounded-full border-2 border-gold-400 border-t-transparent animate-spin"></div>
                     <div>
-                      <div className="text-sm text-gold">Environmental Audit</div>
-                      <div className="text-xs text-gold/70">Due in 45 days</div>
+                      <div className="text-sm text-gold-400">Environmental Audit</div>
+                      <div className="text-xs text-gold-400/70">Due in 45 days</div>
                     </div>
                   </div>
-                  <div className="text-xs font-mono text-gold relative z-10">May 01, 2026</div>
+                  <div className="text-xs font-mono text-gold-400 relative z-10">May 01, 2026</div>
                 </div>
               </div>
             </div>
 
             <div className="glass-panel synthetic-energy p-5 rounded-xl">
               <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-                <FileText size={16} strokeWidth={1} className="text-gold icon-shine" /> Document Vault
+                <FileText size={16} strokeWidth={1} className="text-gold-400 icon-shine" /> Document Vault
               </h3>
               <div className="flex flex-col gap-2">
                 {[
@@ -86,7 +86,7 @@ export default function ProjectEvaluator() {
                 ].map((doc, i) => (
                   <div key={i} className="flex justify-between items-center p-3 hover:bg-white/5 rounded-lg transition-colors group cursor-pointer border border-transparent hover:border-white/10">
                     <div className="flex items-center gap-3">
-                      <FileText size={14} strokeWidth={1} className="text-text-muted group-hover:text-gold transition-colors icon-shine" />
+                      <FileText size={14} strokeWidth={1} className="text-text-muted group-hover:text-gold-400 transition-colors icon-shine" />
                       <div>
                         <div className="text-sm text-gray-200">{doc.name}</div>
                         <div className="text-[10px] text-text-muted font-mono">{doc.type} • {doc.date}</div>
@@ -100,7 +100,7 @@ export default function ProjectEvaluator() {
             
             <div className="glass-panel synthetic-energy p-5 rounded-xl">
               <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-                <DollarSign size={16} strokeWidth={1} className="text-gold icon-shine" /> Cost Simulation (Legal)
+                <DollarSign size={16} strokeWidth={1} className="text-gold-400 icon-shine" /> Cost Simulation (Legal)
               </h3>
               <div className="space-y-4">
                 <div>
@@ -109,7 +109,7 @@ export default function ProjectEvaluator() {
                     <span className="text-white font-mono">$45,000</span>
                   </div>
                   <div className="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
-                    <div className="bg-gold h-full rounded-full relative">
+                    <div className="bg-gold-400 h-full rounded-full relative">
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent synthetic-energy" />
                     </div>
                   </div>

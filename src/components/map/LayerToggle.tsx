@@ -21,8 +21,8 @@ export default function LayerToggle() {
         onClick={() => setIsOpen(!isOpen)}
         className={`p-2.5 rounded-lg transition-colors shadow-lg border ${
           isOpen
-            ? 'bg-gold/20 text-gold border-gold/30'
-            : 'bg-black/40 backdrop-blur-md text-gray-400 hover:bg-gold/20 hover:text-gold border-white/10'
+            ? 'bg-gold-400/15 text-gold-400 border-gold-400/30'
+            : 'bg-black/40 backdrop-blur-md text-gray-400 hover:bg-gold-400/15 hover:text-gold-400 border-white/10'
         }`}
         title="Toggle Layers"
       >
@@ -36,7 +36,7 @@ export default function LayerToggle() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="mt-2 bg-black/80 backdrop-blur-md border border-white/10 rounded-xl p-3 shadow-xl min-w-[200px]"
+            className="mt-2 premium-glass border border-white/10 rounded-xl p-3 shadow-gold-sm min-w-[200px]"
           >
             <h4 className="text-[10px] uppercase tracking-widest text-text-muted font-semibold mb-3 px-1">
               Data Layers
@@ -70,7 +70,7 @@ export default function LayerToggle() {
                       {def.label}
                     </span>
                     {isLoading && (
-                      <Loader2 size={12} className="animate-spin ml-auto text-gold" />
+                      <Loader2 size={12} className="animate-spin ml-auto text-gold-400" />
                     )}
                   </button>
                 );

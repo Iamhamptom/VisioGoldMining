@@ -15,12 +15,12 @@ export default function OpportunityCardItem({ opportunity, onFlyTo, onCreateRepo
 
   return (
     <div
-      className="glass-panel synthetic-energy rounded-xl p-5 border-white/10 hover:border-gold/50 transition-all group cursor-pointer"
+      className="glass-panel synthetic-energy rounded-xl p-5 border-white/10 hover:border-gold-400/50 transition-all group cursor-pointer"
       onClick={() => onFlyTo?.(opp)}
     >
       <div className="flex justify-between items-start mb-3">
         <div>
-          <div className="text-xs text-gold font-mono mb-1">{opp.permit_id}</div>
+          <div className="text-xs text-gold-400 font-mono mb-1">{opp.permit_id}</div>
           <h3 className="text-base font-semibold text-white">{opp.title}</h3>
           <div className="text-xs text-text-muted flex items-center gap-1 mt-0.5">
             <Map size={12} strokeWidth={1} className="icon-shine" /> {opp.province}
@@ -48,7 +48,7 @@ export default function OpportunityCardItem({ opportunity, onFlyTo, onCreateRepo
           <div className="flex gap-2">
             <button
               onClick={(e) => { e.stopPropagation(); onFlyTo?.(opp); }}
-              className="flex-1 py-2 bg-white/5 hover:bg-gold hover:text-black text-gold border border-gold/30 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5 group-hover:border-gold"
+              className="flex-1 py-2 bg-white/5 hover:bg-gold-400 hover:text-black text-gold-400 border border-gold-400/30 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5 group-hover:border-gold"
             >
               Evaluate <ChevronRight size={14} strokeWidth={1} />
             </button>

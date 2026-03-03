@@ -14,7 +14,7 @@ export default function GeneratePlanStep({ plan, loading, error }: Props) {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-48 animate-in fade-in duration-500">
-        <Loader2 size={32} strokeWidth={1} className="text-gold animate-spin mb-4" />
+        <Loader2 size={32} strokeWidth={1} className="text-gold-400 animate-spin mb-4" />
         <p className="text-sm text-text-muted">Generating your DRC project plan...</p>
       </div>
     );
@@ -36,10 +36,10 @@ export default function GeneratePlanStep({ plan, loading, error }: Props) {
 
       {/* Timeline Summary */}
       {plan.timeline_summary && (
-        <div className="glass-panel synthetic-energy p-4 rounded-xl border-gold/30">
+        <div className="glass-panel synthetic-energy p-4 rounded-xl border-gold-400/30">
           <div className="flex items-center gap-2 mb-3">
-            <Calendar size={16} strokeWidth={1} className="text-gold icon-shine" />
-            <span className="text-xs font-semibold text-gold uppercase tracking-wider">Timeline Overview</span>
+            <Calendar size={16} strokeWidth={1} className="text-gold-400 icon-shine" />
+            <span className="text-xs font-semibold text-gold-400 uppercase tracking-wider">Timeline Overview</span>
           </div>
           <div className="text-2xl font-mono text-white gold-text-glow mb-2 relative z-10">
             ~{Math.round(plan.timeline_summary.total_p50_days / 30)} months
@@ -54,8 +54,8 @@ export default function GeneratePlanStep({ plan, loading, error }: Props) {
       {plan.budget_summary && (
         <div className="glass-panel synthetic-energy p-4 rounded-xl border-white/10">
           <div className="flex items-center gap-2 mb-3">
-            <DollarSign size={16} strokeWidth={1} className="text-gold icon-shine" />
-            <span className="text-xs font-semibold text-gold uppercase tracking-wider">Budget Summary</span>
+            <DollarSign size={16} strokeWidth={1} className="text-gold-400 icon-shine" />
+            <span className="text-xs font-semibold text-gold-400 uppercase tracking-wider">Budget Summary</span>
           </div>
           <div className="text-2xl font-mono text-white gold-text-glow mb-3 relative z-10">
             ${(plan.budget_summary.total_p50 / 1_000_000).toFixed(2)}M
@@ -81,7 +81,7 @@ export default function GeneratePlanStep({ plan, loading, error }: Props) {
       {plan.risk_register.length > 0 && (
         <div className="flex flex-col gap-3">
           <h3 className="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
-            <AlertTriangle size={16} strokeWidth={1} className="text-gold icon-shine" /> Risk Register
+            <AlertTriangle size={16} strokeWidth={1} className="text-gold-400 icon-shine" /> Risk Register
           </h3>
           {plan.risk_register.map((risk) => {
             const impactColor = risk.impact === 'high' ? 'text-red-400' : risk.impact === 'medium' ? 'text-gold' : 'text-green-400';
@@ -95,7 +95,7 @@ export default function GeneratePlanStep({ plan, loading, error }: Props) {
                   </div>
                 </div>
                 <p className="text-xs text-gray-400 mb-1">{risk.description}</p>
-                <p className="text-[10px] text-gray-500"><span className="text-gold">Mitigation:</span> {risk.mitigation}</p>
+                <p className="text-[10px] text-gray-500"><span className="text-gold-400">Mitigation:</span> {risk.mitigation}</p>
               </div>
             );
           })}

@@ -6,11 +6,11 @@ export default function GlobeHome() {
     <div className="p-6 flex flex-col gap-6">
       <header>
         <h1 className="text-2xl font-light tracking-tight text-white mb-1">Democratic Republic of the Congo</h1>
-        <p className="text-sm text-gold uppercase tracking-widest font-semibold">National Overview</p>
+        <p className="text-sm text-gold-400 uppercase tracking-widest font-semibold">National Overview</p>
       </header>
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="glass-panel synthetic-energy p-4 rounded-xl border-gold/20">
+        <div className="glass-panel synthetic-energy p-4 rounded-xl border-gold-400/20">
           <div className="text-text-muted text-xs uppercase tracking-wider mb-1">Active Permits</div>
           <div className="text-3xl font-mono text-white gold-text-glow gold-text-alive">1,248</div>
         </div>
@@ -32,7 +32,7 @@ export default function GlobeHome() {
         <div className="flex flex-col gap-3">
           <div className="glass-panel synthetic-energy p-4 rounded-xl border-l-2 border-l-gold hover:bg-white/5 transition-colors cursor-pointer">
             <div className="flex justify-between items-start mb-2">
-              <div className="flex items-center gap-2 text-gold text-xs font-mono">
+              <div className="flex items-center gap-2 text-gold-400 text-xs font-mono">
                 <Clock size={14} strokeWidth={1} className="icon-shine" /> Expiring Soon
               </div>
               <span className="text-[10px] text-text-muted">2 hrs ago</span>

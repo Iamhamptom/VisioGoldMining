@@ -8,7 +8,7 @@ const LandingPage = dynamic(() => import('@/components/LandingPage'), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center h-screen w-screen bg-black">
-      <div className="text-gold font-display text-lg tracking-widest animate-pulse gold-text-glow">
+      <div className="text-gold-400 font-display text-lg tracking-widest animate-pulse gold-text-glow">
         Initializing VisioGold...
       </div>
     </div>

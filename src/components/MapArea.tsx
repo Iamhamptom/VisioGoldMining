@@ -76,7 +76,7 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
   }, []);
 
   return (
-    <div className="absolute inset-0 bg-black overflow-hidden">
+    <div className="absolute inset-0 bg-bg-dark overflow-hidden">
       {/* MapLibre Globe */}
       <GlobeMap />
 
@@ -97,9 +97,9 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
         transition={{ delay: 0.6 }}
         className="absolute top-6 left-1/2 -translate-x-1/2 w-[420px] z-20"
       >
-        <div className="bg-black/70 backdrop-blur-xl rounded-2xl border border-gold/20 shadow-2xl overflow-hidden">
+        <div className="premium-glass rounded-2xl border border-gold-400/20 shadow-gold-sm overflow-hidden">
           <div className="flex items-center px-4 py-3">
-            <Search size={16} strokeWidth={1.5} className="text-gold mr-3 flex-shrink-0" />
+            <Search size={16} strokeWidth={1.5} className="text-gold-400 mr-3 flex-shrink-0 icon-shine" />
             <input
               type="text"
               value={searchQuery}
@@ -148,7 +148,7 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
                         </div>
                       </div>
                       {project.totalResourceMoz && (
-                        <span className="text-[10px] text-gold font-medium flex-shrink-0">
+                        <span className="text-[10px] text-gold-400 font-medium flex-shrink-0">
                           {project.totalResourceMoz} Moz
                         </span>
                       )}
@@ -181,7 +181,7 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
-        className="absolute bottom-6 right-6 bg-black/60 backdrop-blur-md p-5 rounded-2xl text-xs flex flex-col gap-3 border border-white/10 shadow-2xl z-10"
+        className="absolute bottom-6 right-6 premium-glass p-5 rounded-2xl text-xs flex flex-col gap-3 border border-white/10 shadow-gold-sm z-10"
       >
         <h4 className="text-white font-semibold mb-1 uppercase tracking-widest text-[10px]">Project Status</h4>
         <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#00FF88] shadow-[0_0_8px_rgba(0,255,136,0.6)]"></div> Producing</div>
@@ -191,7 +191,7 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
         <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#FF4444] shadow-[0_0_8px_rgba(255,68,68,0.6)]"></div> Care & Maintenance</div>
         <div className="w-full h-px bg-white/10 my-1" />
         <h4 className="text-white font-semibold mb-1 uppercase tracking-widest text-[10px]">Layers</h4>
-        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-gold shadow-[0_0_8px_rgba(212,175,55,0.6)]"></div> Tenements</div>
+        <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-gold-400 shadow-[0_0_8px_rgba(212,175,55,0.6)]"></div> Tenements</div>
         <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-[#8B7355] shadow-[0_0_8px_rgba(139,115,85,0.6)]"></div> Geology</div>
         <div className="flex items-center gap-3 text-gray-300"><div className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]"></div> Security Events</div>
       </motion.div>

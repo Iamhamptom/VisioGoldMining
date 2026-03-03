@@ -38,11 +38,11 @@ export default function ChooseGoalStep({ selected, onSelect }: Props) {
           return (
             <div key={goal.id} onClick={() => onSelect(goal.id)}
               className={`glass-panel p-4 rounded-xl cursor-pointer transition-colors relative overflow-hidden ${
-                isActive ? 'border-gold/50 bg-gold/5' : 'border-border-panel hover:border-white/30'
+                isActive ? 'border-gold-400/50 bg-gold-400/5' : 'border-border-panel hover:border-white/30'
               }`}>
-              {isActive && <div className="absolute top-0 right-0 w-16 h-16 bg-gold/10 rounded-bl-full -mr-8 -mt-8"></div>}
+              {isActive && <div className="absolute top-0 right-0 w-16 h-16 bg-gold-400/10 rounded-bl-full -mr-8 -mt-8"></div>}
               <div className="flex items-start gap-3">
-                <div className={`p-2 rounded-lg ${isActive ? 'bg-gold/20 text-gold' : 'bg-white/5 text-gray-400'}`}>
+                <div className={`p-2 rounded-lg ${isActive ? 'bg-gold-400/20 text-gold' : 'bg-white/5 text-gray-400'}`}>
                   <Icon size={18} strokeWidth={1} className="icon-shine" />
                 </div>
                 <div>

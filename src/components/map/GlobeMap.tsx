@@ -96,8 +96,8 @@ export default function GlobeMap() {
           center: DRC_CENTER,
           zoom: DRC_ZOOM,
           pitch: 40,
-          speed: 0.7,
-          curve: 1.4,
+          speed: 0.6,
+          curve: 1.5,
           essential: true,
         });
       }, 800);
@@ -222,7 +222,7 @@ export default function GlobeMap() {
           type="fill"
           paint={{
             'fill-color': '#D4AF37',
-            'fill-opacity': 0.06,
+            'fill-opacity': 0.12,
           }}
         />
         <Layer
@@ -230,8 +230,9 @@ export default function GlobeMap() {
           type="line"
           paint={{
             'line-color': '#D4AF37',
-            'line-width': 1.5,
-            'line-opacity': 0.5,
+            'line-width': 2.5,
+            'line-opacity': 0.8,
+            'line-blur': 1,
           }}
         />
       </Source>
@@ -325,7 +326,7 @@ export default function GlobeMap() {
                   {getStatusLabel(hoveredProject.project.status)}
                 </span>
                 {hoveredProject.project.totalResourceMoz && (
-                  <span className="text-gold">
+                  <span className="text-gold-400">
                     {hoveredProject.project.totalResourceMoz} Moz
                   </span>
                 )}
@@ -370,7 +371,7 @@ export default function GlobeMap() {
             <div className="grid grid-cols-3 gap-2 mb-3">
               {selectedProject.totalResourceMoz && (
                 <div className="bg-white/5 rounded-lg p-2 text-center">
-                  <div className="text-gold text-xs font-bold">{selectedProject.totalResourceMoz}</div>
+                  <div className="text-gold-400 text-xs font-bold">{selectedProject.totalResourceMoz}</div>
                   <div className="text-gray-500 text-[8px] uppercase tracking-wider">Moz Au</div>
                 </div>
               )}

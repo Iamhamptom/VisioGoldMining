@@ -10,8 +10,8 @@ function RiskCard({ name, score, evidence, mitigations }: {
   name: string; score: number; evidence: string; mitigations: string[];
 }) {
   const color = score < 35 ? 'text-green-400' : score < 60 ? 'text-gold' : 'text-red-400';
-  const bgColor = score < 35 ? 'bg-green-400/10' : score < 60 ? 'bg-gold/10' : 'bg-red-400/10';
-  const borderColor = score < 35 ? 'border-green-400/20' : score < 60 ? 'border-gold/20' : 'border-red-400/20';
+  const bgColor = score < 35 ? 'bg-green-400/10' : score < 60 ? 'bg-gold-400/10' : 'bg-red-400/10';
+  const borderColor = score < 35 ? 'border-green-400/20' : score < 60 ? 'border-gold-400/20' : 'border-red-400/20';
   const level = score < 35 ? 'LOW' : score < 60 ? 'MEDIUM' : 'HIGH';
 
   return (
@@ -25,7 +25,7 @@ function RiskCard({ name, score, evidence, mitigations }: {
       {mitigations.length > 0 && (
         <div className="text-[10px] text-gray-500">
           {mitigations.slice(0, 2).map((m, i) => (
-            <div key={i} className="flex gap-1"><span className="text-gold">+</span> {m}</div>
+            <div key={i} className="flex gap-1"><span className="text-gold-400">+</span> {m}</div>
           ))}
         </div>
       )}
@@ -45,7 +45,7 @@ export default function RiskScoreCards({ risks }: Props) {
   return (
     <div className="glass-panel synthetic-energy p-5 rounded-xl border-white/10">
       <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-        <Shield size={16} strokeWidth={1} className="text-gold icon-shine" /> Risk Impact Assessment
+        <Shield size={16} strokeWidth={1} className="text-gold-400 icon-shine" /> Risk Impact Assessment
       </h3>
       <div className="flex flex-col gap-3 relative z-10">
         {riskList.map((risk) => (

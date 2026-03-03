@@ -35,7 +35,7 @@ export default function OpportunityFeed({ compact, limit, onCreateRepo }: Props)
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 size={24} className="animate-spin text-gold" />
+        <Loader2 size={24} className="animate-spin text-gold-400" />
       </div>
     );
   }

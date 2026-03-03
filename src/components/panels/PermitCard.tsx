@@ -15,7 +15,7 @@ export default function PermitCard({ properties }: Props) {
     <div className="glass-panel synthetic-energy rounded-xl p-5 border-l-2 border-l-gold">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <div className="text-xs text-gold font-mono mb-1">{String(properties.permit_number || properties.id)}</div>
+          <div className="text-xs text-gold-400 font-mono mb-1">{String(properties.permit_number || properties.id)}</div>
           <h3 className="text-lg font-semibold text-white">{String(properties.name || 'Unknown Permit')}</h3>
         </div>
         <span className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border font-semibold ${statusColor}`}>
@@ -26,35 +26,35 @@ export default function PermitCard({ properties }: Props) {
       <div className="flex flex-col gap-3 text-sm">
         {!!properties.holder && (
           <div className="flex items-center gap-2 text-gray-300">
-            <User size={14} strokeWidth={1} className="text-gold icon-shine" />
+            <User size={14} strokeWidth={1} className="text-gold-400 icon-shine" />
             <span className="text-text-muted text-xs w-16">Holder</span>
             <span className="text-white">{String(properties.holder)}</span>
           </div>
         )}
         {!!properties.commodity && (
           <div className="flex items-center gap-2 text-gray-300">
-            <Pickaxe size={14} strokeWidth={1} className="text-gold icon-shine" />
+            <Pickaxe size={14} strokeWidth={1} className="text-gold-400 icon-shine" />
             <span className="text-text-muted text-xs w-16">Commodity</span>
             <span className="text-white">{String(properties.commodity)}</span>
           </div>
         )}
         {!!properties.area_km2 && (
           <div className="flex items-center gap-2 text-gray-300">
-            <SquareStack size={14} strokeWidth={1} className="text-gold icon-shine" />
+            <SquareStack size={14} strokeWidth={1} className="text-gold-400 icon-shine" />
             <span className="text-text-muted text-xs w-16">Area</span>
             <span className="text-white">{String(properties.area_km2)} km²</span>
           </div>
         )}
         {!!properties.granted_date && (
           <div className="flex items-center gap-2 text-gray-300">
-            <Calendar size={14} strokeWidth={1} className="text-gold icon-shine" />
+            <Calendar size={14} strokeWidth={1} className="text-gold-400 icon-shine" />
             <span className="text-text-muted text-xs w-16">Granted</span>
             <span className="text-white">{String(properties.granted_date)}</span>
           </div>
         )}
         {!!properties.expiry_date && (
           <div className="flex items-center gap-2 text-gray-300">
-            <Calendar size={14} strokeWidth={1} className="text-gold icon-shine" />
+            <Calendar size={14} strokeWidth={1} className="text-gold-400 icon-shine" />
             <span className="text-text-muted text-xs w-16">Expires</span>
             <span className="text-white">{String(properties.expiry_date)}</span>
           </div>

@@ -154,7 +154,7 @@ export default function ChatAgent() {
   return (
     <div className="flex flex-col h-full bg-transparent">
       {/* Header with Agent Selector */}
-      <div className="p-4 border-b border-white/5 bg-black/40 relative">
+      <div className="p-4 border-b border-white/5 bg-bg-surface/40 relative">
         <button
           onClick={() => setAgentMenuOpen(!agentMenuOpen)}
           className="flex items-center gap-3 w-full hover:bg-white/5 rounded-xl p-1.5 -m-1.5 transition-colors"
@@ -181,7 +181,7 @@ export default function ChatAgent() {
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="absolute left-3 right-3 top-full mt-1 bg-black/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden"
+              className="absolute left-3 right-3 top-full mt-1 premium-glass border border-white/10 rounded-xl shadow-gold-md z-50 overflow-hidden"
             >
               {AGENTS.map((agent) => {
                 const Icon = agent.icon;
@@ -220,9 +220,9 @@ export default function ChatAgent() {
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="px-4 py-2 bg-gold/5 border-b border-gold/20 flex items-center gap-2">
-              <Crosshair size={10} className="text-gold" />
-              <span className="text-[10px] text-gold font-medium truncate">{pursuitProject.name}</span>
+            <div className="px-4 py-2 bg-gold-400/5 border-b border-gold-400/20 flex items-center gap-2">
+              <Crosshair size={10} className="text-gold-400" />
+              <span className="text-[10px] text-gold-400 font-medium truncate">{pursuitProject.name}</span>
               <span className="text-[9px] text-gray-500">Phase {pursuit.activePhase + 1}</span>
             </div>
           </motion.div>
@@ -267,7 +267,7 @@ export default function ChatAgent() {
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-white/5 bg-black/60 backdrop-blur-md">
+      <div className="p-4 border-t border-white/5 bg-bg-surface/60 backdrop-blur-md">
         <div className="relative flex items-center">
           <input
             type="text"
@@ -275,7 +275,7 @@ export default function ChatAgent() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder={`Ask ${currentAgent.name}...`}
-            className="w-full bg-black/50 border border-white/10 rounded-full py-3 pl-5 pr-14 text-sm focus:outline-none focus:border-gold/50 text-white placeholder-gray-600 transition-colors shadow-inner"
+            className="w-full bg-black/50 border border-white/10 rounded-full py-3 pl-5 pr-14 text-sm focus:outline-none focus:border-gold-400/50 text-white placeholder-gray-600 transition-colors shadow-inner"
           />
           <button
             onClick={handleSend}

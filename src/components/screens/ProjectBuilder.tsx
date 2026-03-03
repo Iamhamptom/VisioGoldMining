@@ -92,7 +92,7 @@ export default function ProjectBuilder() {
       {/* Stepper */}
       <div className="flex justify-between items-center mb-8 relative">
         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-0.5 bg-white/10 -z-10"></div>
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 bg-gold -z-10 transition-all duration-500" style={{ width: `${((step - 1) / (steps.length - 1)) * 100}%` }}></div>
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 bg-gold-400 -z-10 transition-all duration-500" style={{ width: `${((step - 1) / (steps.length - 1)) * 100}%` }}></div>
 
         {steps.map((s) => {
           const Icon = s.icon;
@@ -102,8 +102,8 @@ export default function ProjectBuilder() {
           return (
             <div key={s.id} className="flex flex-col items-center gap-2">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-colors ${
-                isActive ? 'bg-gold text-black gold-glow' :
-                isCompleted ? 'bg-gold/20 text-gold border border-gold' :
+                isActive ? 'bg-gold-400 text-black gold-glow' :
+                isCompleted ? 'bg-gold-400/20 text-gold-400 border border-gold' :
                 'bg-bg-dark border border-border-panel text-gray-500'
               }`}>
                 {isCompleted ? <Check size={14} strokeWidth={1} className="icon-shine" /> : <Icon size={14} strokeWidth={1} className="icon-shine" />}
@@ -136,7 +136,7 @@ export default function ProjectBuilder() {
           <button
             onClick={handleNext}
             disabled={planLoading}
-            className="px-6 py-2 bg-gold text-black rounded-lg text-sm font-medium hover:bg-yellow-400 transition-colors flex items-center gap-2 disabled:opacity-50"
+            className="px-6 py-2 bg-gold-400 text-black rounded-lg text-sm font-medium hover:bg-yellow-400 transition-colors flex items-center gap-2 disabled:opacity-50"
           >
             {step === 3 ? 'Generate Plan' : 'Next'} <ArrowRight size={16} strokeWidth={1} className="icon-shine" />
           </button>

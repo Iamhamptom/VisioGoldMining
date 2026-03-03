@@ -10,7 +10,7 @@ export default function ScheduleCard({ schedule }: Props) {
   return (
     <div className="glass-panel synthetic-energy p-5 rounded-xl border-white/10">
       <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-        <Calendar size={16} strokeWidth={1} className="text-gold icon-shine" /> Schedule Estimate
+        <Calendar size={16} strokeWidth={1} className="text-gold-400 icon-shine" /> Schedule Estimate
       </h3>
 
       <div className="grid grid-cols-3 gap-4 mb-4 relative z-10">
@@ -20,8 +20,8 @@ export default function ScheduleCard({ schedule }: Props) {
           <div className="text-[10px] text-text-muted">days ({(schedule.min_days / 30).toFixed(0)} mo)</div>
         </div>
         <div className="text-center">
-          <div className="text-[10px] text-gold uppercase mb-1">Expected</div>
-          <div className="text-2xl font-mono text-gold gold-text-glow">{schedule.p50_days}</div>
+          <div className="text-[10px] text-gold-400 uppercase mb-1">Expected</div>
+          <div className="text-2xl font-mono text-gold-400 gold-text-glow">{schedule.p50_days}</div>
           <div className="text-[10px] text-text-muted">days ({(schedule.p50_days / 30).toFixed(0)} mo)</div>
         </div>
         <div className="text-center">
@@ -36,7 +36,7 @@ export default function ScheduleCard({ schedule }: Props) {
           <div className="text-[10px] text-text-muted uppercase mb-2">Critical Path</div>
           <div className="flex flex-wrap gap-1.5">
             {schedule.critical_path.map((item, i) => (
-              <span key={i} className="px-2 py-0.5 bg-gold/10 border border-gold/20 rounded text-[10px] text-gold">{item}</span>
+              <span key={i} className="px-2 py-0.5 bg-gold-400/10 border border-gold-400/20 rounded text-[10px] text-gold-400">{item}</span>
             ))}
           </div>
         </div>

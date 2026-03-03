@@ -14,7 +14,7 @@ export default function OpportunityExplorer({ onCreateRepo }: Props) {
       </header>
 
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
-        <button className="glass-panel px-3 py-1.5 rounded-full text-xs flex items-center gap-1 text-white border-gold/50 bg-gold/10 whitespace-nowrap">
+        <button className="glass-panel px-3 py-1.5 rounded-full text-xs flex items-center gap-1 text-white border-gold-400/50 bg-gold-400/10 whitespace-nowrap">
           Commodity: Gold
         </button>
         <button className="glass-panel px-3 py-1.5 rounded-full text-xs flex items-center gap-1 text-gray-300 hover:text-white whitespace-nowrap">

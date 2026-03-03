@@ -18,14 +18,14 @@ export default function DocsChecklist({ checklists }: Props) {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
-          <FileText size={16} strokeWidth={1} className="text-gold icon-shine" /> Document Checklist
+          <FileText size={16} strokeWidth={1} className="text-gold-400 icon-shine" /> Document Checklist
         </h3>
         <span className="text-[10px] text-text-muted font-mono">{completedItems}/{totalItems} complete</span>
       </div>
 
       {checklists.map((cat) => (
         <div key={cat.category} className="glass-panel p-3 rounded-xl border-white/10">
-          <div className="text-xs text-gold font-medium mb-2 uppercase tracking-wider">{cat.category}</div>
+          <div className="text-xs text-gold-400 font-medium mb-2 uppercase tracking-wider">{cat.category}</div>
           <div className="flex flex-col gap-1.5">
             {cat.items.map((item) => {
               const key = `${cat.category}:${item.name}`;
@@ -34,7 +34,7 @@ export default function DocsChecklist({ checklists }: Props) {
                 <button key={key} onClick={() => toggle(key)}
                   className="flex items-center gap-2 text-xs text-left hover:bg-white/5 rounded p-1 transition-colors">
                   {isChecked
-                    ? <CheckSquare size={14} strokeWidth={1} className="text-gold shrink-0" />
+                    ? <CheckSquare size={14} strokeWidth={1} className="text-gold-400 shrink-0" />
                     : <Square size={14} strokeWidth={1} className="text-gray-600 shrink-0" />
                   }
                   <span className={isChecked ? 'text-gray-500 line-through' : 'text-gray-300'}>{item.name}</span>

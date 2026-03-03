@@ -18,7 +18,7 @@ function ConfidenceBar({ min, p50, p90, maxVal }: { min: number; p50: number; p9
   return (
     <div className="relative h-2 w-full bg-white/5 rounded-full overflow-hidden">
       <div className="absolute h-full bg-green-500/40 rounded-full" style={{ width: `${scale(p90)}%` }} />
-      <div className="absolute h-full bg-gold/60 rounded-full" style={{ width: `${scale(p50)}%` }} />
+      <div className="absolute h-full bg-gold-400/60 rounded-full" style={{ width: `${scale(p50)}%` }} />
       <div className="absolute h-full bg-green-400/80 rounded-full" style={{ width: `${scale(min)}%` }} />
     </div>
   );
@@ -30,7 +30,7 @@ export default function CostBreakdownTable({ departments, totalCost }: Props) {
   return (
     <div className="glass-panel synthetic-energy p-5 rounded-xl border-white/10">
       <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-        <DollarSign size={16} strokeWidth={1} className="text-gold icon-shine" /> Cost by Department
+        <DollarSign size={16} strokeWidth={1} className="text-gold-400 icon-shine" /> Cost by Department
       </h3>
 
       <div className="overflow-x-auto">
@@ -49,7 +49,7 @@ export default function CostBreakdownTable({ departments, totalCost }: Props) {
               <tr key={dept.department} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                 <td className="py-2 pr-2 text-gray-300">{dept.label}</td>
                 <td className="text-right py-2 px-2 font-mono text-green-400">{formatUSD(dept.cost.min)}</td>
-                <td className="text-right py-2 px-2 font-mono text-gold">{formatUSD(dept.cost.p50)}</td>
+                <td className="text-right py-2 px-2 font-mono text-gold-400">{formatUSD(dept.cost.p50)}</td>
                 <td className="text-right py-2 px-2 font-mono text-red-400">{formatUSD(dept.cost.p90)}</td>
                 <td className="py-2 px-2">
                   <ConfidenceBar min={dept.cost.min} p50={dept.cost.p50} p90={dept.cost.p90} maxVal={maxP90} />
@@ -58,10 +58,10 @@ export default function CostBreakdownTable({ departments, totalCost }: Props) {
             ))}
           </tbody>
           <tfoot>
-            <tr className="border-t-2 border-gold/30 font-semibold">
-              <td className="py-3 pr-2 text-gold">TOTAL</td>
+            <tr className="border-t-2 border-gold-400/30 font-semibold">
+              <td className="py-3 pr-2 text-gold-400">TOTAL</td>
               <td className="text-right py-3 px-2 font-mono text-green-400">{formatUSD(totalCost.min)}</td>
-              <td className="text-right py-3 px-2 font-mono text-gold gold-text-glow">{formatUSD(totalCost.p50)}</td>
+              <td className="text-right py-3 px-2 font-mono text-gold-400 gold-text-glow">{formatUSD(totalCost.p50)}</td>
               <td className="text-right py-3 px-2 font-mono text-red-400">{formatUSD(totalCost.p90)}</td>
               <td className="py-3 px-2">
                 <ConfidenceBar min={totalCost.min} p50={totalCost.p50} p90={totalCost.p90} maxVal={totalCost.p90} />

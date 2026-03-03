@@ -82,12 +82,12 @@ export default function SimulationStudio() {
         <div className="flex gap-2">
           <button onClick={() => setMode(mode === 'simulate' ? 'compare' : 'simulate')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border ${
-              mode === 'compare' ? 'bg-gold/20 text-gold border-gold/30' : 'bg-white/5 text-gray-400 border-white/10 hover:text-white'
+              mode === 'compare' ? 'bg-gold-400/20 text-gold-400 border-gold-400/30' : 'bg-white/5 text-gray-400 border-white/10 hover:text-white'
             }`}>
             <Layers size={14} strokeWidth={1} className="icon-shine" />
             {mode === 'compare' ? 'Compare Mode' : 'Compare'}
           </button>
-          <button className="p-2 bg-white/5 hover:bg-gold/20 text-gold rounded-lg transition-colors border border-gold/30">
+          <button className="p-2 bg-white/5 hover:bg-gold-400/20 text-gold-400 rounded-lg transition-colors border border-gold-400/30">
             <Download size={18} strokeWidth={1} className="icon-shine" />
           </button>
         </div>
@@ -98,9 +98,9 @@ export default function SimulationStudio() {
           <>
             {/* Cost Hero */}
             {outputs && (
-              <div className="glass-panel synthetic-energy p-6 rounded-xl border-gold/30 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gold/10 rounded-full blur-3xl"></div>
-                <h3 className="text-xs font-semibold text-gold uppercase tracking-wider mb-2 relative z-10">Estimated Total Project Cost</h3>
+              <div className="glass-panel synthetic-energy p-6 rounded-xl border-gold-400/30 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gold-400/10 rounded-full blur-3xl"></div>
+                <h3 className="text-xs font-semibold text-gold-400 uppercase tracking-wider mb-2 relative z-10">Estimated Total Project Cost</h3>
                 <div className="text-4xl font-mono text-white gold-text-glow mb-1 gold-text-alive relative z-10">
                   ${(outputs.total_cost.p50 / 1_000_000).toFixed(2)}M
                 </div>

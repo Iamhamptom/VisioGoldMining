@@ -22,10 +22,10 @@ export default function ExportCommitStep({ planName, hasPlan }: Props) {
     <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-500">
       <h2 className="text-lg font-medium text-white mb-2">Export + Commit</h2>
 
-      <div className="glass-panel synthetic-energy p-5 rounded-xl border-gold/30">
+      <div className="glass-panel synthetic-energy p-5 rounded-xl border-gold-400/30">
         <div className="flex items-center gap-3 mb-4 relative z-10">
-          <div className="p-2 bg-gold/20 rounded-lg">
-            <GitBranch size={18} strokeWidth={1} className="text-gold icon-shine" />
+          <div className="p-2 bg-gold-400/20 rounded-lg">
+            <GitBranch size={18} strokeWidth={1} className="text-gold-400 icon-shine" />
           </div>
           <div>
             <div className="text-sm text-white font-medium">{planName || 'DRC Project Plan'}</div>
@@ -57,7 +57,7 @@ export default function ExportCommitStep({ planName, hasPlan }: Props) {
           </div>
         ) : (
           <button onClick={() => setSaved(true)}
-            className="w-full flex items-center justify-center gap-2 py-3 bg-gold text-black rounded-lg font-semibold text-sm hover:bg-yellow-400 transition-colors relative z-10">
+            className="w-full flex items-center justify-center gap-2 py-3 bg-gold-400 text-black rounded-lg font-semibold text-sm hover:bg-yellow-400 transition-colors relative z-10">
             <Save size={16} strokeWidth={1} /> Save to Branch
           </button>
         )}

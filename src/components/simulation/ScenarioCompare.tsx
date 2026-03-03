@@ -29,22 +29,22 @@ export default function ScenarioCompare({ savedSimulations, onCompare, compariso
   return (
     <div className="glass-panel synthetic-energy p-5 rounded-xl border-white/10">
       <h3 className="text-sm font-semibold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
-        <BarChart3 size={16} strokeWidth={1} className="text-gold icon-shine" /> Scenario Comparison
+        <BarChart3 size={16} strokeWidth={1} className="text-gold-400 icon-shine" /> Scenario Comparison
       </h3>
 
       <div className="flex gap-3 mb-4 relative z-10">
         <select value={idA} onChange={(e) => setIdA(e.target.value)}
-          className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-gold/50 focus:outline-none">
+          className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-gold-400/50 focus:outline-none">
           <option value="" className="bg-black">Scenario A...</option>
           {savedSimulations.map(s => <option key={s.id} value={s.id} className="bg-black">{s.name}</option>)}
         </select>
         <select value={idB} onChange={(e) => setIdB(e.target.value)}
-          className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-gold/50 focus:outline-none">
+          className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-gold-400/50 focus:outline-none">
           <option value="" className="bg-black">Scenario B...</option>
           {savedSimulations.map(s => <option key={s.id} value={s.id} className="bg-black">{s.name}</option>)}
         </select>
         <button onClick={() => idA && idB && onCompare(idA, idB)} disabled={!idA || !idB || loading}
-          className="px-4 py-2 bg-gold text-black rounded-lg text-sm font-medium hover:bg-yellow-400 transition-colors disabled:opacity-50">
+          className="px-4 py-2 bg-gold-400 text-black rounded-lg text-sm font-medium hover:bg-yellow-400 transition-colors disabled:opacity-50">
           {loading ? '...' : 'Compare'}
         </button>
       </div>
@@ -71,8 +71,8 @@ export default function ScenarioCompare({ savedSimulations, onCompare, compariso
             })}
           </div>
 
-          <div className="flex justify-between items-center py-2 px-2 border-t border-gold/20 text-sm font-semibold">
-            <span className="text-gold">Total Delta</span>
+          <div className="flex justify-between items-center py-2 px-2 border-t border-gold-400/20 text-sm font-semibold">
+            <span className="text-gold-400">Total Delta</span>
             <span className={`font-mono ${comparison.delta_total > 0 ? 'text-red-400' : 'text-green-400'}`}>
               {formatDelta(comparison.delta_total)}
             </span>
@@ -85,8 +85,8 @@ export default function ScenarioCompare({ savedSimulations, onCompare, compariso
             </span>
           </div>
 
-          <div className="mt-4 p-3 bg-gold/5 border border-gold/20 rounded-lg">
-            <div className="text-[10px] text-gold uppercase tracking-wider mb-1">Recommendation</div>
+          <div className="mt-4 p-3 bg-gold-400/5 border border-gold-400/20 rounded-lg">
+            <div className="text-[10px] text-gold-400 uppercase tracking-wider mb-1">Recommendation</div>
             <p className="text-xs text-gray-300 leading-relaxed">{comparison.recommendation}</p>
           </div>
         </div>

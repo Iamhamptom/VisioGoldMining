@@ -22,7 +22,7 @@ export default function SettingsModal({ isOpen, onClose }: { isOpen: boolean; on
           >
             <div className="flex items-center justify-between p-6 border-b border-white/5">
               <h2 className="text-xl font-light text-white flex items-center gap-3">
-                <Monitor className="text-gold icon-shine" strokeWidth={1} /> System Settings
+                <Monitor className="text-gold-400 icon-shine" strokeWidth={1} /> System Settings
               </h2>
               <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">
                 <X size={24} strokeWidth={1} className="icon-shine" />
@@ -54,11 +54,11 @@ export default function SettingsModal({ isOpen, onClose }: { isOpen: boolean; on
                 <div>
                   <h3 className="text-sm font-medium text-white mb-4 uppercase tracking-wider">Theme Preferences</h3>
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="border border-gold bg-gold/5 rounded-xl p-4 cursor-pointer flex flex-col items-center gap-3">
+                    <div className="border border-gold-400 bg-gold-400/5 rounded-xl p-4 cursor-pointer flex flex-col items-center gap-3">
                       <div className="w-full h-16 bg-black rounded-md border border-white/10 flex items-center justify-center">
-                        <span className="text-gold font-mono text-xs">Pitch Black</span>
+                        <span className="text-gold-400 font-mono text-xs">Pitch Black</span>
                       </div>
-                      <span className="text-sm text-gold font-medium">Dark Mode (Active)</span>
+                      <span className="text-sm text-gold-400 font-medium">Dark Mode (Active)</span>
                     </div>
                     <div className="border border-white/10 bg-white/5 rounded-xl p-4 cursor-pointer flex flex-col items-center gap-3 opacity-50">
                       <div className="w-full h-16 bg-white rounded-md border border-gray-200 flex items-center justify-center">
@@ -76,7 +76,7 @@ export default function SettingsModal({ isOpen, onClose }: { isOpen: boolean; on
                       <div className="text-sm text-white font-medium">High-Fidelity Globe</div>
                       <div className="text-xs text-gray-400">Enable WebGL 3D rendering for the interactive map.</div>
                     </div>
-                    <div className="w-10 h-6 bg-gold rounded-full relative cursor-pointer">
+                    <div className="w-10 h-6 bg-gold-400 rounded-full relative cursor-pointer">
                       <div className="absolute right-1 top-1 w-4 h-4 bg-black rounded-full"></div>
                     </div>
                   </div>
@@ -88,7 +88,7 @@ export default function SettingsModal({ isOpen, onClose }: { isOpen: boolean; on
               <button onClick={onClose} className="px-5 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white transition-colors">
                 Cancel
               </button>
-              <button onClick={onClose} className="px-5 py-2 rounded-lg text-sm font-medium bg-gold text-black hover:bg-yellow-400 transition-colors">
+              <button onClick={onClose} className="px-5 py-2 rounded-lg text-sm font-medium bg-gold-400 text-black hover:bg-yellow-400 transition-colors">
                 Save Changes
               </button>
             </div>

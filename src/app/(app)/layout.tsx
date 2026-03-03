@@ -39,7 +39,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Sidebar */}
       <aside className="w-64 border-r border-white/10 bg-black/80 backdrop-blur-xl flex flex-col">
         <div className="p-4 border-b border-white/10">
-          <h1 className="text-lg font-display font-bold text-gold tracking-wider">VisioGold DRC</h1>
+          <h1 className="text-lg font-display font-bold text-gold-400 tracking-wider">VisioGold DRC</h1>
           <p className="text-xs text-gray-500">{user?.email}</p>
         </div>
 
@@ -49,7 +49,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
         <nav className="flex-1 p-4 space-y-1">
           <Link href="/explorer">
-            <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-gold hover:bg-gold/10">
+            <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-gold-400 hover:bg-gold-400/10">
               <Compass className="mr-2 h-4 w-4" />
               Explorer
             </Button>

@@ -16,7 +16,7 @@ export default function GeneratedTaskBoard({ taskGroups }: Props) {
   return (
     <div className="flex flex-col gap-3">
       <h3 className="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2">
-        <FileText size={16} strokeWidth={1} className="text-gold icon-shine" /> Task Breakdown
+        <FileText size={16} strokeWidth={1} className="text-gold-400 icon-shine" /> Task Breakdown
       </h3>
 
       {taskGroups.map((group) => (
@@ -24,13 +24,13 @@ export default function GeneratedTaskBoard({ taskGroups }: Props) {
           <button onClick={() => toggle(group.phase)}
             className="w-full flex items-center justify-between p-3 hover:bg-white/5 transition-colors">
             <div className="flex items-center gap-2">
-              {expanded[group.phase] ? <ChevronDown size={14} strokeWidth={1} className="text-gold" /> : <ChevronRight size={14} strokeWidth={1} className="text-gray-500" />}
-              <span className="text-xs text-gold font-mono">Phase {group.phase}</span>
+              {expanded[group.phase] ? <ChevronDown size={14} strokeWidth={1} className="text-gold-400" /> : <ChevronRight size={14} strokeWidth={1} className="text-gray-500" />}
+              <span className="text-xs text-gold-400 font-mono">Phase {group.phase}</span>
               <span className="text-sm text-white font-medium">{group.name}</span>
             </div>
             <div className="flex items-center gap-2 text-[10px] text-text-muted">
               <span>{group.tasks.length} tasks</span>
-              <span className="text-gold font-mono flex items-center gap-1">
+              <span className="text-gold-400 font-mono flex items-center gap-1">
                 <Clock size={10} strokeWidth={1} /> ~{group.total_duration_days.p50}d
               </span>
             </div>
