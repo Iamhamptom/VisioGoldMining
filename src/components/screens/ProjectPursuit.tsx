@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Crosshair, ChevronRight, ChevronDown, Clock, DollarSign,
   Users, AlertTriangle, FileText, MapPin, CheckCircle2,
   Circle, ArrowRight, Building, Pickaxe, Mountain, Shield,
   Landmark, Banknote, HardHat, Leaf, Target, Search as SearchIcon,
+  Eye, Globe,
 } from 'lucide-react';
 import { DRC_PROJECTS, type DRCProject } from '../../data/drc-projects';
+import { usePursuit } from '../../hooks/usePursuitContext';
+import { type RegionIntelligence, getIntelByProvince } from '../../data/drc-local-intel';
 
 const phaseIcons = [SearchIcon, Target, Mountain, FileText, Landmark, Shield, Banknote, HardHat, Pickaxe, Leaf];
 const phaseColors = ['#4488FF', '#A78BFA', '#00FF88', '#FFD700', '#FF8800', '#FF4444', '#D4AF37', '#4488FF', '#00FF88', '#8B7355'];
@@ -31,17 +34,36 @@ interface PursuitState {
 }
 
 export default function ProjectPursuit() {
+  const { pursuit: sharedPursuit, endPursuit: endSharedPursuit, setPhase: setSharedPhase } = usePursuit();
   const [pursuit, setPursuit] = useState<PursuitState | null>(null);
   const [selectedPhase, setSelectedPhase] = useState<number>(0);
   const [expandedSection, setExpandedSection] = useState<string | null>('overview');
+  const [showIntel, setShowIntel] = useState(false);
   const projectsWithCoords = DRC_PROJECTS.filter(p => p.location.lat !== null);
 
+  // Sync from shared pursuit context (e.g. when "Pursue" is clicked from the map)
+  useEffect(() => {
+    if (sharedPursuit.pursuitActive && sharedPursuit.activeProjectId) {
+      setPursuit({
+        projectId: sharedPursuit.activeProjectId,
+        currentPhase: sharedPursuit.activePhase,
+        started: true,
+      });
+    }
+  }, [sharedPursuit.pursuitActive, sharedPursuit.activeProjectId, sharedPursuit.activePhase]);
+
   if (!pursuit) {
-    return <ProjectSelector projects={projectsWithCoords} onSelect={(id) => setPursuit({ projectId: id, currentPhase: 0, started: true })} />;
+    return <ProjectSelector projects={projectsWithCoords} onSelect={(id) => {
+      setPursuit({ projectId: id, currentPhase: 0, started: true });
+      setSharedPhase(0);
+    }} />;
   }
 
   const project = DRC_PROJECTS.find(p => p.projectId === pursuit.projectId);
   if (!project) return null;
+
+  const regionIntelArr = getIntelByProvince(project.location.province);
+  const regionIntel = regionIntelArr.length > 0 ? regionIntelArr[0] : null;
 
   return (
     <div className="h-full flex flex-col">
@@ -55,12 +77,25 @@ export default function ProjectPursuit() {
             <h2 className="text-sm font-semibold text-white">{project.name}</h2>
             <p className="text-[10px] text-gold uppercase tracking-widest">Project Pursuit Active</p>
           </div>
-          <button
-            onClick={() => setPursuit(null)}
-            className="text-[10px] text-gray-500 hover:text-red-400 px-3 py-1.5 rounded-lg border border-white/10 hover:border-red-400/30 transition-colors"
-          >
-            Exit Pursuit
-          </button>
+          <div className="flex items-center gap-2">
+            {regionIntel && (
+              <button
+                onClick={() => setShowIntel(!showIntel)}
+                className={`text-[10px] px-3 py-1.5 rounded-lg border transition-colors flex items-center gap-1.5 ${
+                  showIntel ? 'text-blue-400 border-blue-400/30 bg-blue-500/10' : 'text-gray-500 border-white/10 hover:text-blue-400 hover:border-blue-400/30'
+                }`}
+              >
+                <Eye size={10} />
+                Intel
+              </button>
+            )}
+            <button
+              onClick={() => { setPursuit(null); endSharedPursuit(); }}
+              className="text-[10px] text-gray-500 hover:text-red-400 px-3 py-1.5 rounded-lg border border-white/10 hover:border-red-400/30 transition-colors"
+            >
+              Exit Pursuit
+            </button>
+          </div>
         </div>
 
         {/* Progress bar */}
@@ -73,16 +108,30 @@ export default function ProjectPursuit() {
                 i === pursuit.currentPhase ? 'bg-gold/60 animate-pulse' :
                 'bg-white/10'
               }`}
-              onClick={() => { setSelectedPhase(i); setPursuit(prev => prev ? { ...prev, currentPhase: i } : null); }}
+              onClick={() => { setSelectedPhase(i); setPursuit(prev => prev ? { ...prev, currentPhase: i } : null); setSharedPhase(i); }}
             />
           ))}
         </div>
         <p className="text-[10px] text-gray-500 mt-2">Phase {pursuit.currentPhase + 1} of 10</p>
       </div>
 
-      {/* Phase Timeline */}
+      {/* Phase Timeline / Intel */}
       <div className="flex-1 overflow-y-auto">
         <div className="p-4">
+          {/* Local Intel Panel */}
+          <AnimatePresence>
+            {showIntel && regionIntel && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden mb-4"
+              >
+                <RegionIntelPanel intel={regionIntel} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Phase Cards */}
           <div className="space-y-2">
             {PHASE_SUMMARIES.map((phase, i) => {
@@ -487,5 +536,118 @@ function getPhaseMeetings(i: number): React.ReactNode {
         </li>
       ))}
     </ul>
+  );
+}
+
+function RegionIntelPanel({ intel }: { intel: RegionIntelligence | null }) {
+  if (!intel) return null;
+
+  const securityColors: Record<string, string> = {
+    low: 'text-green-400 bg-green-500/10 border-green-500/20',
+    medium: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20',
+    high: 'text-orange-400 bg-orange-500/10 border-orange-500/20',
+    critical: 'text-red-400 bg-red-500/10 border-red-500/20',
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2 mb-2">
+        <Eye size={14} className="text-blue-400" />
+        <h3 className="text-xs font-semibold text-white uppercase tracking-widest">Local Intelligence — {intel.province}</h3>
+      </div>
+
+      {/* Security */}
+      <div className={`p-3 rounded-xl border ${securityColors[intel.security.level]}`}>
+        <div className="flex items-center gap-2 mb-2">
+          <Shield size={12} />
+          <span className="text-[10px] uppercase tracking-widest font-semibold">Security: {intel.security.level}</span>
+        </div>
+        {intel.security.armedGroups.length > 0 && (
+          <p className="text-[10px] text-gray-400 mb-1.5">Known groups: {intel.security.armedGroups.join(', ')}</p>
+        )}
+        <ul className="space-y-1">
+          {intel.security.recommendations.map((rec, i) => (
+            <li key={i} className="text-[10px] text-gray-400 flex items-start gap-1.5">
+              <AlertTriangle size={8} className="mt-0.5 shrink-0" />
+              {rec}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Languages */}
+      <div className="p-3 rounded-xl bg-purple-500/5 border border-purple-500/20">
+        <p className="text-[10px] text-purple-400 uppercase tracking-widest mb-2 font-semibold">Languages</p>
+        <div className="flex flex-wrap gap-1.5">
+          {intel.languages.map((lang, i) => (
+            <span key={i} className="text-[9px] px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-300 border border-purple-500/20">
+              {lang.name} ({lang.type})
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Infrastructure */}
+      <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+        <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-2 font-semibold">Infrastructure</p>
+        <div className="space-y-1.5 text-[10px] text-gray-400">
+          {intel.infrastructure.airports.length > 0 && (
+            <div className="flex items-start gap-1.5">
+              <Globe size={9} className="text-blue-400 mt-0.5 shrink-0" />
+              <span>{intel.infrastructure.airports.join('; ')}</span>
+            </div>
+          )}
+          <div className="flex items-start gap-1.5">
+            <MapPin size={9} className="text-blue-400 mt-0.5 shrink-0" />
+            <span>{intel.infrastructure.roads.join('; ')}</span>
+          </div>
+          <div className="flex items-start gap-1.5">
+            <Building size={9} className="text-blue-400 mt-0.5 shrink-0" />
+            <span>Power: {intel.infrastructure.power}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Artisanal Mining */}
+      <div className="p-3 rounded-xl bg-orange-500/5 border border-orange-500/20">
+        <p className="text-[10px] text-orange-400 uppercase tracking-widest mb-2 font-semibold">Artisanal Mining</p>
+        <div className="space-y-1 text-[10px] text-gray-400">
+          <p>Est. miners: <span className="text-orange-300 font-mono">{intel.artisanalMining.estimatedMiners.toLocaleString()}</span></p>
+          <p>Minerals: {intel.artisanalMining.minerals.join(', ')}</p>
+          <p>Cooperatives: {intel.artisanalMining.cooperatives.join(', ')}</p>
+          <p>Conflict risk: <span className="text-orange-300">{intel.artisanalMining.conflictRisk}</span></p>
+        </div>
+      </div>
+
+      {/* Accommodation */}
+      {intel.accommodation.length > 0 && (
+        <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+          <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-2 font-semibold">Accommodation</p>
+          <div className="space-y-1.5">
+            {intel.accommodation.map((acc, i) => (
+              <div key={i} className="flex items-center justify-between text-[10px]">
+                <span className="text-gray-300">{acc.name}</span>
+                <span className="text-gold font-mono">{acc.priceRange}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Key Contacts */}
+      {intel.keyContacts.length > 0 && (
+        <div className="p-3 rounded-xl bg-white/5 border border-white/10">
+          <p className="text-[10px] text-gray-500 uppercase tracking-widest mb-2 font-semibold">Key Contacts</p>
+          <div className="space-y-2">
+            {intel.keyContacts.map((contact, i) => (
+              <div key={i}>
+                <p className="text-[10px] text-gold font-medium">{contact.role}</p>
+                <p className="text-[10px] text-gray-400">{contact.description} — {contact.location}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

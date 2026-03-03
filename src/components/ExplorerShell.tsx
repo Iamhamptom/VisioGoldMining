@@ -9,6 +9,7 @@ import RightPanel from './RightPanel';
 import SettingsModal from './SettingsModal';
 import { MapProvider } from '@/hooks/useMap';
 import { SelectionProvider } from '@/hooks/useFeatureSelection';
+import { PursuitProvider } from '@/hooks/usePursuitContext';
 import type { ScreenType } from '@/lib/types/screen';
 import type { SelectedFeature } from '@/lib/types/layers';
 
@@ -66,46 +67,52 @@ export default function ExplorerShell() {
     if (screen !== 'repo') setSelectedRepo(null);
   }, []);
 
+  const handlePursuitStart = useCallback(() => {
+    setActiveScreen('pursuit');
+  }, []);
+
   return (
     <MapProvider>
       <SelectionProvider onSelectionChange={handleSelectionChange}>
-        <div className="bg-black text-white overflow-hidden font-sans w-screen h-screen relative">
-          <BackgroundEffects />
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, ease: 'easeInOut' }}
-            className="flex h-screen w-screen relative z-10"
-          >
-            <Sidebar
-              activeScreen={activeScreen}
-              setActiveScreen={handleSetActiveScreen}
-              onOpenSettings={() => setIsSettingsOpen(true)}
-            />
-
-            {/* Left Panel: AI Chat Agent */}
-            <div className="w-80 h-full border-r border-white/10 bg-black/40 backdrop-blur-2xl flex flex-col z-10 relative shadow-[4px_0_24px_rgba(0,0,0,0.5)]">
-              <ChatAgent />
-            </div>
-
-            {/* Center Panel: Interactive Map */}
-            <div className="flex-1 h-full relative bg-transparent">
-              <MapArea activeScreen={activeScreen} />
-            </div>
-
-            {/* Right Panel: Context / Details */}
-            <div className="w-[450px] h-full border-l border-white/10 bg-black/40 backdrop-blur-2xl flex flex-col z-10 relative shadow-[-4px_0_24px_rgba(0,0,0,0.5)]">
-              <RightPanel
+        <PursuitProvider onPursuitStart={handlePursuitStart}>
+          <div className="bg-black text-white overflow-hidden font-sans w-screen h-screen relative">
+            <BackgroundEffects />
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, ease: 'easeInOut' }}
+              className="flex h-screen w-screen relative z-10"
+            >
+              <Sidebar
                 activeScreen={activeScreen}
-                selectedRepo={selectedRepo}
-                setActiveScreen={setActiveScreen}
-                setSelectedRepo={setSelectedRepo}
+                setActiveScreen={handleSetActiveScreen}
+                onOpenSettings={() => setIsSettingsOpen(true)}
               />
-            </div>
-          </motion.div>
 
-          <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
-        </div>
+              {/* Left Panel: AI Chat Agent */}
+              <div className="w-80 h-full border-r border-white/10 bg-black/40 backdrop-blur-2xl flex flex-col z-10 relative shadow-[4px_0_24px_rgba(0,0,0,0.5)]">
+                <ChatAgent />
+              </div>
+
+              {/* Center Panel: Interactive Map */}
+              <div className="flex-1 h-full relative bg-transparent">
+                <MapArea activeScreen={activeScreen} />
+              </div>
+
+              {/* Right Panel: Context / Details */}
+              <div className="w-[450px] h-full border-l border-white/10 bg-black/40 backdrop-blur-2xl flex flex-col z-10 relative shadow-[-4px_0_24px_rgba(0,0,0,0.5)]">
+                <RightPanel
+                  activeScreen={activeScreen}
+                  selectedRepo={selectedRepo}
+                  setActiveScreen={setActiveScreen}
+                  setSelectedRepo={setSelectedRepo}
+                />
+              </div>
+            </motion.div>
+
+            <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+          </div>
+        </PursuitProvider>
       </SelectionProvider>
     </MapProvider>
   );
