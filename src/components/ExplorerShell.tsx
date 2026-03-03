@@ -114,10 +114,19 @@ export default function ExplorerShell() {
   const effectiveLeft = leftCollapsed ? 0 : leftWidth;
   const effectiveRight = rightCollapsed ? 0 : rightWidth;
 
+  // Track the screen before we switch to 'feature' so we can go back
+  const screenBeforeFeature = useRef<ScreenType>('home');
+
   const handleSelectionChange = useCallback((feature: SelectedFeature | null) => {
     if (feature) {
-      setActiveScreen('feature');
+      setActiveScreen((prev) => {
+        if (prev !== 'feature') screenBeforeFeature.current = prev;
+        return 'feature';
+      });
       if (rightCollapsed) setRightCollapsed(false);
+    } else {
+      // Go back to previous screen when selection is cleared
+      setActiveScreen(screenBeforeFeature.current);
     }
   }, [rightCollapsed]);
 

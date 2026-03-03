@@ -43,6 +43,7 @@ export default function RightPanel({ activeScreen, selectedRepo, setActiveScreen
                 setSelectedRepo?.(repoId);
                 setActiveScreen?.('repo');
               }}
+              onEvaluate={() => setActiveScreen?.('evaluator')}
             />
           )}
           {activeScreen === 'evaluator' && <ProjectEvaluator />}
