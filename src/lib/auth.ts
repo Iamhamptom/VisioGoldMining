@@ -2,9 +2,11 @@ import { SignJWT, jwtVerify } from 'jose';
 import bcrypt from 'bcryptjs';
 import type { JWTPayload } from '@/types';
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'dev-secret-change-in-production-min-32-chars!'
-);
+const jwtSecretValue = process.env.JWT_SECRET;
+if (!jwtSecretValue || jwtSecretValue.length < 32) {
+  console.error('FATAL: JWT_SECRET must be set and at least 32 characters. Auth will fail.');
+}
+const JWT_SECRET = new TextEncoder().encode(jwtSecretValue || 'MISSING-SET-JWT_SECRET-IN-ENV');
 
 const JWT_EXPIRY = process.env.JWT_EXPIRY || '15m';
 const REFRESH_TOKEN_EXPIRY = process.env.REFRESH_TOKEN_EXPIRY || '7d';

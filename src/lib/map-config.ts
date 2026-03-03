@@ -30,6 +30,7 @@ export const LAYER_IDS = {
 } as const;
 
 export const MAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+export const MAP_STYLE_SATELLITE = 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json';
 
 // Terrain configuration for 3D visualization
 export const TERRAIN_SOURCE = {

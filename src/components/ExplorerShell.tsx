@@ -7,6 +7,7 @@ import ChatAgent from './ChatAgent';
 import MapArea from './MapArea';
 import RightPanel from './RightPanel';
 import SettingsModal from './SettingsModal';
+import { ErrorBoundary } from './error-boundary';
 import { MapProvider } from '@/hooks/useMap';
 import { SelectionProvider } from '@/hooks/useFeatureSelection';
 import { PursuitProvider } from '@/hooks/usePursuitContext';
@@ -91,22 +92,43 @@ export default function ExplorerShell() {
 
               {/* Left Panel: AI Chat Agent */}
               <div className="w-80 h-full border-r border-white/10 bg-bg-surface/40 backdrop-blur-2xl flex flex-col z-10 relative shadow-[4px_0_24px_rgba(0,0,0,0.5)]">
-                <ChatAgent />
+                <ErrorBoundary fallback={
+                  <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+                    <div className="text-gold-400 text-sm font-medium mb-2">Agent Offline</div>
+                    <p className="text-xs text-gray-500">The AI chat agent encountered an error. Refresh to reconnect.</p>
+                  </div>
+                }>
+                  <ChatAgent />
+                </ErrorBoundary>
               </div>
 
               {/* Center Panel: Interactive Map */}
               <div className="flex-1 h-full relative bg-transparent">
-                <MapArea activeScreen={activeScreen} />
+                <ErrorBoundary fallback={
+                  <div className="flex flex-col items-center justify-center h-full bg-bg-dark">
+                    <div className="text-gold-400 text-lg font-light mb-2">Map Unavailable</div>
+                    <p className="text-xs text-gray-500 max-w-sm text-center">The interactive map encountered an error. Please refresh the page.</p>
+                  </div>
+                }>
+                  <MapArea activeScreen={activeScreen} />
+                </ErrorBoundary>
               </div>
 
               {/* Right Panel: Context / Details */}
               <div className="w-[450px] h-full border-l border-white/10 bg-bg-surface/40 backdrop-blur-2xl flex flex-col z-10 relative shadow-[-4px_0_24px_rgba(0,0,0,0.5)]">
-                <RightPanel
-                  activeScreen={activeScreen}
-                  selectedRepo={selectedRepo}
-                  setActiveScreen={setActiveScreen}
-                  setSelectedRepo={setSelectedRepo}
-                />
+                <ErrorBoundary fallback={
+                  <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+                    <div className="text-gold-400 text-sm font-medium mb-2">Panel Error</div>
+                    <p className="text-xs text-gray-500">This panel encountered an error. Try switching to a different view.</p>
+                  </div>
+                }>
+                  <RightPanel
+                    activeScreen={activeScreen}
+                    selectedRepo={selectedRepo}
+                    setActiveScreen={setActiveScreen}
+                    setSelectedRepo={setSelectedRepo}
+                  />
+                </ErrorBoundary>
               </div>
             </motion.div>
 

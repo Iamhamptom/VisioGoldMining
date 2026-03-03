@@ -70,6 +70,27 @@ export const LAYER_DEFINITIONS: LayerDefinition[] = [
     visible: false,
     mapLayers: [
       {
+        id: 'occurrences-glow',
+        type: 'circle',
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'], ['zoom'],
+            4, 10,
+            8, 18,
+            12, 28,
+          ],
+          'circle-color': [
+            'match', ['get', 'commodity'],
+            'Gold', '#FFD700',
+            'Copper', '#B87333',
+            'Cobalt', '#0047AB',
+            '#D4AF37',
+          ],
+          'circle-opacity': 0.12,
+          'circle-blur': 1,
+        },
+      },
+      {
         id: 'occurrences-circle',
         type: 'circle',
         paint: {
@@ -104,6 +125,26 @@ export const LAYER_DEFINITIONS: LayerDefinition[] = [
     visible: false,
     mapLayers: [
       {
+        id: 'security-events-glow',
+        type: 'circle',
+        paint: {
+          'circle-radius': [
+            'interpolate', ['linear'], ['zoom'],
+            4, 14,
+            8, 24,
+          ],
+          'circle-color': [
+            'match', ['get', 'severity'],
+            'high', '#FF4444',
+            'medium', '#FF8800',
+            'low', '#FFCC00',
+            '#FF6666',
+          ],
+          'circle-opacity': 0.15,
+          'circle-blur': 1,
+        },
+      },
+      {
         id: 'security-events-circle',
         type: 'circle',
         paint: {
@@ -135,6 +176,23 @@ export const LAYER_DEFINITIONS: LayerDefinition[] = [
     visible: false,
     mapLayers: [
       {
+        id: 'infrastructure-lines-glow',
+        type: 'line',
+        paint: {
+          'line-color': [
+            'match', ['get', 'type'],
+            'road', '#888888',
+            'river', '#4488FF',
+            'railway', '#CC8800',
+            '#666666',
+          ],
+          'line-width': 6,
+          'line-opacity': 0.1,
+          'line-blur': 4,
+        },
+        filter: ['==', ['geometry-type'], 'LineString'],
+      },
+      {
         id: 'infrastructure-lines',
         type: 'line',
         paint: {
@@ -152,6 +210,7 @@ export const LAYER_DEFINITIONS: LayerDefinition[] = [
             'railway', 1,
             1,
           ],
+          'line-dasharray': [2, 1],
         },
         filter: ['==', ['geometry-type'], 'LineString'],
       },

@@ -1,11 +1,21 @@
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://xquzbgaenmohruluyhgv.supabase.co';
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxdXpiZ2Flbm1vaHJ1bHV5aGd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExODYzMTgsImV4cCI6MjA4Njc2MjMxOH0.vZEgz1TKUQWhMuV238zBKY0XfEsRXAyy9nUPa4QOXqQ';
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  console.warn(
+    'Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables. ' +
+    'Supabase RPC calls will fail. Set these in .env.local or your deployment environment.'
+  );
+}
 
 /**
  * Call a Supabase RPC function via PostgREST (HTTPS).
  * Bypasses IPv6/pooler issues by using the REST API.
  */
 export async function supabaseRpc<T>(fnName: string, params: Record<string, unknown>): Promise<T> {
+  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+    throw new Error('Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.');
+  }
   const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fnName}`, {
     method: 'POST',
     headers: {

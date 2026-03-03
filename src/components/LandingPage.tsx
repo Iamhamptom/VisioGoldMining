@@ -450,8 +450,8 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
               </div>
               <p className="text-sm leading-relaxed">Built with precision for DRC mining intelligence. Enterprise-grade security meets cutting-edge AI.</p>
               <div className="flex space-x-4 pt-2">
-                <a href="#" className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:border-gold-400/40 hover:text-gold-400 transition-all"><Linkedin size={14}/></a>
-                <a href="#" className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:border-gold-400/40 hover:text-gold-400 transition-all"><Github size={14}/></a>
+                <a href="https://www.linkedin.com/company/visiogold" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:border-gold-400/40 hover:text-gold-400 transition-all"><Linkedin size={14}/></a>
+                <a href="https://github.com/Iamhamptom/VisioGoldMining" target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:border-gold-400/40 hover:text-gold-400 transition-all"><Github size={14}/></a>
                 <a href="mailto:contact@visiogold.com" className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:border-gold-400/40 hover:text-gold-400 transition-all"><Mail size={14}/></a>
               </div>
             </div>

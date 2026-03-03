@@ -1,15 +1,18 @@
 'use client';
 
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
-import Map, { Source, Layer, Marker, Popup, NavigationControl, AttributionControl } from 'react-map-gl/maplibre';
+import Map, { Source, Layer, Marker, Popup, AttributionControl } from 'react-map-gl/maplibre';
 import type { MapRef, ViewStateChangeEvent, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { Brain, Crosshair, Plane, Sparkles, Loader2 } from 'lucide-react';
 import { useMapContext } from '../../hooks/useMap';
 import { useSelection } from '../../hooks/useFeatureSelection';
+import { usePursuit } from '../../hooks/usePursuitContext';
 import { DRC_PROJECTS } from '../../data/drc-projects';
 import type { DRCProject, ProjectStatus } from '../../data/drc-projects';
 import {
   MAP_STYLE,
+  MAP_STYLE_SATELLITE,
   DRC_CENTER,
   DRC_ZOOM,
   TERRAIN_SOURCE,
@@ -40,10 +43,15 @@ interface HoveredProject {
   y: number;
 }
 
-export default function GlobeMap() {
+interface Props {
+  isSatellite?: boolean;
+}
+
+export default function GlobeMap({ isSatellite = false }: Props) {
   const mapRef = useRef<MapRef>(null);
   const { setMap } = useMapContext();
   const { setSelectedFeature } = useSelection();
+  const { startPursuit } = usePursuit();
 
   const [viewState, setViewState] = useState({
     longitude: DRC_CENTER[0],
@@ -56,53 +64,96 @@ export default function GlobeMap() {
   const [hoveredProject, setHoveredProject] = useState<HoveredProject | null>(null);
   const [selectedProject, setSelectedProject] = useState<DRCProject | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [aiBrief, setAiBrief] = useState<string | null>(null);
+  const [aiBriefLoading, setAiBriefLoading] = useState(false);
+  const initialFlyDone = useRef(false);
 
-  // Projects with valid coordinates
   const mappableProjects = useMemo(() =>
     DRC_PROJECTS.filter(p => p.location.lat !== null && p.location.lon !== null),
   []);
 
-  // Fly to DRC after initial load
+  // Apply globe projection + terrain to the map instance
+  const applyMapSetup = useCallback((map: maplibregl.Map) => {
+    try {
+      map.setProjection({ type: 'globe' });
+    } catch { /* older maplibre may not support globe */ }
+
+    try {
+      if (!map.getSource('terrain-dem')) {
+        map.addSource('terrain-dem', {
+          type: 'raster-dem',
+          tiles: [TERRAIN_SOURCE.url],
+          tileSize: TERRAIN_SOURCE.tileSize,
+          maxzoom: TERRAIN_SOURCE.maxzoom,
+        });
+      }
+      map.setTerrain({
+        source: 'terrain-dem',
+        exaggeration: TERRAIN_DEFAULTS.exaggeration,
+      });
+    } catch { /* terrain may not be ready */ }
+  }, []);
+
+  // Initial map load — set globe, terrain, fly to DRC
   useEffect(() => {
     if (mapLoaded && mapRef.current) {
       const map = mapRef.current.getMap();
-      // Store the maplibre instance for TerrainControls and other consumers
       setMap(map);
+      applyMapSetup(map);
 
-      // Set globe projection
-      try {
-        map.setProjection({ type: 'globe' });
-      } catch { /* older maplibre may not support globe */ }
+      // Re-apply setup when map style changes (satellite toggle)
+      map.on('style.load', () => {
+        applyMapSetup(map);
+      });
 
-      // Add 3D terrain
-      try {
-        if (!map.getSource('terrain-dem')) {
-          map.addSource('terrain-dem', {
-            type: 'raster-dem',
-            tiles: [TERRAIN_SOURCE.url],
-            tileSize: TERRAIN_SOURCE.tileSize,
-            maxzoom: TERRAIN_SOURCE.maxzoom,
+      // Fly to DRC on first load only
+      if (!initialFlyDone.current) {
+        initialFlyDone.current = true;
+        setTimeout(() => {
+          map.flyTo({
+            center: DRC_CENTER,
+            zoom: DRC_ZOOM,
+            pitch: 40,
+            speed: 0.6,
+            curve: 1.5,
+            essential: true,
           });
-        }
-        map.setTerrain({
-          source: 'terrain-dem',
-          exaggeration: TERRAIN_DEFAULTS.exaggeration,
-        });
-      } catch { /* terrain may not be ready */ }
-
-      // Fly to DRC
-      setTimeout(() => {
-        map.flyTo({
-          center: DRC_CENTER,
-          zoom: DRC_ZOOM,
-          pitch: 40,
-          speed: 0.6,
-          curve: 1.5,
-          essential: true,
-        });
-      }, 800);
+        }, 800);
+      }
     }
-  }, [mapLoaded, setMap]);
+  }, [mapLoaded, setMap, applyMapSetup]);
+
+  // Animated glow pulsing for data layers
+  useEffect(() => {
+    if (!mapLoaded || !mapRef.current) return;
+    const map = mapRef.current.getMap();
+    let frame: number;
+    let startTime = Date.now();
+
+    const animate = () => {
+      const elapsed = (Date.now() - startTime) / 1000;
+      const pulse = 0.08 + Math.sin(elapsed * 1.5) * 0.08; // oscillate 0.0 – 0.16
+
+      // Pulse security event glow
+      try {
+        if (map.getLayer('security-events-glow')) {
+          map.setPaintProperty('security-events-glow', 'circle-opacity', pulse + 0.05);
+        }
+      } catch { /* layer may not exist */ }
+
+      // Pulse occurrences glow (gold shimmer)
+      try {
+        if (map.getLayer('occurrences-glow')) {
+          map.setPaintProperty('occurrences-glow', 'circle-opacity', pulse);
+        }
+      } catch { /* layer may not exist */ }
+
+      frame = requestAnimationFrame(animate);
+    };
+
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [mapLoaded]);
 
   const onMapLoad = useCallback(() => {
     setMapLoaded(true);
@@ -112,13 +163,13 @@ export default function GlobeMap() {
     setViewState(evt.viewState);
   }, []);
 
-  // Click on a project marker — fly to it and show details in the right panel
+  // Click on a project marker
   const handleMarkerClick = useCallback((project: DRCProject) => {
     if (!project.location.lat || !project.location.lon) return;
 
     setSelectedProject(project);
+    setAiBrief(null);
 
-    // Fly to the project
     mapRef.current?.getMap().flyTo({
       center: [project.location.lon, project.location.lat],
       zoom: 9,
@@ -127,7 +178,6 @@ export default function GlobeMap() {
       essential: true,
     });
 
-    // Also set the feature selection for the right panel
     setSelectedFeature({
       layerId: 'drc-projects',
       properties: {
@@ -149,7 +199,53 @@ export default function GlobeMap() {
     });
   }, [setSelectedFeature]);
 
-  // Handle click on other layers (tenements, geology, etc.)
+  // Fetch an AI brief for the selected project
+  const fetchAIBrief = useCallback(async (project: DRCProject) => {
+    setAiBriefLoading(true);
+    setAiBrief(null);
+    try {
+      const settings = JSON.parse(localStorage.getItem('visiogold_settings') || '{}');
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (settings.anthropicApiKey) headers['x-anthropic-key'] = settings.anthropicApiKey;
+
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          agentId: 'local-intel',
+          message: `Give a 3-sentence intelligence brief on the ${project.name} gold project (${project.operator}) in ${project.location.province}, DRC. Cover: current status, key risks, and opportunity assessment. Be specific and data-driven.`,
+          context: { projectId: project.projectId, province: project.location.province },
+        }),
+      });
+
+      if (!res.ok || !res.body) throw new Error('API error');
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let text = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        for (const line of chunk.split('\n')) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6));
+              if (data.text) text += data.text;
+            } catch { /* skip malformed chunks */ }
+          }
+        }
+      }
+      setAiBrief(text || 'Unable to generate brief.');
+    } catch {
+      setAiBrief('AI brief unavailable — check your API key in Settings.');
+    } finally {
+      setAiBriefLoading(false);
+    }
+  }, []);
+
+  // Handle click on other layers
   const handleMapClick = useCallback((e: MapLayerMouseEvent) => {
     const map = mapRef.current?.getMap();
     if (!map) return;
@@ -180,7 +276,7 @@ export default function GlobeMap() {
     }
   }, [setSelectedFeature]);
 
-  // Cursor change on hover for non-project layers
+  // Cursor change on hover
   const handleMouseMove = useCallback((e: MapLayerMouseEvent) => {
     const map = mapRef.current?.getMap();
     if (!map) return;
@@ -200,6 +296,8 @@ export default function GlobeMap() {
     map.getCanvas().style.cursor = features.length > 0 ? 'pointer' : '';
   }, []);
 
+  const currentMapStyle = isSatellite ? MAP_STYLE_SATELLITE : MAP_STYLE;
+
   return (
     <Map
       ref={mapRef}
@@ -208,7 +306,7 @@ export default function GlobeMap() {
       onLoad={onMapLoad}
       onClick={handleMapClick}
       onMouseMove={handleMouseMove}
-      mapStyle={MAP_STYLE}
+      mapStyle={currentMapStyle}
       maxPitch={85}
       attributionControl={false}
       style={{ width: '100%', height: '100%' }}
@@ -221,8 +319,8 @@ export default function GlobeMap() {
           id={`${LAYER_IDS.DRC_BOUNDARY}-fill`}
           type="fill"
           paint={{
-            'fill-color': '#D4AF37',
-            'fill-opacity': 0.12,
+            'fill-color': isSatellite ? '#D4AF37' : '#D4AF37',
+            'fill-opacity': isSatellite ? 0.06 : 0.12,
           }}
         />
         <Layer
@@ -230,9 +328,20 @@ export default function GlobeMap() {
           type="line"
           paint={{
             'line-color': '#D4AF37',
-            'line-width': 2.5,
-            'line-opacity': 0.8,
+            'line-width': isSatellite ? 3 : 2.5,
+            'line-opacity': isSatellite ? 1 : 0.8,
             'line-blur': 1,
+          }}
+        />
+        {/* Animated glow effect on DRC boundary */}
+        <Layer
+          id={`${LAYER_IDS.DRC_BOUNDARY}-glow`}
+          type="line"
+          paint={{
+            'line-color': '#D4AF37',
+            'line-width': 8,
+            'line-opacity': 0.15,
+            'line-blur': 6,
           }}
         />
       </Source>
@@ -265,7 +374,7 @@ export default function GlobeMap() {
               }}
               onMouseLeave={() => setHoveredProject(null)}
             >
-              {/* Outer glow */}
+              {/* Outer glow — pulsing ring */}
               <div
                 className="absolute rounded-full animate-pulse"
                 style={{
@@ -278,6 +387,21 @@ export default function GlobeMap() {
                   boxShadow: `0 0 ${isSelected ? 20 : 12}px ${color}40`,
                 }}
               />
+              {/* Secondary ring for producing mines */}
+              {(project.status === 'producing' || project.status === 'producing_small') && (
+                <div
+                  className="absolute rounded-full animate-ping"
+                  style={{
+                    width: glowSize + 8,
+                    height: glowSize + 8,
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    border: `1px solid ${color}30`,
+                    animationDuration: '3s',
+                  }}
+                />
+              )}
               {/* Inner dot */}
               <div
                 className="relative rounded-full border-2 transition-all duration-300"
@@ -337,7 +461,7 @@ export default function GlobeMap() {
         </Popup>
       )}
 
-      {/* Selected Project Popup */}
+      {/* Selected Project Popup — with AI Brief + Quick Actions */}
       {selectedProject && selectedProject.location.lat && selectedProject.location.lon && (
         <Popup
           longitude={selectedProject.location.lon}
@@ -345,12 +469,12 @@ export default function GlobeMap() {
           anchor="bottom"
           closeButton={true}
           closeOnClick={false}
-          onClose={() => setSelectedProject(null)}
+          onClose={() => { setSelectedProject(null); setAiBrief(null); }}
           offset={[0, -20] as [number, number]}
           className="project-detail-popup"
-          maxWidth="320px"
+          maxWidth="340px"
         >
-          <div className="bg-black/95 backdrop-blur-xl border border-white/15 rounded-xl p-4 shadow-2xl min-w-[280px]">
+          <div className="bg-black/95 backdrop-blur-xl border border-white/15 rounded-xl p-4 shadow-2xl min-w-[300px]">
             <div className="flex items-start justify-between mb-3">
               <div>
                 <h3 className="text-white text-sm font-semibold">{selectedProject.name}</h3>
@@ -417,9 +541,38 @@ export default function GlobeMap() {
               </div>
             </div>
 
-            <div className="mt-3 pt-2 border-t border-white/10 text-[9px] text-gray-500">
-              Click on project details in the right panel for full intelligence
+            {/* Quick Action Buttons */}
+            <div className="mt-3 pt-3 border-t border-white/10 flex gap-2">
+              <button
+                onClick={() => fetchAIBrief(selectedProject)}
+                disabled={aiBriefLoading}
+                className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-purple-500/15 border border-purple-500/30 text-purple-400 text-[10px] font-medium hover:bg-purple-500/25 transition-colors disabled:opacity-50"
+              >
+                {aiBriefLoading ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                AI Brief
+              </button>
+              <button
+                onClick={() => startPursuit(selectedProject.projectId)}
+                className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-gold-400/15 border border-gold-400/30 text-gold-400 text-[10px] font-medium hover:bg-gold-400/25 transition-colors"
+              >
+                <Crosshair size={10} />
+                Pursue
+              </button>
             </div>
+
+            {/* AI Brief Content */}
+            {(aiBrief || aiBriefLoading) && (
+              <div className="mt-2 p-2.5 rounded-lg bg-purple-500/5 border border-purple-500/20">
+                {aiBriefLoading ? (
+                  <div className="flex items-center gap-2 text-[10px] text-purple-400">
+                    <Loader2 size={12} className="animate-spin" />
+                    <span>Generating intelligence brief...</span>
+                  </div>
+                ) : (
+                  <p className="text-[10px] text-gray-300 leading-relaxed">{aiBrief}</p>
+                )}
+              </div>
+            )}
           </div>
         </Popup>
       )}

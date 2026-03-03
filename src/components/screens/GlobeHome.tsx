@@ -1,7 +1,16 @@
 import { AlertTriangle, Clock } from 'lucide-react';
 import OpportunityFeed from '../opportunities/OpportunityFeed';
+import { useMapContext } from '../../hooks/useMap';
 
 export default function GlobeHome() {
+  const { map } = useMapContext();
+
+  const flyToRegion = (lat: number, lon: number, zoom: number) => {
+    if (map) {
+      map.flyTo({ center: [lon, lat], zoom, pitch: 45, speed: 1.2, essential: true });
+    }
+  };
+
   return (
     <div className="p-6 flex flex-col gap-6">
       <header>
@@ -30,7 +39,10 @@ export default function GlobeHome() {
       <div className="flex flex-col gap-4 mt-2">
         <h3 className="text-sm font-semibold uppercase tracking-wider text-white border-b border-white/10 pb-2">Latest Alerts</h3>
         <div className="flex flex-col gap-3">
-          <div className="glass-panel synthetic-energy p-4 rounded-xl border-l-2 border-l-gold hover:bg-white/5 transition-colors cursor-pointer">
+          <div
+            onClick={() => flyToRegion(1.8, 30.5, 7)}
+            className="glass-panel synthetic-energy p-4 rounded-xl border-l-2 border-l-gold hover:bg-white/5 transition-colors cursor-pointer active:scale-[0.99]"
+          >
             <div className="flex justify-between items-start mb-2">
               <div className="flex items-center gap-2 text-gold-400 text-xs font-mono">
                 <Clock size={14} strokeWidth={1} className="icon-shine" /> Expiring Soon
@@ -41,7 +53,10 @@ export default function GlobeHome() {
             <p className="text-xs text-gray-400">High prospectivity zone. Current holder missed renewal deadline.</p>
           </div>
 
-          <div className="glass-panel synthetic-energy p-4 rounded-xl border-l-2 border-l-red-500 hover:bg-white/5 transition-colors cursor-pointer">
+          <div
+            onClick={() => flyToRegion(-2.5, 28.0, 7)}
+            className="glass-panel synthetic-energy p-4 rounded-xl border-l-2 border-l-red-500 hover:bg-white/5 transition-colors cursor-pointer active:scale-[0.99]"
+          >
             <div className="flex justify-between items-start mb-2">
               <div className="flex items-center gap-2 text-red-400 text-xs font-mono">
                 <AlertTriangle size={14} strokeWidth={1} className="icon-shine" /> Risk Update

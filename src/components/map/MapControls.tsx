@@ -1,10 +1,15 @@
 import { useState } from 'react';
-import { Crosshair, ZoomIn, ZoomOut, ChevronDown, Globe } from 'lucide-react';
+import { Crosshair, ZoomIn, ZoomOut, ChevronDown, Globe, Satellite, Map as MapIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useMapContext } from '../../hooks/useMap';
 import { FLY_TO_PRESETS, DRC_CENTER, DRC_ZOOM } from '../../lib/map-config';
 
-export default function MapControls() {
+interface Props {
+  isSatellite?: boolean;
+  onToggleSatellite?: () => void;
+}
+
+export default function MapControls({ isSatellite, onToggleSatellite }: Props) {
   const { map } = useMapContext();
   const [presetsOpen, setPresetsOpen] = useState(false);
 
@@ -50,6 +55,22 @@ export default function MapControls() {
         >
           <Crosshair size={20} strokeWidth={1} className="icon-shine" />
         </button>
+
+        {/* Satellite toggle */}
+        {onToggleSatellite && (
+          <button
+            onClick={onToggleSatellite}
+            className={`p-2.5 rounded-lg transition-colors ${
+              isSatellite
+                ? 'bg-gold-400/20 text-gold-400 border border-gold-400/30'
+                : 'bg-white/5 hover:bg-gold-400/15 hover:text-gold-400 text-gray-400'
+            }`}
+            title={isSatellite ? 'Switch to Dark Map' : 'Switch to Satellite View'}
+          >
+            {isSatellite ? <MapIcon size={20} strokeWidth={1} className="icon-shine" /> : <Satellite size={20} strokeWidth={1} className="icon-shine" />}
+          </button>
+        )}
+
         <div className="relative">
           <button
             onClick={() => setPresetsOpen(!presetsOpen)}

@@ -8,13 +8,15 @@ interface Props {
   compact?: boolean;
   limit?: number;
   onCreateRepo?: (repoId: string) => void;
+  filterFn?: (opp: Opportunity) => boolean;
 }
 
-export default function OpportunityFeed({ compact, limit, onCreateRepo }: Props) {
+export default function OpportunityFeed({ compact, limit, onCreateRepo, filterFn }: Props) {
   const { opportunities, loading } = useOpportunities();
   const { map } = useMapContext();
 
-  const displayed = limit ? opportunities.slice(0, limit) : opportunities;
+  const filtered = filterFn ? opportunities.filter(filterFn) : opportunities;
+  const displayed = limit ? filtered.slice(0, limit) : filtered;
 
   const handleFlyTo = (opp: Opportunity) => {
     if (map && opp.centroid) {
@@ -36,6 +38,15 @@ export default function OpportunityFeed({ compact, limit, onCreateRepo }: Props)
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 size={24} className="animate-spin text-gold-400" />
+      </div>
+    );
+  }
+
+  if (displayed.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <p className="text-sm text-gray-400 mb-1">No opportunities match your filters.</p>
+        <p className="text-xs text-gray-500">Try adjusting your filter criteria.</p>
       </div>
     );
   }

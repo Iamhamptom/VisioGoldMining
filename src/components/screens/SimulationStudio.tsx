@@ -6,7 +6,6 @@ import ScheduleCard from '../simulation/ScheduleCard';
 import RiskScoreCards from '../simulation/RiskScoreCards';
 import ScenarioCompare from '../simulation/ScenarioCompare';
 import SaveToBranchButton from '../simulation/SaveToBranchButton';
-import { runSimulation, listSimulations, compareSimulations, getDefaultContext } from '../../api/simulations';
 import type { SimulationInput, SimulationOutput, ScenarioComparison } from '../../types/simulation';
 
 const DEFAULT_INPUTS: SimulationInput = {
@@ -36,21 +35,21 @@ export default function SimulationStudio() {
   const [savedSims, setSavedSims] = useState<{ id: string; name: string }[]>([]);
   const [comparison, setComparison] = useState<ScenarioComparison | null>(null);
   const [compareLoading, setCompareLoading] = useState(false);
-  const [ctx, setCtx] = useState<{ repoId: string; branchId: string } | null>(null);
-
-  useEffect(() => {
-    getDefaultContext().then(c => {
-      setCtx({ repoId: c.repoId, branchId: c.branchId });
-      listSimulations(c.branchId).then(sims => setSavedSims(sims.map(s => ({ id: s.id, name: s.name }))));
-    }).catch(() => {});
-  }, []);
 
   const handleRun = async () => {
-    if (!ctx) return;
     setLoading(true);
     setError(null);
     try {
-      const result = await runSimulation(ctx.repoId, ctx.branchId, inputs);
+      const res = await fetch('/api/simulations/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(inputs),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: res.statusText }));
+        throw new Error(err.error || `Simulation failed: ${res.status}`);
+      }
+      const result = await res.json();
       setOutputs(result.outputs);
       setSavedSims(prev => [{ id: result.id, name: result.name }, ...prev]);
     } catch (err) {
@@ -63,8 +62,9 @@ export default function SimulationStudio() {
   const handleCompare = async (idA: string, idB: string) => {
     setCompareLoading(true);
     try {
-      const result = await compareSimulations(idA, idB);
-      setComparison(result);
+      // Find the full simulation data for both IDs from saved results
+      // For now, comparison requires re-running or having full output data
+      setError('Comparison requires two completed simulations with stored outputs.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Comparison failed');
     } finally {
@@ -87,7 +87,26 @@ export default function SimulationStudio() {
             <Layers size={14} strokeWidth={1} className="icon-shine" />
             {mode === 'compare' ? 'Compare Mode' : 'Compare'}
           </button>
-          <button className="p-2 bg-white/5 hover:bg-gold-400/20 text-gold-400 rounded-lg transition-colors border border-gold-400/30">
+          <button
+            onClick={() => {
+              if (!outputs) return;
+              const data = JSON.stringify({ inputs, outputs }, null, 2);
+              const blob = new Blob([data], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `simulation-${inputs.name.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.json`;
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+            disabled={!outputs}
+            className={`p-2 rounded-lg transition-colors border ${
+              outputs
+                ? 'bg-white/5 hover:bg-gold-400/20 text-gold-400 border-gold-400/30 cursor-pointer'
+                : 'bg-white/5 text-gray-600 border-white/10 cursor-not-allowed'
+            }`}
+            title={outputs ? 'Download simulation results as JSON' : 'Run a simulation first'}
+          >
             <Download size={18} strokeWidth={1} className="icon-shine" />
           </button>
         </div>

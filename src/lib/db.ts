@@ -22,16 +22,21 @@ const pool = process.env.DATABASE_URL
       connectionTimeoutMillis: 5000,
       ...searchPathOption,
     })
-  : new Pool({
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5432'),
-      database: process.env.DB_NAME || 'visiogold_dev',
-      user: process.env.DB_APP_USER || 'visiogold_app',
-      password: process.env.DB_APP_PASSWORD || 'app_password',
-      max: parseInt(process.env.DB_POOL_MAX || '20'),
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000,
-    });
+  : (() => {
+      if (!process.env.DB_APP_PASSWORD) {
+        console.warn('DB_APP_PASSWORD is not set. Database connections will fail in production.');
+      }
+      return new Pool({
+        host: process.env.DB_HOST || 'localhost',
+        port: parseInt(process.env.DB_PORT || '5432'),
+        database: process.env.DB_NAME || 'visiogold_dev',
+        user: process.env.DB_APP_USER || 'visiogold_app',
+        password: process.env.DB_APP_PASSWORD,
+        max: parseInt(process.env.DB_POOL_MAX || '20'),
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 5000,
+      });
+    })();
 
 // Admin pool — uses visiogold_admin role (bypasses RLS, for seed/migration only)
 // In managed Postgres (DATABASE_URL), this uses the same connection since the
@@ -45,16 +50,21 @@ const adminPool = process.env.DATABASE_URL
       connectionTimeoutMillis: 5000,
       ...searchPathOption,
     })
-  : new Pool({
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5432'),
-      database: process.env.DB_NAME || 'visiogold_dev',
-      user: process.env.DB_ADMIN_USER || 'visiogold_admin',
-      password: process.env.DB_ADMIN_PASSWORD || 'admin_password',
-      max: parseInt(process.env.DB_ADMIN_POOL_MAX || '5'),
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000,
-    });
+  : (() => {
+      if (!process.env.DB_ADMIN_PASSWORD) {
+        console.warn('DB_ADMIN_PASSWORD is not set. Admin database connections will fail in production.');
+      }
+      return new Pool({
+        host: process.env.DB_HOST || 'localhost',
+        port: parseInt(process.env.DB_PORT || '5432'),
+        database: process.env.DB_NAME || 'visiogold_dev',
+        user: process.env.DB_ADMIN_USER || 'visiogold_admin',
+        password: process.env.DB_ADMIN_PASSWORD,
+        max: parseInt(process.env.DB_ADMIN_POOL_MAX || '5'),
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 5000,
+      });
+    })();
 
 /**
  * Execute a callback within an RLS-scoped transaction.

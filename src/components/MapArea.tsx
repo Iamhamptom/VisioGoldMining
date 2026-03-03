@@ -26,6 +26,7 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<typeof DRC_PROJECTS>([]);
   const [showResults, setShowResults] = useState(false);
+  const [isSatellite, setIsSatellite] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
   // Filter projects as user types
@@ -78,10 +79,10 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
   return (
     <div className="absolute inset-0 bg-bg-dark overflow-hidden">
       {/* MapLibre Globe */}
-      <GlobeMap />
+      <GlobeMap isSatellite={isSatellite} />
 
       {/* Map Controls */}
-      <MapControls />
+      <MapControls isSatellite={isSatellite} onToggleSatellite={() => setIsSatellite(s => !s)} />
 
       {/* Layer Toggle Panel */}
       <LayerToggle />

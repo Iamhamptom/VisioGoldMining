@@ -1,19 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Brain, Crosshair, Eye, Radio, FileCheck, Plane, Languages,
   ChevronRight, Circle, Clock, CheckCircle2, AlertCircle,
-  Send, Activity, Zap,
+  Send, Activity, Zap, Square,
 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { usePursuit } from '../../hooks/usePursuitContext';
 import { DRC_PROJECTS } from '../../data/drc-projects';
+import { useAgentChat, type ChatMessage } from '../../hooks/useAgentChat';
+import { extractContext } from '../../lib/agents/agent-framework';
 import { getProjectPursuitResponse } from '../../lib/agents/project-pursuit-agent';
 import { getLocalIntelResponse } from '../../lib/agents/local-intel-agent';
 import { getResearchDispatchResponse } from '../../lib/agents/research-dispatch-agent';
 import { getPaperworkResponse } from '../../lib/agents/paperwork-agent';
 import { getTripPlanningResponse } from '../../lib/agents/trip-planning-agent';
 import { getLanguageResponse } from '../../lib/agents/language-agent';
-import { extractContext } from '../../lib/agents/agent-framework';
 
 type AgentId = 'pursuit' | 'local-intel' | 'research' | 'paperwork' | 'trip' | 'language';
 
@@ -95,11 +98,19 @@ const AGENT_DEFS: AgentDef[] = [
 export default function AgentCommandCenter() {
   const { pursuit } = usePursuit();
   const [selectedAgent, setSelectedAgent] = useState<AgentId | null>(null);
-  const [tasks] = useState<Task[]>([
+  const [tasks, setTasks] = useState<Task[]>([
     { id: '1', agentId: 'research', description: 'Survey artisanal sites near Kamituga', status: 'in_progress', createdAt: '2024-12-15' },
     { id: '2', agentId: 'local-intel', description: 'Security assessment for Ituri province', status: 'completed', createdAt: '2024-12-14' },
     { id: '3', agentId: 'paperwork', description: 'PR application document review', status: 'pending', createdAt: '2024-12-16' },
   ]);
+
+  const cycleTaskStatus = (taskId: string) => {
+    setTasks(prev => prev.map(t => {
+      if (t.id !== taskId) return t;
+      const next = t.status === 'pending' ? 'in_progress' : t.status === 'in_progress' ? 'completed' : 'pending';
+      return { ...t, status: next };
+    }));
+  };
 
   const pursuitProject = pursuit.pursuitActive && pursuit.activeProjectId
     ? DRC_PROJECTS.find(p => p.projectId === pursuit.activeProjectId)
@@ -207,7 +218,12 @@ export default function AgentCommandCenter() {
                 {tasks.map((task) => {
                   const agentDef = AGENT_DEFS.find(a => a.id === task.agentId);
                   return (
-                    <div key={task.id} className="p-3 rounded-lg bg-black/30 border border-white/5">
+                    <div
+                      key={task.id}
+                      onClick={() => cycleTaskStatus(task.id)}
+                      className="p-3 rounded-lg bg-black/30 border border-white/5 cursor-pointer hover:bg-white/5 transition-colors"
+                      title="Click to change status"
+                    >
                       <div className="flex items-center gap-2">
                         {task.status === 'completed' ? (
                           <CheckCircle2 size={12} className="text-green-400" />
@@ -238,56 +254,58 @@ export default function AgentCommandCenter() {
   );
 }
 
+function getLocalFallback(agentId: string, message: string): string {
+  const ctx = extractContext(message);
+  switch (agentId) {
+    case 'pursuit':
+      return getProjectPursuitResponse(message, { projectId: ctx.projectId, currentPhase: ctx.currentPhase }).content;
+    case 'local-intel':
+      return getLocalIntelResponse(message, { province: ctx.province, territory: ctx.province }).content;
+    case 'research':
+      return getResearchDispatchResponse(message, { activeTaskCount: ctx.activeTaskCount }).content;
+    case 'paperwork':
+      return getPaperworkResponse(message, { permitType: ctx.permitType, currentStep: ctx.currentStep }).content;
+    case 'trip':
+      return getTripPlanningResponse(message, { destination: ctx.destination || ctx.province, teamSize: ctx.teamSize }).content;
+    case 'language':
+      return getLanguageResponse(message, { targetLanguage: ctx.targetLanguage }).content;
+    default:
+      return 'Processing your request...';
+  }
+}
+
 function AgentDetail({ agent, onBack, tasks, projectId, phase }: { agent: AgentDef; onBack: () => void; tasks: Task[]; projectId?: string | null; phase?: number }) {
   const [chatInput, setChatInput] = useState('');
-  const [messages, setMessages] = useState<{ role: 'user' | 'agent'; text: string }[]>([
-    { role: 'agent', text: `I'm the ${agent.name} agent. ${agent.role}. How can I assist you today?` },
-  ]);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const Icon = agent.icon;
 
+  const context = useMemo(() => {
+    const project = projectId ? DRC_PROJECTS.find(p => p.projectId === projectId) : null;
+    return {
+      projectId: projectId || null,
+      province: project?.location.province || null,
+      phase,
+    };
+  }, [projectId, phase]);
+
+  const fallback = useCallback((id: string, msg: string) => getLocalFallback(id, msg), []);
+
+  const { messages, isStreaming, sendMessage, stopStreaming } = useAgentChat({
+    agentId: agent.id,
+    context,
+    initialMessages: [{ role: 'assistant', text: `I'm the ${agent.name} agent. ${agent.role}. How can I assist you today?`, agentId: agent.id }],
+    fallbackFn: fallback,
+  });
+
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [messages]);
+
   const handleSend = () => {
-    if (!chatInput.trim()) return;
-    const userMsg = chatInput.trim();
-    setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
+    if (!chatInput.trim() || isStreaming) return;
+    sendMessage(chatInput);
     setChatInput('');
-
-    setTimeout(() => {
-      const ctx = extractContext(userMsg);
-      if (projectId) ctx.projectId = projectId;
-      if (phase !== undefined) ctx.currentPhase = phase;
-
-      if (ctx.projectId) {
-        const proj = DRC_PROJECTS.find(p => p.projectId === ctx.projectId);
-        if (proj && !ctx.province) ctx.province = proj.location.province;
-      }
-
-      let response: string;
-      switch (agent.id) {
-        case 'pursuit':
-          response = getProjectPursuitResponse(userMsg, { projectId: ctx.projectId, currentPhase: ctx.currentPhase }).content;
-          break;
-        case 'local-intel':
-          response = getLocalIntelResponse(userMsg, { province: ctx.province, territory: ctx.province }).content;
-          break;
-        case 'research':
-          response = getResearchDispatchResponse(userMsg, { activeTaskCount: ctx.activeTaskCount }).content;
-          break;
-        case 'paperwork':
-          response = getPaperworkResponse(userMsg, { permitType: ctx.permitType, currentStep: ctx.currentStep }).content;
-          break;
-        case 'trip':
-          response = getTripPlanningResponse(userMsg, { destination: ctx.destination || ctx.province, teamSize: ctx.teamSize }).content;
-          break;
-        case 'language':
-          response = getLanguageResponse(userMsg, { targetLanguage: ctx.targetLanguage }).content;
-          break;
-        default:
-          response = 'Processing your request...';
-      }
-
-      setMessages(prev => [...prev, { role: 'agent', text: response }]);
-    }, 400 + Math.random() * 600);
   };
 
   return (
@@ -303,7 +321,7 @@ function AgentDetail({ agent, onBack, tasks, projectId, phase }: { agent: AgentD
             <div>
               <span className="text-xs font-medium text-white">{agent.name}</span>
               <p className="text-[10px] text-gray-500 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400" /> Online
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400" /> AI-Powered
               </p>
             </div>
           </div>
@@ -318,21 +336,32 @@ function AgentDetail({ agent, onBack, tasks, projectId, phase }: { agent: AgentD
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
         <AnimatePresence initial={false}>
-          {messages.map((msg, i) => (
+          {messages.map((msg: ChatMessage, i: number) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               className={`flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
             >
-              <div className={`max-w-[85%] p-3 rounded-xl text-xs leading-relaxed whitespace-pre-line ${
+              <div className={`max-w-[85%] p-3 rounded-xl text-xs leading-relaxed ${
                 msg.role === 'user'
-                  ? 'bg-white/10 text-white rounded-tr-sm'
+                  ? 'bg-white/10 text-white rounded-tr-sm whitespace-pre-line'
                   : 'bg-black/60 border border-white/5 text-gray-300 rounded-tl-sm'
               }`}>
-                {msg.text}
+                {msg.role === 'assistant' ? (
+                  <div className="prose-chat">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {msg.text || ''}
+                    </ReactMarkdown>
+                    {msg.streaming && (
+                      <span className="inline-block w-2 h-3 bg-gold-400 animate-pulse ml-0.5 rounded-sm" />
+                    )}
+                  </div>
+                ) : (
+                  msg.text
+                )}
               </div>
             </motion.div>
           ))}
@@ -378,16 +407,27 @@ function AgentDetail({ agent, onBack, tasks, projectId, phase }: { agent: AgentD
             value={chatInput}
             onChange={e => setChatInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSend()}
-            placeholder={`Ask ${agent.name}...`}
-            className="flex-1 bg-black/50 border border-white/10 rounded-full py-2.5 px-4 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-gold/50"
+            placeholder={isStreaming ? 'AI is responding...' : `Ask ${agent.name}...`}
+            disabled={isStreaming}
+            className="flex-1 bg-black/50 border border-white/10 rounded-full py-2.5 px-4 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-gold/50 disabled:opacity-50"
           />
-          <button
-            onClick={handleSend}
-            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-            style={{ backgroundColor: agent.color }}
-          >
-            <Send size={14} className="text-black ml-0.5" />
-          </button>
+          {isStreaming ? (
+            <button
+              onClick={stopStreaming}
+              className="w-8 h-8 rounded-full flex items-center justify-center bg-red-500/80 hover:bg-red-500 transition-colors"
+              title="Stop generating"
+            >
+              <Square size={10} className="text-white" fill="white" />
+            </button>
+          ) : (
+            <button
+              onClick={handleSend}
+              className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+              style={{ backgroundColor: agent.color }}
+            >
+              <Send size={14} className="text-black ml-0.5" />
+            </button>
+          )}
         </div>
       </div>
     </div>

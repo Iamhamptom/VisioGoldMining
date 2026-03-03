@@ -1,15 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Send, User, Sparkles, ChevronDown, Crosshair, Eye, Radio, FileCheck, Plane, Languages } from 'lucide-react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { Send, User, Sparkles, ChevronDown, Crosshair, Eye, Radio, FileCheck, Plane, Languages, Square } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { usePursuit } from '../hooks/usePursuitContext';
 import { DRC_PROJECTS } from '../data/drc-projects';
+import { useAgentChat, type ChatMessage } from '../hooks/useAgentChat';
+import { extractContext } from '../lib/agents/agent-framework';
 import { getProjectPursuitResponse } from '../lib/agents/project-pursuit-agent';
 import { getLocalIntelResponse } from '../lib/agents/local-intel-agent';
 import { getResearchDispatchResponse } from '../lib/agents/research-dispatch-agent';
 import { getPaperworkResponse } from '../lib/agents/paperwork-agent';
 import { getTripPlanningResponse } from '../lib/agents/trip-planning-agent';
 import { getLanguageResponse } from '../lib/agents/language-agent';
-import { extractContext } from '../lib/agents/agent-framework';
 
 type AgentId = 'general' | 'pursuit' | 'local-intel' | 'research' | 'paperwork' | 'trip' | 'language';
 
@@ -22,40 +25,18 @@ interface AgentDef {
 }
 
 const AGENTS: AgentDef[] = [
-  { id: 'general', name: 'VisioGold Agent', icon: Sparkles, color: '#D4AF37', greeting: 'Welcome to VisioGold DRC. I am your mining intelligence agent. How can I assist you with your Kivu exploration or operations today?' },
+  { id: 'general', name: 'VisioGold Agent', icon: Sparkles, color: '#D4AF37', greeting: 'Welcome to VisioGold DRC. I am your AI mining intelligence agent powered by Claude. Ask me anything about DRC gold projects, regulations, logistics, or opportunities.' },
   { id: 'pursuit', name: 'Project Pursuit', icon: Crosshair, color: '#D4AF37', greeting: 'I can guide you through every phase of a mining project lifecycle in the DRC. Which project would you like to pursue?' },
   { id: 'local-intel', name: 'Local Intel', icon: Eye, color: '#4488FF', greeting: 'I have intelligence on every major mining region in the DRC. Ask me about security, culture, infrastructure, or artisanal mining in any province.' },
-  { id: 'research', name: 'Research Dispatch', icon: Radio, color: '#00FF88', greeting: 'I can dispatch local research teams to collect ground data, hire translators, and commission field work. Where should I deploy?' },
-  { id: 'paperwork', name: 'Regulatory', icon: FileCheck, color: '#FF8800', greeting: 'I can navigate the DRC Mining Code 2018 and CAMI permit system for you. What regulatory question do you have?' },
+  { id: 'research', name: 'Research Dispatch', icon: Radio, color: '#00FF88', greeting: 'I can help plan field research campaigns — dispatching teams, collecting samples, and coordinating logistics on the ground. Where should we deploy?' },
+  { id: 'paperwork', name: 'Regulatory', icon: FileCheck, color: '#FF8800', greeting: 'I know the DRC Mining Code 2018 and CAMI permit system inside and out. What regulatory question do you have?' },
   { id: 'trip', name: 'Trip Planner', icon: Plane, color: '#A78BFA', greeting: 'Let me plan your trip to any DRC project site. I handle flights, ground transport, accommodation, and security arrangements.' },
-  { id: 'language', name: 'Language', icon: Languages, color: '#FF6B9D', greeting: 'I can translate between French, Swahili, Lingala, and English. I also provide cultural communication guidance for DRC engagement.' },
+  { id: 'language', name: 'Language', icon: Languages, color: '#FF6B9D', greeting: 'I can translate between French, Swahili, Lingala, and English, and provide cultural communication guidance for DRC engagement.' },
 ];
 
-const GENERAL_RESPONSES = [
-  'Analyzing regional geological surveys and permit data for the requested area. I can see several active exploration permits in this zone.',
-  'Based on current market intelligence, the DRC gold sector shows strong growth potential. Shall I pull up specific project data?',
-  'I can see multiple layers of data for this region. Would you like me to focus on tenements, geology, or security events?',
-];
-
-interface Message {
-  role: 'user' | 'assistant';
-  text: string;
-  agentId: AgentId;
-}
-
-function getAgentResponse(agentId: AgentId, message: string, projectId?: string | null, phase?: number): string {
+// Fallback to keyword matching when API is unavailable
+function getLocalFallback(agentId: string, message: string): string {
   const ctx = extractContext(message);
-
-  if (projectId) ctx.projectId = projectId;
-  if (phase !== undefined) ctx.currentPhase = phase;
-
-  if (ctx.projectId) {
-    const proj = DRC_PROJECTS.find(p => p.projectId === ctx.projectId);
-    if (proj && !ctx.province) {
-      ctx.province = proj.location.province;
-    }
-  }
-
   switch (agentId) {
     case 'pursuit':
       return getProjectPursuitResponse(message, { projectId: ctx.projectId, currentPhase: ctx.currentPhase }).content;
@@ -70,19 +51,58 @@ function getAgentResponse(agentId: AgentId, message: string, projectId?: string 
     case 'language':
       return getLanguageResponse(message, { targetLanguage: ctx.targetLanguage }).content;
     default:
-      return GENERAL_RESPONSES[Math.floor(Math.random() * GENERAL_RESPONSES.length)];
+      return 'I can help with DRC gold mining intelligence. Try asking about a specific project, region, or topic.';
   }
 }
+
+// Markdown components styled for chat
+const markdownComponents = {
+  p: ({ children }: { children?: React.ReactNode }) => <p className="mb-2 last:mb-0">{children}</p>,
+  h1: ({ children }: { children?: React.ReactNode }) => <h1 className="text-sm font-bold text-white mb-2">{children}</h1>,
+  h2: ({ children }: { children?: React.ReactNode }) => <h2 className="text-xs font-bold text-white mb-1.5">{children}</h2>,
+  h3: ({ children }: { children?: React.ReactNode }) => <h3 className="text-xs font-semibold text-white mb-1">{children}</h3>,
+  ul: ({ children }: { children?: React.ReactNode }) => <ul className="list-disc list-inside mb-2 space-y-0.5">{children}</ul>,
+  ol: ({ children }: { children?: React.ReactNode }) => <ol className="list-decimal list-inside mb-2 space-y-0.5">{children}</ol>,
+  li: ({ children }: { children?: React.ReactNode }) => <li className="text-xs">{children}</li>,
+  strong: ({ children }: { children?: React.ReactNode }) => <strong className="text-white font-semibold">{children}</strong>,
+  code: ({ children }: { children?: React.ReactNode }) => <code className="bg-white/10 px-1 py-0.5 rounded text-gold-400 text-[10px] font-mono">{children}</code>,
+  table: ({ children }: { children?: React.ReactNode }) => <table className="w-full text-xs border-collapse mb-2">{children}</table>,
+  th: ({ children }: { children?: React.ReactNode }) => <th className="text-left text-gold-400 border-b border-white/10 pb-1 pr-3 text-[10px] uppercase">{children}</th>,
+  td: ({ children }: { children?: React.ReactNode }) => <td className="py-1 pr-3 border-b border-white/5">{children}</td>,
+};
 
 export default function ChatAgent() {
   const { pursuit } = usePursuit();
   const [activeAgent, setActiveAgent] = useState<AgentId>('general');
   const [agentMenuOpen, setAgentMenuOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', text: AGENTS[0].greeting, agentId: 'general' },
-  ]);
   const [input, setInput] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const currentAgent = AGENTS.find(a => a.id === activeAgent)!;
+
+  const context = useMemo(() => ({
+    projectId: pursuit.activeProjectId,
+    province: pursuit.pursuitActive && pursuit.activeProjectId
+      ? DRC_PROJECTS.find(p => p.projectId === pursuit.activeProjectId)?.location.province
+      : null,
+    phase: pursuit.activePhase,
+  }), [pursuit.activeProjectId, pursuit.pursuitActive, pursuit.activePhase]);
+
+  const fallback = useCallback((id: string, msg: string) => getLocalFallback(id, msg), []);
+
+  const {
+    messages,
+    setMessages,
+    isStreaming,
+    sendMessage,
+    addSystemMessage,
+    stopStreaming,
+  } = useAgentChat({
+    agentId: activeAgent,
+    context,
+    initialMessages: [{ role: 'assistant', text: currentAgent.greeting, agentId: activeAgent }],
+    fallbackFn: fallback,
+  });
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -90,21 +110,17 @@ export default function ChatAgent() {
     }
   }, [messages]);
 
-  // When pursuit becomes active, inject a context message
+  // When pursuit becomes active, inject context
+  const prevPursuitRef = useRef(pursuit.pursuitActive);
   useEffect(() => {
-    if (pursuit.pursuitActive && pursuit.activeProjectId) {
+    if (pursuit.pursuitActive && !prevPursuitRef.current && pursuit.activeProjectId) {
       const project = DRC_PROJECTS.find(p => p.projectId === pursuit.activeProjectId);
       if (project) {
-        setMessages(prev => [...prev, {
-          role: 'assistant',
-          text: `Pursuit mode active for **${project.name}** (${project.location.province}). All agents now have context on this project. Phase ${pursuit.activePhase + 1} — ${project.status.replace(/_/g, ' ')}. Ask me anything about this project.`,
-          agentId: 'general',
-        }]);
+        addSystemMessage(`Pursuit mode active for **${project.name}** (${project.location.province}). All agents now have context on this project. Phase ${pursuit.activePhase + 1} — ${project.status.replace(/_/g, ' ')}. Ask me anything about this project.`);
       }
     }
-  }, [pursuit.pursuitActive, pursuit.activeProjectId]);
-
-  const currentAgent = AGENTS.find(a => a.id === activeAgent)!;
+    prevPursuitRef.current = pursuit.pursuitActive;
+  }, [pursuit.pursuitActive, pursuit.activeProjectId, pursuit.activePhase, addSystemMessage]);
 
   const switchAgent = (id: AgentId) => {
     setActiveAgent(id);
@@ -131,20 +147,9 @@ export default function ChatAgent() {
   };
 
   const handleSend = () => {
-    if (!input.trim()) return;
-    const userMsg = input.trim();
-    setMessages(prev => [...prev, { role: 'user', text: userMsg, agentId: activeAgent }]);
+    if (!input.trim() || isStreaming) return;
+    sendMessage(input);
     setInput('');
-
-    setTimeout(() => {
-      const response = getAgentResponse(
-        activeAgent,
-        userMsg,
-        pursuit.activeProjectId,
-        pursuit.activePhase,
-      );
-      setMessages(prev => [...prev, { role: 'assistant', text: response, agentId: activeAgent }]);
-    }, 400 + Math.random() * 600);
   };
 
   const pursuitProject = pursuit.pursuitActive && pursuit.activeProjectId
@@ -169,7 +174,7 @@ export default function ChatAgent() {
             <h2 className="font-medium text-sm tracking-wide text-white">{currentAgent.name}</h2>
             <p className="text-[10px] flex items-center gap-1.5 uppercase tracking-widest mt-0.5" style={{ color: currentAgent.color }}>
               <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: currentAgent.color }} />
-              Online
+              AI-Powered
             </p>
           </div>
           <ChevronDown size={14} className={`text-gray-500 transition-transform ${agentMenuOpen ? 'rotate-180' : ''}`} />
@@ -232,7 +237,7 @@ export default function ChatAgent() {
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
         <AnimatePresence initial={false}>
-          {messages.map((msg, idx) => {
+          {messages.map((msg: ChatMessage, idx: number) => {
             const msgAgent = AGENTS.find(a => a.id === msg.agentId) || currentAgent;
             return (
               <motion.div
@@ -253,17 +258,48 @@ export default function ChatAgent() {
                     <msgAgent.icon size={12} strokeWidth={1} style={{ color: msgAgent.color }} />
                   )}
                 </div>
-                <div className={`p-3 rounded-2xl text-xs leading-relaxed max-w-[85%] shadow-lg whitespace-pre-line ${
+                <div className={`p-3 rounded-2xl text-xs leading-relaxed max-w-[85%] shadow-lg ${
                   msg.role === 'user'
-                    ? 'bg-white/10 text-white rounded-tr-sm border border-white/5'
+                    ? 'bg-white/10 text-white rounded-tr-sm border border-white/5 whitespace-pre-line'
                     : 'bg-black/80 border border-white/10 text-gray-300 rounded-tl-sm'
                 }`}>
-                  {msg.text}
+                  {msg.role === 'assistant' ? (
+                    <div className="prose-chat">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents as never}>
+                        {msg.text || ''}
+                      </ReactMarkdown>
+                      {msg.streaming && (
+                        <span className="inline-block w-2 h-3 bg-gold-400 animate-pulse ml-0.5 rounded-sm" />
+                      )}
+                    </div>
+                  ) : (
+                    msg.text
+                  )}
                 </div>
               </motion.div>
             );
           })}
         </AnimatePresence>
+
+        {/* Streaming indicator */}
+        {isStreaming && messages.length > 0 && messages[messages.length - 1]?.text === '' && (
+          <div className="flex gap-2.5">
+            <div
+              className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+              style={{ backgroundColor: `${currentAgent.color}15`, border: `1px solid ${currentAgent.color}30` }}
+            >
+              <currentAgent.icon size={12} strokeWidth={1} style={{ color: currentAgent.color }} />
+            </div>
+            <div className="p-3 rounded-2xl bg-black/80 border border-white/10 rounded-tl-sm">
+              <div className="flex items-center gap-1.5">
+                <div className="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse" />
+                <div className="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse" style={{ animationDelay: '0.2s' }} />
+                <div className="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse" style={{ animationDelay: '0.4s' }} />
+                <span className="text-[10px] text-gray-500 ml-1">Thinking...</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Input */}
@@ -274,16 +310,27 @@ export default function ChatAgent() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder={`Ask ${currentAgent.name}...`}
-            className="w-full bg-black/50 border border-white/10 rounded-full py-3 pl-5 pr-14 text-sm focus:outline-none focus:border-gold-400/50 text-white placeholder-gray-600 transition-colors shadow-inner"
+            placeholder={isStreaming ? 'AI is responding...' : `Ask ${currentAgent.name}...`}
+            disabled={isStreaming}
+            className="w-full bg-black/50 border border-white/10 rounded-full py-3 pl-5 pr-14 text-sm focus:outline-none focus:border-gold-400/50 text-white placeholder-gray-600 transition-colors shadow-inner disabled:opacity-50"
           />
-          <button
-            onClick={handleSend}
-            className="absolute right-2 w-9 h-9 rounded-full flex items-center justify-center hover:opacity-80 transition-opacity shadow-lg"
-            style={{ backgroundColor: currentAgent.color }}
-          >
-            <Send size={16} strokeWidth={1} className="ml-0.5 text-black icon-shine" />
-          </button>
+          {isStreaming ? (
+            <button
+              onClick={stopStreaming}
+              className="absolute right-2 w-9 h-9 rounded-full flex items-center justify-center bg-red-500/80 hover:bg-red-500 transition-colors shadow-lg"
+              title="Stop generating"
+            >
+              <Square size={12} className="text-white" fill="white" />
+            </button>
+          ) : (
+            <button
+              onClick={handleSend}
+              className="absolute right-2 w-9 h-9 rounded-full flex items-center justify-center hover:opacity-80 transition-opacity shadow-lg"
+              style={{ backgroundColor: currentAgent.color }}
+            >
+              <Send size={16} strokeWidth={1} className="ml-0.5 text-black icon-shine" />
+            </button>
+          )}
         </div>
       </div>
     </div>
