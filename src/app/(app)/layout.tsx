@@ -7,7 +7,7 @@ import { useAuth } from '@/context/auth-provider';
 import { WorkspaceSwitcher } from '@/components/workspace-switcher';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Button } from '@/components/ui/button';
-import { FolderGit2, Shield, LogOut, Compass, LayoutDashboard } from 'lucide-react';
+import { FolderGit2, Shield, LogOut, Compass, LayoutDashboard, Landmark } from 'lucide-react';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { token, user, isLoading, logout } = useAuth();
@@ -70,6 +70,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-white/5">
               <Shield className="mr-2 h-4 w-4" />
               Audit Log
+            </Button>
+          </Link>
+          <Link href="/dashboard/gov">
+            <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-gold-400 hover:bg-gold-400/10">
+              <Landmark className="mr-2 h-4 w-4" />
+              Gov Portal
             </Button>
           </Link>
         </nav>
