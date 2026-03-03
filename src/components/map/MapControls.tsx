@@ -30,7 +30,7 @@ export default function MapControls({ isSatellite, onToggleSatellite }: Props) {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.5 }}
-      className="absolute top-6 left-6 flex flex-col gap-3 z-10"
+      className="absolute top-14 left-6 flex flex-col gap-3 z-10"
     >
       <div className="premium-glass border border-white/10 rounded-xl p-2 flex flex-col gap-2 shadow-gold-sm">
         <button
