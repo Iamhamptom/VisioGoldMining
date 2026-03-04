@@ -1,6 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { FileText, Calendar, DollarSign, CheckCircle2, Download, ChevronDown, MapPin, Shield, Pickaxe, FlaskConical, ScrollText, AlertTriangle } from 'lucide-react';
 import { DRC_PROJECTS, type DRCProject } from '../../data/drc-projects';
+import { useMapContext } from '../../hooks/useMap';
 
 function computeScore(project: DRCProject): number {
   let score = 50;
@@ -19,12 +20,25 @@ function statusLabel(status: string): string {
 }
 
 export default function ProjectEvaluator() {
+  const { map } = useMapContext();
   const [selectedId, setSelectedId] = useState<string>(DRC_PROJECTS[0]?.projectId || '');
   const [activeTab, setActiveTab] = useState('legal');
   const [selectorOpen, setSelectorOpen] = useState(false);
 
   const project = useMemo(() => DRC_PROJECTS.find(p => p.projectId === selectedId) || DRC_PROJECTS[0], [selectedId]);
   const score = useMemo(() => project ? computeScore(project) : 0, [project]);
+
+  useEffect(() => {
+    if (!map || !project || project.location.lat === null || project.location.lon === null) return;
+
+    map.flyTo({
+      center: [project.location.lon, project.location.lat],
+      zoom: 8,
+      pitch: 40,
+      speed: 0.8,
+      essential: true,
+    });
+  }, [map, project]);
 
   const tabs = [
     { id: 'legal', label: 'Legal/Tenure', icon: ScrollText },

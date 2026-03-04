@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { MOCK_MODE } from '@/lib/db';
 import { createHandler } from '@/lib/handler';
+import { getMockRepos } from '@/lib/mock-data';
 import { createRepoSchema } from '@/lib/validation';
 import { badRequest } from '@/lib/errors';
 
@@ -7,6 +9,10 @@ import { badRequest } from '@/lib/errors';
 export const GET = createHandler({
   audit: { action: 'REPO_READ', resourceType: 'repo' },
   handler: async (_req, ctx) => {
+    if (MOCK_MODE) {
+      return NextResponse.json({ repos: getMockRepos() });
+    }
+
     const { rows } = await ctx.db.query(
       `SELECT r.*, b.name as default_branch_name
        FROM repos r
@@ -32,6 +38,39 @@ export const POST = createHandler({
     }
 
     const { name, slug, description, country, commodity } = parsed.data;
+
+    if (MOCK_MODE) {
+      const repoId = crypto.randomUUID();
+      const branchId = crypto.randomUUID();
+
+      return NextResponse.json(
+        {
+          repo: {
+            id: repoId,
+            workspace_id: ctx.workspaceId,
+            name,
+            slug,
+            description: description || null,
+            country,
+            commodity,
+            status: 'ACTIVE',
+            default_branch_id: branchId,
+            default_branch_name: 'main',
+            created_by: ctx.user.sub,
+            created_at: new Date().toISOString(),
+          },
+          branch: {
+            id: branchId,
+            repo_id: repoId,
+            workspace_id: ctx.workspaceId,
+            name: 'main',
+            visibility: 'PRIVATE',
+            created_at: new Date().toISOString(),
+          },
+        },
+        { status: 201 }
+      );
+    }
 
     // Create repo
     const { rows: [repo] } = await ctx.db.query(

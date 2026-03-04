@@ -3,6 +3,8 @@ import { createHandler } from '@/lib/handler';
 import { publishSchema } from '@/lib/validation';
 import { badRequest, notFound } from '@/lib/errors';
 
+export const dynamic = 'force-dynamic';
+
 // POST /api/branches/:branchId/publish — publish a branch as a public snapshot
 export const POST = createHandler({
   roles: ['ADMIN', 'OWNER'],

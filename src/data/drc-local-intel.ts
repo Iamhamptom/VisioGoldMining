@@ -263,6 +263,9 @@ export const DRC_REGION_INTEL: RegionIntelligence[] = [
 export function getIntelByProvince(province: string): RegionIntelligence[] {
   const normalized = province.toLowerCase().trim();
   return DRC_REGION_INTEL.filter(
-    (region) => region.province.toLowerCase() === normalized
+    (region) =>
+      region.province.toLowerCase() === normalized ||
+      normalized.includes(region.province.toLowerCase()) ||
+      region.province.toLowerCase().includes(normalized)
   );
 }

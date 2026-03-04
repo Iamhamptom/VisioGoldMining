@@ -7,17 +7,28 @@ import ProjectBuilder from './screens/ProjectBuilder';
 import SimulationStudio from './screens/SimulationStudio';
 import ProjectPursuit from './screens/ProjectPursuit';
 import AgentCommandCenter from './screens/AgentCommandCenter';
+import ProjectListScreen from './screens/ProjectListScreen';
+import ProjectIntelligenceHub from './screens/ProjectIntelligenceHub';
 import FeatureContextPanel from './panels/FeatureContextPanel';
 import RepoMapPanel from './repos/RepoMapPanel';
 
 interface Props {
   activeScreen: ScreenType;
   selectedRepo?: string | null;
+  selectedProjectId?: string | null;
   setActiveScreen?: (screen: ScreenType) => void;
   setSelectedRepo?: (id: string | null) => void;
+  setSelectedProjectId?: (id: string | null) => void;
 }
 
-export default function RightPanel({ activeScreen, selectedRepo, setActiveScreen, setSelectedRepo }: Props) {
+export default function RightPanel({
+  activeScreen,
+  selectedRepo,
+  selectedProjectId,
+  setActiveScreen,
+  setSelectedRepo,
+  setSelectedProjectId,
+}: Props) {
   const variants = {
     initial: { opacity: 0, x: 20 },
     animate: { opacity: 1, x: 0 },
@@ -51,6 +62,20 @@ export default function RightPanel({ activeScreen, selectedRepo, setActiveScreen
           {activeScreen === 'simulation' && <SimulationStudio />}
           {activeScreen === 'pursuit' && <ProjectPursuit />}
           {activeScreen === 'agents' && <AgentCommandCenter />}
+          {activeScreen === 'projects' && (
+            <ProjectListScreen
+              onSelectProject={(projectId) => {
+                setSelectedProjectId?.(projectId);
+                setActiveScreen?.('project-detail');
+              }}
+            />
+          )}
+          {activeScreen === 'project-detail' && selectedProjectId && (
+            <ProjectIntelligenceHub
+              projectId={selectedProjectId}
+              onBack={() => setActiveScreen?.('projects')}
+            />
+          )}
           {activeScreen === 'feature' && <FeatureContextPanel />}
           {activeScreen === 'repo' && selectedRepo && <RepoMapPanel repoId={selectedRepo} />}
         </motion.div>

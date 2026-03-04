@@ -64,6 +64,7 @@ export default function ExplorerShell() {
   const [activeScreen, setActiveScreen] = useState<ScreenType>('home');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [selectedRepo, setSelectedRepo] = useState<string | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
   // --- Resizable panel state ---
   const [leftWidth, setLeftWidth] = useState(LEFT_DEFAULT);
@@ -133,6 +134,7 @@ export default function ExplorerShell() {
   const handleSetActiveScreen = useCallback((screen: ScreenType) => {
     setActiveScreen(screen);
     if (screen !== 'repo') setSelectedRepo(null);
+    if (screen !== 'projects' && screen !== 'project-detail') setSelectedProjectId(null);
   }, []);
 
   const handlePursuitStart = useCallback(() => {
@@ -237,8 +239,10 @@ export default function ExplorerShell() {
                     <RightPanel
                       activeScreen={activeScreen}
                       selectedRepo={selectedRepo}
-                      setActiveScreen={setActiveScreen}
+                      selectedProjectId={selectedProjectId}
+                      setActiveScreen={handleSetActiveScreen}
                       setSelectedRepo={setSelectedRepo}
+                      setSelectedProjectId={setSelectedProjectId}
                     />
                   </ErrorBoundary>
                 )}
