@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useApi } from '@/hooks/use-api';
+import { DRC_PROJECTS } from '@/data/drc-projects';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -20,12 +21,16 @@ interface Repo {
 export function RepoList() {
   const { apiFetch } = useApi();
   const [repos, setRepos] = useState<Repo[]>([]);
+  const [showProjectFallback, setShowProjectFallback] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     apiFetch('/api/repos')
-      .then((data) => setRepos(data.repos))
-      .catch(console.error)
+      .then((data) => {
+        setRepos(data.repos || []);
+        setShowProjectFallback(!data.repos || data.repos.length === 0);
+      })
+      .catch(() => setShowProjectFallback(true))
       .finally(() => setLoading(false));
   }, [apiFetch]);
 
@@ -33,10 +38,29 @@ export function RepoList() {
     return <div className="text-muted-foreground">Loading repos...</div>;
   }
 
-  if (repos.length === 0) {
+  if (showProjectFallback) {
     return (
-      <div className="text-center py-12 text-muted-foreground">
-        No repos yet. Create one to get started.
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {DRC_PROJECTS.map((project) => (
+          <Link key={project.projectId} href={`/projects/${project.projectId}`}>
+            <Card className="cursor-pointer border-gold-400/10 bg-white/5 transition-colors hover:border-gold-400/30 hover:bg-gold-400/5">
+              <CardHeader>
+                <div className="flex items-center justify-between gap-3">
+                  <CardTitle className="text-lg">{project.name}</CardTitle>
+                  <Badge variant="outline">{project.status.replace(/_/g, ' ')}</Badge>
+                </div>
+                <CardDescription>{project.operator}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2 text-xs text-muted-foreground">
+                <div>{project.location.province}</div>
+                <div>
+                  {project.totalResourceMoz ? `${project.totalResourceMoz} Moz` : 'Resource pending'} •{' '}
+                  {project.averageGrade ? `${project.averageGrade} g/t` : 'Grade pending'}
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
       </div>
     );
   }

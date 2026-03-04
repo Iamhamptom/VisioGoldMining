@@ -1,11 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { MOCK_MODE } from '@/lib/db';
 import { createHandler } from '@/lib/handler';
+import { getMockRepo } from '@/lib/mock-data';
 import { updateRepoSchema } from '@/lib/validation';
 import { notFound, badRequest } from '@/lib/errors';
 
 // GET /api/repos/:repoId
 export const GET = createHandler({
   handler: async (_req, ctx) => {
+    if (MOCK_MODE) {
+      const entry = getMockRepo(ctx.params.repoId);
+      if (!entry) {
+        throw notFound('Repo not found');
+      }
+
+      return NextResponse.json({ repo: entry.repo, branches: entry.branches });
+    }
+
     const { rows } = await ctx.db.query(
       `SELECT r.*, b.name as default_branch_name
        FROM repos r
@@ -40,6 +51,22 @@ export const PATCH = createHandler({
     }
 
     const updates = parsed.data;
+
+    if (MOCK_MODE) {
+      const entry = getMockRepo(ctx.params.repoId);
+      if (!entry) {
+        throw notFound('Repo not found');
+      }
+
+      return NextResponse.json({
+        repo: {
+          ...entry.repo,
+          ...updates,
+          updated_at: new Date().toISOString(),
+        },
+      });
+    }
+
     const setClauses: string[] = [];
     const values: unknown[] = [];
     let paramIndex = 1;

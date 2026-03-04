@@ -64,6 +64,7 @@ export default function ExplorerShell() {
   const [activeScreen, setActiveScreen] = useState<ScreenType>('home');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [selectedRepo, setSelectedRepo] = useState<string | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
   // --- Resizable panel state ---
   const [leftWidth, setLeftWidth] = useState(LEFT_DEFAULT);
@@ -114,16 +115,26 @@ export default function ExplorerShell() {
   const effectiveLeft = leftCollapsed ? 0 : leftWidth;
   const effectiveRight = rightCollapsed ? 0 : rightWidth;
 
+  // Track the screen before we switch to 'feature' so we can go back
+  const screenBeforeFeature = useRef<ScreenType>('home');
+
   const handleSelectionChange = useCallback((feature: SelectedFeature | null) => {
     if (feature) {
-      setActiveScreen('feature');
+      setActiveScreen((prev) => {
+        if (prev !== 'feature') screenBeforeFeature.current = prev;
+        return 'feature';
+      });
       if (rightCollapsed) setRightCollapsed(false);
+    } else {
+      // Go back to previous screen when selection is cleared
+      setActiveScreen(screenBeforeFeature.current);
     }
   }, [rightCollapsed]);
 
   const handleSetActiveScreen = useCallback((screen: ScreenType) => {
     setActiveScreen(screen);
     if (screen !== 'repo') setSelectedRepo(null);
+    if (screen !== 'projects' && screen !== 'project-detail') setSelectedProjectId(null);
   }, []);
 
   const handlePursuitStart = useCallback(() => {
@@ -228,8 +239,10 @@ export default function ExplorerShell() {
                     <RightPanel
                       activeScreen={activeScreen}
                       selectedRepo={selectedRepo}
-                      setActiveScreen={setActiveScreen}
+                      selectedProjectId={selectedProjectId}
+                      setActiveScreen={handleSetActiveScreen}
                       setSelectedRepo={setSelectedRepo}
+                      setSelectedProjectId={setSelectedProjectId}
                     />
                   </ErrorBoundary>
                 )}

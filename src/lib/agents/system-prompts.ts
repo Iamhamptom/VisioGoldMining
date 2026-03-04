@@ -1,5 +1,11 @@
 import { DRC_PROJECTS, type DRCProject } from '../../data/drc-projects';
 import { DRC_REGION_INTEL, type RegionIntelligence } from '../../data/drc-local-intel';
+import { getHotelsForProject } from '../../data/drc-hotels';
+import { getGovernmentByProvince } from '../../data/drc-government';
+import { getCultureByRegion } from '../../data/drc-culture';
+import { getSportsByProvince } from '../../data/drc-sports';
+import { getLandmarksByProvince } from '../../data/drc-landmarks';
+import { getInfrastructureByProvince } from '../../data/drc-infrastructure';
 
 interface AgentContext {
   projectId?: string | null;
@@ -62,6 +68,63 @@ function getAllProjectsList(): string {
   ).join('\n');
 }
 
+function getProvinceParts(province: string): string[] {
+  return province.split('/').map((part) => part.trim()).filter(Boolean);
+}
+
+function getEnhancedProjectContext(project: DRCProject): string {
+  const provinceParts = getProvinceParts(project.location.province);
+  const hotels = getHotelsForProject(project.projectId, provinceParts[0], project.accessInfo.nearestCity)
+    .slice(0, 3)
+    .map((hotel) => `${hotel.name} (${hotel.city}, ${hotel.priceRange})`);
+  const government = provinceParts
+    .flatMap((province) => getGovernmentByProvince(province))
+    .slice(0, 3)
+    .map((contact) => `${contact.office} (${contact.level})`);
+  const sports = provinceParts
+    .flatMap((province) => getSportsByProvince(province))
+    .slice(0, 2)
+    .map((club) => `${club.name} in ${club.city}`);
+  const landmarks = provinceParts
+    .flatMap((province) => getLandmarksByProvince(province))
+    .slice(0, 2)
+    .map((site) => `${site.name} (${site.type})`);
+  const infrastructure = provinceParts
+    .flatMap((province) => getInfrastructureByProvince(province))
+    .slice(0, 4)
+    .map((node) => `${node.type}: ${node.name}`);
+
+  return [
+    hotels.length > 0 ? `Hotels: ${hotels.join('; ')}` : null,
+    government.length > 0 ? `Government / regulators: ${government.join('; ')}` : null,
+    sports.length > 0 ? `Sports culture markers: ${sports.join('; ')}` : null,
+    landmarks.length > 0 ? `Landmarks: ${landmarks.join('; ')}` : null,
+    infrastructure.length > 0 ? `Infrastructure: ${infrastructure.join('; ')}` : null,
+  ].filter(Boolean).join('\n');
+}
+
+function getEnhancedRegionContext(province: string): string {
+  const provinceParts = getProvinceParts(province);
+  const government = provinceParts
+    .flatMap((part) => getGovernmentByProvince(part))
+    .slice(0, 4)
+    .map((contact) => `${contact.office} — ${contact.jurisdiction}`);
+  const culture = provinceParts
+    .flatMap((part) => getCultureByRegion(part))
+    .slice(0, 4)
+    .map((rule) => `${rule.importanceLevel}: ${rule.rule}`);
+  const sports = provinceParts
+    .flatMap((part) => getSportsByProvince(part))
+    .slice(0, 3)
+    .map((club) => `${club.name} (${club.city})`);
+
+  return [
+    government.length > 0 ? `Government: ${government.join('; ')}` : null,
+    culture.length > 0 ? `Culture: ${culture.join('; ')}` : null,
+    sports.length > 0 ? `Sports: ${sports.join('; ')}` : null,
+  ].filter(Boolean).join('\n');
+}
+
 const BASE_INSTRUCTION = `You are an AI agent on the VisioGold DRC mining intelligence platform — a world-class tool used by mining executives, analysts, and investors evaluating gold opportunities in the Democratic Republic of the Congo.
 
 IMPORTANT RULES:
@@ -84,11 +147,11 @@ export function getSystemPrompt(agentId: string, context: AgentContext): string 
       : null;
 
   const projectContext = project
-    ? `\n\nCURRENT PROJECT IN CONTEXT:\n${getProjectSummary(project)}`
+    ? `\n\nCURRENT PROJECT IN CONTEXT:\n${getProjectSummary(project)}\n${getEnhancedProjectContext(project)}`
     : '';
 
   const regionContext = region
-    ? `\n\nREGION INTELLIGENCE:\n${getRegionSummary(region)}`
+    ? `\n\nREGION INTELLIGENCE:\n${getRegionSummary(region)}\n${getEnhancedRegionContext(region.province)}`
     : '';
 
   const phaseContext = context.phase !== undefined

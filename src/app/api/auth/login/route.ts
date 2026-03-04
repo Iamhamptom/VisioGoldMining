@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { signToken, signRefreshToken, comparePassword } from '@/lib/auth';
 import { loginSchema } from '@/lib/validation';
 import { errorResponse, unauthorized, badRequest } from '@/lib/errors';
+import {
+  DEFAULT_WORKSPACE,
+  MOCK_AUTH_MODE,
+  getDemoUserByEmail,
+  getDemoWorkspaceMemberships,
+} from '@/lib/mock-data';
 import { supabaseRpc } from '@/lib/supabase-rest';
 import type { MemberRole } from '@/types';
 
@@ -26,6 +32,46 @@ export async function POST(req: NextRequest) {
     }
 
     const { email, password } = parsed.data;
+
+    if (MOCK_AUTH_MODE) {
+      const demoUser = getDemoUserByEmail(email);
+      if (!demoUser || password !== 'password123') {
+        throw unauthorized('Invalid email or password');
+      }
+
+      const memberships = getDemoWorkspaceMemberships(demoUser.role);
+      const token = await signToken({
+        sub: demoUser.id,
+        email: demoUser.email,
+        workspaceId: DEFAULT_WORKSPACE.id,
+        role: demoUser.role,
+      });
+
+      const refreshToken = await signRefreshToken({
+        sub: demoUser.id,
+        email: demoUser.email,
+      });
+
+      return NextResponse.json({
+        token,
+        refreshToken,
+        user: {
+          id: demoUser.id,
+          email: demoUser.email,
+          displayName: demoUser.displayName,
+        },
+        workspaces: memberships.map((membership) => ({
+          id: membership.workspace_id,
+          name: membership.workspace_name,
+          slug: DEFAULT_WORKSPACE.slug,
+          role: membership.role,
+        })),
+        currentWorkspace: {
+          id: DEFAULT_WORKSPACE.id,
+          role: demoUser.role,
+        },
+      });
+    }
 
     // Authenticate via Supabase RPC (HTTPS, no direct pg connection)
     const userData = await supabaseRpc<AuthResult | null>('vg_authenticate', {

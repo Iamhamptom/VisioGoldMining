@@ -5,6 +5,7 @@ import type { Opportunity } from '../../lib/types/opportunities';
 
 interface Props {
   onCreateRepo?: (repoId: string) => void;
+  onEvaluate?: () => void;
 }
 
 const PROVINCES = [
@@ -68,7 +69,7 @@ function FilterDropdown({ label, value, options, onChange }: {
   );
 }
 
-export default function OpportunityExplorer({ onCreateRepo }: Props) {
+export default function OpportunityExplorer({ onCreateRepo, onEvaluate }: Props) {
   const [commodity, setCommodity] = useState('All');
   const [province, setProvince] = useState('All');
   const [status, setStatus] = useState('All');
@@ -119,7 +120,7 @@ export default function OpportunityExplorer({ onCreateRepo }: Props) {
       </div>
 
       <div className="flex-1 overflow-y-auto pr-2">
-        <OpportunityFeed onCreateRepo={onCreateRepo} filterFn={filterFn} />
+        <OpportunityFeed onCreateRepo={onCreateRepo} onEvaluate={onEvaluate} filterFn={filterFn} />
       </div>
     </div>
   );

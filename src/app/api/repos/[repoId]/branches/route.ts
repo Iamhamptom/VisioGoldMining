@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { MOCK_MODE } from '@/lib/db';
 import { createHandler } from '@/lib/handler';
+import { getMockRepo, getMockRepoBranches } from '@/lib/mock-data';
 import { createBranchSchema } from '@/lib/validation';
 import { badRequest } from '@/lib/errors';
 
 // GET /api/repos/:repoId/branches
 export const GET = createHandler({
   handler: async (_req, ctx) => {
+    if (MOCK_MODE) {
+      return NextResponse.json({ branches: getMockRepoBranches(ctx.params.repoId) });
+    }
+
     const { rows } = await ctx.db.query(
       `SELECT b.*, u.display_name as created_by_name
        FROM branches b
@@ -31,6 +37,27 @@ export const POST = createHandler({
     }
 
     const { name, visibility, fromBranchId } = parsed.data;
+
+    if (MOCK_MODE) {
+      const entry = getMockRepo(ctx.params.repoId);
+      if (!entry) {
+        throw badRequest('Repo not found');
+      }
+
+      const branch = {
+        id: crypto.randomUUID(),
+        workspace_id: ctx.workspaceId,
+        repo_id: ctx.params.repoId,
+        name,
+        visibility,
+        parent_branch_id: fromBranchId || null,
+        head_commit_id: null,
+        created_by: ctx.user.sub,
+        created_at: new Date().toISOString(),
+      };
+
+      return NextResponse.json({ branch }, { status: 201 });
+    }
 
     // If branching from another branch, inherit its head commit
     let headCommitId: string | null = null;

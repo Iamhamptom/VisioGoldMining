@@ -1,7 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { extractAuth } from '@/lib/middleware/with-auth';
 import { errorResponse, notFound } from '@/lib/errors';
+import {
+  DEFAULT_WORKSPACE,
+  MOCK_AUTH_MODE,
+  getDemoUserById,
+  getMockWorkspaces,
+} from '@/lib/mock-data';
 import { supabaseRpc } from '@/lib/supabase-rest';
+
+export const dynamic = 'force-dynamic';
 
 interface UserProfile {
   id: string;
@@ -20,6 +28,24 @@ interface UserProfile {
 export async function GET(req: NextRequest) {
   try {
     const payload = await extractAuth(req);
+
+    if (MOCK_AUTH_MODE) {
+      const demoUser = getDemoUserById(payload.sub);
+      if (!demoUser) {
+        throw notFound('User not found');
+      }
+
+      return NextResponse.json({
+        user: {
+          id: demoUser.id,
+          email: demoUser.email,
+          displayName: demoUser.displayName,
+          isActive: true,
+          createdAt: DEFAULT_WORKSPACE.created_at,
+        },
+        workspaces: getMockWorkspaces(demoUser.role),
+      });
+    }
 
     const profile = await supabaseRpc<UserProfile | null>('vg_get_user_profile', {
       p_user_id: payload.sub,

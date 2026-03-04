@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createHandler } from '@/lib/handler';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/dashboard/gov/analytics — Portal analytics dashboard data
 export const GET = createHandler({
   roles: ['ADMIN', 'OWNER'],

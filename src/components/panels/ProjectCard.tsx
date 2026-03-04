@@ -13,9 +13,9 @@ interface Props {
 export default function ProjectCard({ properties }: Props) {
   const { startPursuit } = usePursuit();
 
-  const projectId = (properties.projectId as string) || (properties.name as string) || '';
+  const projectId = (properties.projectId as string) || (properties.id as string) || (properties.name as string) || '';
   const project = DRC_PROJECTS.find(p =>
-    p.projectId === projectId || p.name === properties.name
+    p.projectId === projectId || p.projectId === properties.id || p.name === properties.name
   );
 
   if (!project) {

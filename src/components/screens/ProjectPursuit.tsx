@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { DRC_PROJECTS, type DRCProject } from '../../data/drc-projects';
 import { usePursuit } from '../../hooks/usePursuitContext';
+import { useMapContext } from '../../hooks/useMap';
 import { type RegionIntelligence, getIntelByProvince } from '../../data/drc-local-intel';
 
 const phaseIcons = [SearchIcon, Target, Mountain, FileText, Landmark, Shield, Banknote, HardHat, Pickaxe, Leaf];
@@ -35,6 +36,7 @@ interface PursuitState {
 
 export default function ProjectPursuit() {
   const { pursuit: sharedPursuit, endPursuit: endSharedPursuit, setPhase: setSharedPhase } = usePursuit();
+  const { map } = useMapContext();
   const [pursuit, setPursuit] = useState<PursuitState | null>(null);
   const [selectedPhase, setSelectedPhase] = useState<number>(0);
   const [expandedSection, setExpandedSection] = useState<string | null>('overview');
@@ -52,6 +54,20 @@ export default function ProjectPursuit() {
     }
   }, [sharedPursuit.pursuitActive, sharedPursuit.activeProjectId, sharedPursuit.activePhase]);
 
+  const project = pursuit ? DRC_PROJECTS.find(p => p.projectId === pursuit.projectId) || null : null;
+
+  useEffect(() => {
+    if (!map || !project || project.location.lat === null || project.location.lon === null) return;
+
+    map.flyTo({
+      center: [project.location.lon, project.location.lat],
+      zoom: 8.5,
+      pitch: 45,
+      speed: 0.8,
+      essential: true,
+    });
+  }, [map, project]);
+
   if (!pursuit) {
     return <ProjectSelector projects={projectsWithCoords} onSelect={(id) => {
       setPursuit({ projectId: id, currentPhase: 0, started: true });
@@ -59,7 +75,6 @@ export default function ProjectPursuit() {
     }} />;
   }
 
-  const project = DRC_PROJECTS.find(p => p.projectId === pursuit.projectId);
   if (!project) return null;
 
   const regionIntelArr = getIntelByProvince(project.location.province);

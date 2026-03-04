@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PoolClient } from 'pg';
-import { withRLS } from '@/lib/db';
+import { MOCK_MODE, getMockDbClient, withRLS } from '@/lib/db';
 import { extractAuth } from '@/lib/middleware/with-auth';
 import { validateWorkspaceAccess } from '@/lib/middleware/with-workspace';
 import { checkRole } from '@/lib/middleware/with-role';
@@ -59,9 +59,14 @@ export function createHandler(options: HandlerOptions) {
 
       // Workspace middleware
       if (options.workspace !== false && options.auth !== false) {
-        const access = await validateWorkspaceAccess(req, user);
-        workspaceId = access.workspaceId;
-        role = access.role;
+        if (MOCK_MODE) {
+          workspaceId = user.workspaceId || req.headers.get('x-workspace-id') || '';
+          role = user.role;
+        } else {
+          const access = await validateWorkspaceAccess(req, user);
+          workspaceId = access.workspaceId;
+          role = access.role;
+        }
       }
 
       // Role check
@@ -73,13 +78,12 @@ export function createHandler(options: HandlerOptions) {
         checkRole(role, minRole);
       }
 
-      // Execute handler within RLS transaction
-      const result = await withRLS(workspaceId, user.sub, async (db) => {
+      const execute = async (db: PoolClient) => {
         const ctx: HandlerContext = { user, workspaceId, role, db, params };
         const response = await options.handler(req, ctx);
 
         // Audit logging (within the same transaction)
-        if (options.audit && response.status >= 200 && response.status < 300) {
+        if (!MOCK_MODE && options.audit && response.status >= 200 && response.status < 300) {
           await auditAction(db, req, {
             workspaceId,
             userId: user.sub,
@@ -89,7 +93,14 @@ export function createHandler(options: HandlerOptions) {
         }
 
         return response;
-      });
+      };
+
+      // In mock mode we bypass workspace validation queries + RLS entirely.
+      if (MOCK_MODE) {
+        return await execute(getMockDbClient());
+      }
+
+      const result = await withRLS(workspaceId, user.sub, execute);
 
       return result;
     } catch (error) {

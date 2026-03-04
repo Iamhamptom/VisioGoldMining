@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { MOCK_MODE } from '@/lib/db';
 import { createHandler } from '@/lib/handler';
+import { getMockAuditEntries } from '@/lib/mock-data';
+
+export const dynamic = 'force-dynamic';
 
 // GET /api/audit — query audit log with pagination + filters
 export const GET = createHandler({
@@ -12,6 +16,28 @@ export const GET = createHandler({
     const userId = url.searchParams.get('userId');
     const startDate = url.searchParams.get('startDate');
     const endDate = url.searchParams.get('endDate');
+
+    if (MOCK_MODE) {
+      const entries = getMockAuditEntries().filter((entry) => {
+        if (action && entry.action !== action) return false;
+        if (userId && entry.user_id !== userId) return false;
+        if (startDate && entry.created_at < startDate) return false;
+        if (endDate && entry.created_at > endDate) return false;
+        return true;
+      });
+      const offset = (page - 1) * limit;
+      const paginated = entries.slice(offset, offset + limit);
+
+      return NextResponse.json({
+        entries: paginated,
+        pagination: {
+          page,
+          limit,
+          total: entries.length,
+          totalPages: Math.max(1, Math.ceil(entries.length / limit)),
+        },
+      });
+    }
 
     const conditions: string[] = ['a.workspace_id = $1'];
     const params: unknown[] = [ctx.workspaceId];

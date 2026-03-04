@@ -3,7 +3,15 @@ import type { SimulationInput, Simulation, ScenarioComparison } from '../types/s
 import type { DefaultContext } from '../types/foundation';
 
 export async function getDefaultContext(): Promise<DefaultContext> {
-  return apiFetch<DefaultContext>('/context/default');
+  try {
+    return await apiFetch<DefaultContext>('/context/default');
+  } catch {
+    return {
+      workspaceId: '00000000-0000-4000-8000-000000000001',
+      repoId: 'mock-repo',
+      branchId: 'mock-branch',
+    };
+  }
 }
 
 export async function runSimulation(repoId: string, branchId: string, input: SimulationInput) {
