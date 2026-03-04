@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createHandler } from '@/lib/handler';
 import { getAdminClient } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/dashboard/gov/leads — Investor leads for this workspace's portals
 export const GET = createHandler({
   roles: ['ADMIN', 'OWNER'],

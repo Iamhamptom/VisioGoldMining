@@ -1,8 +1,12 @@
 import { Pool, PoolClient } from 'pg';
+import { AppError } from '@/lib/errors';
 
-const sslConfig = process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost')
-  ? { rejectUnauthorized: false }
-  : false;
+export const MOCK_MODE = !process.env.DATABASE_URL && !process.env.DB_APP_PASSWORD;
+
+const sslConfig =
+  process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('localhost')
+    ? { rejectUnauthorized: false }
+    : false;
 
 // When using a managed DB (Supabase), route all queries to the visiogold schema
 // so tables are isolated from other apps sharing the same database.
@@ -11,60 +15,76 @@ const searchPathOption = process.env.DATABASE_URL
   ? { options: `-c search_path=${SCHEMA_SEARCH_PATH},extensions,public` }
   : {};
 
-// Application pool — uses the visiogold_app role (RLS enforced)
-// Supports DATABASE_URL for managed Postgres (Vercel, Neon, Supabase)
-const pool = process.env.DATABASE_URL
-  ? new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: sslConfig,
-      max: parseInt(process.env.DB_POOL_MAX || '20'),
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000,
-      ...searchPathOption,
-    })
-  : (() => {
-      if (!process.env.DB_APP_PASSWORD) {
-        console.warn('DB_APP_PASSWORD is not set. Database connections will fail in production.');
-      }
-      return new Pool({
-        host: process.env.DB_HOST || 'localhost',
-        port: parseInt(process.env.DB_PORT || '5432'),
-        database: process.env.DB_NAME || 'visiogold_dev',
-        user: process.env.DB_APP_USER || 'visiogold_app',
-        password: process.env.DB_APP_PASSWORD,
-        max: parseInt(process.env.DB_POOL_MAX || '20'),
-        idleTimeoutMillis: 30000,
-        connectionTimeoutMillis: 5000,
-      });
-    })();
+function databaseUnavailableError() {
+  return new AppError(
+    503,
+    'Database not configured. Set DATABASE_URL or DB_APP_PASSWORD to enable database-backed routes.'
+  );
+}
 
-// Admin pool — uses visiogold_admin role (bypasses RLS, for seed/migration only)
-// In managed Postgres (DATABASE_URL), this uses the same connection since the
-// managed user typically has full privileges.
-const adminPool = process.env.DATABASE_URL
-  ? new Pool({
+type PoolMode = 'app' | 'admin';
+
+function buildPool(mode: PoolMode): Pool {
+  if (process.env.DATABASE_URL) {
+    return new Pool({
       connectionString: process.env.DATABASE_URL,
       ssl: sslConfig,
-      max: parseInt(process.env.DB_ADMIN_POOL_MAX || '5'),
+      max: parseInt(
+        process.env[mode === 'admin' ? 'DB_ADMIN_POOL_MAX' : 'DB_POOL_MAX'] || (mode === 'admin' ? '5' : '20'),
+        10
+      ),
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 5000,
       ...searchPathOption,
-    })
-  : (() => {
-      if (!process.env.DB_ADMIN_PASSWORD) {
-        console.warn('DB_ADMIN_PASSWORD is not set. Admin database connections will fail in production.');
+    });
+  }
+
+  if (mode === 'admin' && !process.env.DB_ADMIN_PASSWORD) {
+    console.warn('DB_ADMIN_PASSWORD is not set. Admin database connections will fail outside mock mode.');
+  }
+
+  if (mode === 'app' && !process.env.DB_APP_PASSWORD) {
+    console.warn('DB_APP_PASSWORD is not set. Application database connections will fail outside mock mode.');
+  }
+
+  return new Pool({
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '5432', 10),
+    database: process.env.DB_NAME || 'visiogold_dev',
+    user: process.env[mode === 'admin' ? 'DB_ADMIN_USER' : 'DB_APP_USER'] || (mode === 'admin' ? 'visiogold_admin' : 'visiogold_app'),
+    password: process.env[mode === 'admin' ? 'DB_ADMIN_PASSWORD' : 'DB_APP_PASSWORD'],
+    max: parseInt(
+      process.env[mode === 'admin' ? 'DB_ADMIN_POOL_MAX' : 'DB_POOL_MAX'] || (mode === 'admin' ? '5' : '20'),
+      10
+    ),
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 5000,
+  });
+}
+
+function createLazyPool(mode: PoolMode): Pool {
+  let instance: Pool | null = null;
+
+  return new Proxy({} as Pool, {
+    get(_target, property) {
+      if (!instance) {
+        instance = buildPool(mode);
       }
-      return new Pool({
-        host: process.env.DB_HOST || 'localhost',
-        port: parseInt(process.env.DB_PORT || '5432'),
-        database: process.env.DB_NAME || 'visiogold_dev',
-        user: process.env.DB_ADMIN_USER || 'visiogold_admin',
-        password: process.env.DB_ADMIN_PASSWORD,
-        max: parseInt(process.env.DB_ADMIN_POOL_MAX || '5'),
-        idleTimeoutMillis: 30000,
-        connectionTimeoutMillis: 5000,
-      });
-    })();
+      const value = instance[property as keyof Pool];
+      return typeof value === 'function' ? value.bind(instance) : value;
+    },
+  });
+}
+
+const mockDbClient = {
+  async query() {
+    throw databaseUnavailableError();
+  },
+  release() {},
+} as unknown as PoolClient;
+
+const poolInstance = MOCK_MODE ? null : createLazyPool('app');
+const adminPoolInstance = MOCK_MODE ? null : createLazyPool('admin');
 
 /**
  * Execute a callback within an RLS-scoped transaction.
@@ -76,14 +96,18 @@ export async function withRLS<T>(
   userId: string,
   fn: (client: PoolClient) => Promise<T>
 ): Promise<T> {
-  const client = await pool.connect();
+  if (!poolInstance) {
+    throw databaseUnavailableError();
+  }
+
+  const client = await poolInstance.connect();
   try {
     await client.query('BEGIN');
-    await client.query("SET LOCAL app.current_workspace_id = $1", [workspaceId]);
-    await client.query("SET LOCAL app.current_user_id = $1", [userId]);
+    await client.query('SET LOCAL app.current_workspace_id = $1', [workspaceId]);
+    await client.query('SET LOCAL app.current_user_id = $1', [userId]);
 
     if (process.env.VISIOGOLD_ORG_WORKSPACE_ID) {
-      await client.query("SET LOCAL app.visiogold_org_workspace_id = $1", [
+      await client.query('SET LOCAL app.visiogold_org_workspace_id = $1', [
         process.env.VISIOGOLD_ORG_WORKSPACE_ID,
       ]);
     }
@@ -107,7 +131,11 @@ export async function queryNoRLS<T = Record<string, unknown>>(
   sql: string,
   params?: unknown[]
 ): Promise<T[]> {
-  const client = await adminPool.connect();
+  if (!adminPoolInstance) {
+    throw databaseUnavailableError();
+  }
+
+  const client = await adminPoolInstance.connect();
   try {
     const result = await client.query(sql, params);
     return result.rows as T[];
@@ -120,7 +148,15 @@ export async function queryNoRLS<T = Record<string, unknown>>(
  * Get an admin client for operations that must bypass RLS (seed scripts, etc.)
  */
 export async function getAdminClient(): Promise<PoolClient> {
-  return adminPool.connect();
+  if (!adminPoolInstance) {
+    throw databaseUnavailableError();
+  }
+  return adminPoolInstance.connect();
 }
 
-export { pool, adminPool };
+export function getMockDbClient(): PoolClient {
+  return mockDbClient;
+}
+
+export const pool = poolInstance;
+export const adminPool = adminPoolInstance;

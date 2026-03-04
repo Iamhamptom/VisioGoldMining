@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { extractAuth } from '@/lib/middleware/with-auth';
-import { queryNoRLS, getAdminClient } from '@/lib/db';
+import { MOCK_MODE, queryNoRLS, getAdminClient } from '@/lib/db';
+import { getMockWorkspaces } from '@/lib/mock-data';
 import { createWorkspaceSchema } from '@/lib/validation';
 import { errorResponse, badRequest } from '@/lib/errors';
 
@@ -8,6 +9,12 @@ import { errorResponse, badRequest } from '@/lib/errors';
 export async function GET(req: NextRequest) {
   try {
     const user = await extractAuth(req);
+
+    if (MOCK_MODE) {
+      return NextResponse.json({
+        workspaces: getMockWorkspaces(user.role),
+      });
+    }
 
     const workspaces = await queryNoRLS(
       `SELECT w.id, w.name, w.slug, w.created_at, wm.role
@@ -35,6 +42,21 @@ export async function POST(req: NextRequest) {
     }
 
     const { name, slug } = parsed.data;
+
+    if (MOCK_MODE) {
+      return NextResponse.json(
+        {
+          workspace: {
+            id: crypto.randomUUID(),
+            name,
+            slug,
+            created_at: new Date().toISOString(),
+            role: 'OWNER',
+          },
+        },
+        { status: 201 }
+      );
+    }
 
     // Use admin client to bypass RLS for workspace creation
     const client = await getAdminClient();

@@ -4,6 +4,7 @@
 // ============================================================================
 
 import { AgentMessage, generateMessageId } from './agent-framework';
+import { getHotelsByCity, getHotelsByProvince } from '../../data/drc-hotels';
 
 // ---------------------------------------------------------------------------
 // DRC travel reference data
@@ -693,6 +694,14 @@ export function getTripPlanningResponse(
 // ---------------------------------------------------------------------------
 
 function buildDestinationBrief(dest: DRCDestination, teamSize: number): AgentMessage {
+  const hotelMatches = [
+    ...getHotelsByCity(dest.city),
+    ...getHotelsByProvince(dest.province),
+  ].slice(0, 4);
+  const hotelLines = hotelMatches.length > 0
+    ? hotelMatches.map((hotel) => `${hotel.name} (${hotel.priceRange}; security ${hotel.securityRating}/5)`)
+    : dest.hotelOptions;
+
   return {
     id: generateMessageId(),
     agentId: 'trip',
@@ -705,7 +714,7 @@ function buildDestinationBrief(dest: DRCDestination, teamSize: number): AgentMes
       `### Getting There\n` +
       `**Airlines:** ${dest.airlines.join(', ')}\n\n` +
       `### Accommodation\n` +
-      dest.hotelOptions.map((h) => `- ${h}`).join('\n') +
+      hotelLines.map((hotel) => `- ${hotel}`).join('\n') +
       `\n\n### Ground Transport\n` +
       `${dest.groundTransport}\n\n` +
       `### Medical Facilities\n` +
@@ -726,7 +735,7 @@ function buildDestinationBrief(dest: DRCDestination, teamSize: number): AgentMes
       securityLevel: dest.securityLevel,
       teamSize,
       airlines: dest.airlines,
-      hotels: dest.hotelOptions,
+      hotels: hotelLines,
     },
     timestamp: new Date().toISOString(),
     actions: [

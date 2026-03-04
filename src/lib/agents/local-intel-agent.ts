@@ -4,6 +4,10 @@
 // ============================================================================
 
 import { AgentMessage, generateMessageId } from './agent-framework';
+import { getHotelsByProvince } from '../../data/drc-hotels';
+import { getGovernmentByProvince } from '../../data/drc-government';
+import { getCultureByRegion } from '../../data/drc-culture';
+import { getSportsByProvince } from '../../data/drc-sports';
 
 // ---------------------------------------------------------------------------
 // Province intelligence summaries (inline; full data in src/data/drc-local-intel.ts)
@@ -178,6 +182,10 @@ function buildProvinceOverview(prov: ProvinceIntel): AgentMessage {
     high: 'HIGH',
     critical: 'CRITICAL',
   };
+  const hotels = getHotelsByProvince(prov.name).slice(0, 3);
+  const offices = getGovernmentByProvince(prov.name).slice(0, 3);
+  const culture = getCultureByRegion(prov.name).slice(0, 3);
+  const sports = getSportsByProvince(prov.name).slice(0, 2);
 
   return {
     id: generateMessageId(),
@@ -200,10 +208,22 @@ function buildProvinceOverview(prov: ProvinceIntel): AgentMessage {
       `- **Telecom:** ${prov.infrastructure.telecom}\n\n` +
       `### Accommodation Options\n` +
       prov.accommodation.map((a) => `- ${a}`).join('\n') +
+      (hotels.length > 0
+        ? `\n\n### Hotel Shortlist\n${hotels.map((hotel) => `- ${hotel.name} (${hotel.city}, ${hotel.priceRange})`).join('\n')}`
+        : '') +
       `\n\n### Key Mining Companies\n` +
       prov.keyCompanies.map((c) => `- ${c}`).join('\n') +
       `\n\n### Artisanal Mining Activity\n` +
       `${prov.asmActivity}\n\n` +
+      (offices.length > 0
+        ? `### Government / Regulator Contacts\n${offices.map((office) => `- ${office.office}: ${office.jurisdiction}`).join('\n')}\n\n`
+        : '') +
+      (sports.length > 0
+        ? `### Sports & Civic Pulse\n${sports.map((club) => `- ${club.name} (${club.city})`).join('\n')}\n\n`
+        : '') +
+      (culture.length > 0
+        ? `### Cultural Protocols\n${culture.map((rule) => `- ${rule.rule}`).join('\n')}\n\n`
+        : '') +
       `### Cultural Notes\n` +
       `${prov.culturalNotes}`,
     data: {

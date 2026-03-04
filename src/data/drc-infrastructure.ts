@@ -1,0 +1,212 @@
+export interface DRCInfrastructureNode {
+  id: string;
+  name: string;
+  type: 'airport' | 'hospital' | 'bank' | 'fuel' | 'telecom' | 'power';
+  province: string;
+  city: string;
+  coordinates?: [number, number];
+  details: string;
+  operatingHours?: string;
+  notes: string;
+}
+
+export const DRC_INFRASTRUCTURE: DRCInfrastructureNode[] = [
+  {
+    id: 'infra-001',
+    name: 'N’djili International Airport',
+    type: 'airport',
+    province: 'Kinshasa',
+    city: 'Kinshasa',
+    coordinates: [15.447, -4.385],
+    details: 'Main international gateway for DRC with diplomatic and commercial handling.',
+    operatingHours: '24/7',
+    notes: 'Primary staging point for executives and regulatory travel.',
+  },
+  {
+    id: 'infra-002',
+    name: 'Luano Airport',
+    type: 'airport',
+    province: 'Haut-Katanga',
+    city: 'Lubumbashi',
+    coordinates: [27.531, -11.592],
+    details: 'Southern hub with stronger charter support and fuel availability.',
+    operatingHours: '06:00-22:00',
+    notes: 'Useful fallback for equipment and medevac rerouting.',
+  },
+  {
+    id: 'infra-003',
+    name: 'Kavumu Airport',
+    type: 'airport',
+    province: 'South Kivu',
+    city: 'Bukavu',
+    coordinates: [28.806, -2.308],
+    details: 'Bukavu airport used for eastern domestic flights and charters.',
+    operatingHours: 'Daylight operations',
+    notes: 'Security posture and runway scheduling can change quickly.',
+  },
+  {
+    id: 'infra-004',
+    name: 'Bunia Airport',
+    type: 'airport',
+    province: 'Ituri',
+    city: 'Bunia',
+    coordinates: [30.22, 1.565],
+    details: 'Key Ituri air bridge for Bunia and Mambasa logistics.',
+    operatingHours: 'Daylight operations',
+    notes: 'Escort planning should be synchronized with arrivals.',
+  },
+  {
+    id: 'infra-005',
+    name: 'Bangoka Airport',
+    type: 'airport',
+    province: 'Tshopo',
+    city: 'Kisangani',
+    coordinates: [25.338, 0.481],
+    details: 'Main Tshopo aviation gateway with cargo relevance.',
+    operatingHours: '06:00-18:00',
+    notes: 'Useful midpoint for inland resupply and charter repositioning.',
+  },
+  {
+    id: 'infra-006',
+    name: 'Doko Airstrip',
+    type: 'airport',
+    province: 'Haut-Uele',
+    city: 'Durba',
+    coordinates: [29.55, 3.17],
+    details: 'Mine-linked airstrip serving the Kibali corridor.',
+    operatingHours: 'Restricted / arranged access',
+    notes: 'Best access point for Kibali-linked site work when permitted.',
+  },
+  {
+    id: 'infra-007',
+    name: 'Panzi Hospital',
+    type: 'hospital',
+    province: 'South Kivu',
+    city: 'Bukavu',
+    coordinates: [28.84, -2.53],
+    details: 'Best-known referral hospital in Bukavu.',
+    operatingHours: '24/7',
+    notes: 'Important medical fallback for South Kivu teams.',
+  },
+  {
+    id: 'infra-008',
+    name: 'HEAL Africa Hospital',
+    type: 'hospital',
+    province: 'North Kivu',
+    city: 'Goma',
+    coordinates: [29.228, -1.674],
+    details: 'Major referral hospital in Goma with emergency capacity.',
+    operatingHours: '24/7',
+    notes: 'Common first-stop medical referral for North Kivu operations.',
+  },
+  {
+    id: 'infra-009',
+    name: 'General Hospital Bunia',
+    type: 'hospital',
+    province: 'Ituri',
+    city: 'Bunia',
+    coordinates: [30.243, 1.564],
+    details: 'Primary Bunia hospital with limited trauma capability.',
+    operatingHours: '24/7',
+    notes: 'Severe cases should be planned for air evacuation.',
+  },
+  {
+    id: 'infra-010',
+    name: 'Kibali Medical Clinic',
+    type: 'hospital',
+    province: 'Haut-Uele',
+    city: 'Durba',
+    details: 'Mine-standard clinic with controlled access.',
+    operatingHours: '24/7',
+    notes: 'Restricted but relevant for Kibali corridor response planning.',
+  },
+  {
+    id: 'infra-011',
+    name: 'Rawbank Corporate Branch',
+    type: 'bank',
+    province: 'Kinshasa',
+    city: 'Kinshasa',
+    details: 'Major corporate banking interface for payments and treasury support.',
+    operatingHours: '08:00-16:00',
+    notes: 'Cash still required outside major hubs despite bank presence.',
+  },
+  {
+    id: 'infra-012',
+    name: 'Rawbank Bukavu',
+    type: 'bank',
+    province: 'South Kivu',
+    city: 'Bukavu',
+    details: 'Primary formal banking node for Bukavu business operations.',
+    operatingHours: '08:00-15:30',
+    notes: 'ATM uptime can be inconsistent; do not rely on same-day large cash access.',
+  },
+  {
+    id: 'infra-013',
+    name: 'TotalEnergies Lubumbashi Depot',
+    type: 'fuel',
+    province: 'Haut-Katanga',
+    city: 'Lubumbashi',
+    details: 'Reliable southern fuel node for convoy staging.',
+    operatingHours: '06:00-20:00',
+    notes: 'Good point for bulk jerry-can planning before field movement.',
+  },
+  {
+    id: 'infra-014',
+    name: 'Bunia Fuel Corridor',
+    type: 'fuel',
+    province: 'Ituri',
+    city: 'Bunia',
+    details: 'Cluster of supplier stations serving escorted road departures.',
+    operatingHours: '06:00-18:00',
+    notes: 'Fuel quality can vary; carry filtration and reserve stock.',
+  },
+  {
+    id: 'infra-015',
+    name: 'Vodacom Eastern Backbone',
+    type: 'telecom',
+    province: 'South Kivu',
+    city: 'Bukavu',
+    details: 'Most stable urban mobile/data coverage in Bukavu and main corridors.',
+    operatingHours: 'Network service',
+    notes: 'Coverage drops sharply beyond primary towns and major road axes.',
+  },
+  {
+    id: 'infra-016',
+    name: 'Airtel Ituri Coverage',
+    type: 'telecom',
+    province: 'Ituri',
+    city: 'Bunia',
+    details: 'Patchy but often usable in Bunia and some transit corridors.',
+    operatingHours: 'Network service',
+    notes: 'Satellite communications remain mandatory for field missions.',
+  },
+  {
+    id: 'infra-017',
+    name: 'Ruzizi Hydropower Grid',
+    type: 'power',
+    province: 'South Kivu',
+    city: 'Bukavu',
+    details: 'Main grid source for Bukavu with frequent interruptions.',
+    operatingHours: 'Grid service',
+    notes: 'Generator redundancy remains standard for critical work.',
+  },
+  {
+    id: 'infra-018',
+    name: 'Kibali Hydropower Cascade',
+    type: 'power',
+    province: 'Haut-Uele',
+    city: 'Durba',
+    details: 'Mine-linked hydro system supporting the Kibali operating area.',
+    operatingHours: 'Continuous',
+    notes: 'One of the stronger remote power references in the northeast.',
+  },
+];
+
+function normalize(value: string) {
+  return value.toLowerCase().trim();
+}
+
+export function getInfrastructureByProvince(province: string) {
+  const normalizedProvince = normalize(province);
+  return DRC_INFRASTRUCTURE.filter((item) => normalize(item.province).includes(normalizedProvince));
+}

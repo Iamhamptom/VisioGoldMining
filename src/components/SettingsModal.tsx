@@ -198,7 +198,11 @@ export default function SettingsModal({ isOpen, onClose }: { isOpen: boolean; on
                             <input
                               type={showKey ? 'text' : 'password'}
                               value={settings.anthropicApiKey}
-                              onChange={(e) => setSettings(s => ({ ...s, anthropicApiKey: e.target.value }))}
+                              onChange={(e) => {
+                                const nextSettings = { ...settings, anthropicApiKey: e.target.value };
+                                setSettings(nextSettings);
+                                localStorage.setItem('visiogold-settings', JSON.stringify(nextSettings));
+                              }}
                               placeholder="sk-ant-..."
                               className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-gray-600 outline-none focus:border-gold-400/50 font-mono"
                             />

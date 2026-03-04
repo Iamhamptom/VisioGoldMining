@@ -3,6 +3,7 @@ import './globals.css';
 import { AuthProvider } from '@/context/auth-provider';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.APP_URL || 'http://localhost:3000'),
   title: 'VisioGold DRC — AI-Powered Mining Intelligence',
   description: 'The premier AI-powered mining intelligence platform for the Democratic Republic of the Congo. Real-time geological intelligence, opportunity scoring, and Monte Carlo simulation.',
   icons: {

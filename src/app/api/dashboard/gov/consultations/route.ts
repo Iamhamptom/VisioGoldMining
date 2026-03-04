@@ -3,6 +3,8 @@ import { createHandler } from '@/lib/handler';
 import { updateConsultationSchema } from '@/lib/validation';
 import { badRequest, notFound } from '@/lib/errors';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/dashboard/gov/consultations — Consultation request queue
 export const GET = createHandler({
   roles: ['ADMIN', 'OWNER'],

@@ -5,8 +5,8 @@ import LithologyCard from './LithologyCard';
 import OccurrenceCard from './OccurrenceCard';
 import IncidentCard from './IncidentCard';
 import InfrastructureCard from './InfrastructureCard';
-import ProjectCard from './ProjectCard';
 import OpportunityDetailCard from './OpportunityDetailCard';
+import ProjectIntelligenceHub from '../screens/ProjectIntelligenceHub';
 
 export default function FeatureContextPanel() {
   const { selectedFeature, clearSelection } = useSelection();
@@ -47,7 +47,7 @@ export default function FeatureContextPanel() {
         </button>
       </div>
 
-      {isProject && <ProjectCard properties={properties} />}
+      {isProject && <ProjectIntelligenceHub properties={properties} />}
       {isOpportunity && <OpportunityDetailCard properties={properties} />}
       {layerId === 'tenements' && <PermitCard properties={properties} />}
       {layerId === 'geology' && <LithologyCard properties={properties} />}
