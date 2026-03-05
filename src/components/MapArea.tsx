@@ -28,6 +28,7 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
   const [searchResults, setSearchResults] = useState<typeof DRC_PROJECTS>([]);
   const [showResults, setShowResults] = useState(false);
   const [isSatellite, setIsSatellite] = useState(false);
+  const [focusedProjectId, setFocusedProjectId] = useState<string | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
 
   // Layer management — lifted here so GlobeMap can read visibility
@@ -58,14 +59,16 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
 
   // Fly to a selected search result
   const flyToProject = useCallback((project: typeof DRC_PROJECTS[0]) => {
-    if (!map || !project.location.lat || !project.location.lon) return;
-    map.flyTo({
-      center: [project.location.lon, project.location.lat],
-      zoom: 9,
-      pitch: 50,
-      speed: 0.8,
-      essential: true,
-    });
+    setFocusedProjectId(project.projectId);
+    if (map && project.location.lat && project.location.lon) {
+      map.flyTo({
+        center: [project.location.lon, project.location.lat],
+        zoom: 9,
+        pitch: 50,
+        speed: 0.8,
+        essential: true,
+      });
+    }
     setShowResults(false);
     setSearchQuery(project.name);
   }, [map]);
@@ -84,7 +87,11 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
   return (
     <div className="absolute inset-0 bg-bg-dark overflow-hidden">
       {/* MapLibre Globe */}
-      <GlobeMap isSatellite={isSatellite} showProjectMarkers={showProjectMarkers} />
+      <GlobeMap
+        isSatellite={isSatellite}
+        showProjectMarkers={showProjectMarkers}
+        focusedProjectId={focusedProjectId}
+      />
 
       {/* Map Controls */}
       <MapControls isSatellite={isSatellite} onToggleSatellite={() => setIsSatellite(s => !s)} />

@@ -16,24 +16,31 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [showRequest, setShowRequest] = useState(false);
 
+  const seeded = (seed: number) => {
+    let t = seed + 0x6D2B79F5;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+
   // Gold dust particles
   const stars = useMemo(() => Array.from({ length: 50 }).map((_, i) => ({
     id: i,
-    left: `${Math.random() * 100}%`,
-    top: `${Math.random() * 100}%`,
-    size: 2 + Math.random() * 3,
-    animationDuration: `${2 + Math.random() * 5}s`,
-    animationDelay: `${Math.random() * 4}s`,
-    opacity: 0.3 + Math.random() * 0.6,
+    left: `${seeded(i + 1) * 100}%`,
+    top: `${seeded(i + 101) * 100}%`,
+    size: 2 + seeded(i + 201) * 3,
+    animationDuration: `${2 + seeded(i + 301) * 5}s`,
+    animationDelay: `${seeded(i + 401) * 4}s`,
+    opacity: 0.3 + seeded(i + 501) * 0.6,
   })), []);
 
   // Rising dust
   const floatingDust = useMemo(() => Array.from({ length: 20 }).map((_, i) => ({
     id: i,
-    left: `${Math.random() * 100}%`,
-    animationDuration: `${12 + Math.random() * 16}s`,
-    animationDelay: `-${Math.random() * 16}s`,
-    size: 1.5 + Math.random() * 2,
+    left: `${seeded(i + 601) * 100}%`,
+    animationDuration: `${12 + seeded(i + 701) * 16}s`,
+    animationDelay: `-${seeded(i + 801) * 16}s`,
+    size: 1.5 + seeded(i + 901) * 2,
   })), []);
 
   const handleSubmit = async (e: React.FormEvent) => {

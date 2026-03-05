@@ -2,15 +2,37 @@ import { apiFetch } from './client';
 import type { SimulationInput, Simulation, ScenarioComparison } from '../types/simulation';
 import type { DefaultContext } from '../types/foundation';
 
+function getFallbackContext(): DefaultContext {
+  let workspaceId = '00000000-0000-4000-8000-000000000001';
+
+  if (typeof window !== 'undefined') {
+    try {
+      const raw = localStorage.getItem('vg_current_workspace');
+      if (raw) {
+        const parsed = JSON.parse(raw) as { id?: string } | null;
+        if (parsed?.id) workspaceId = parsed.id;
+      }
+    } catch {
+      // ignore malformed local storage and keep default workspace id
+    }
+  }
+
+  return {
+    workspaceId,
+    repoId: 'mock-repo',
+    branchId: 'mock-branch',
+  };
+}
+
 export async function getDefaultContext(): Promise<DefaultContext> {
+  const fallback = getFallbackContext();
+  const useContextEndpoint = process.env.NEXT_PUBLIC_USE_CONTEXT_ENDPOINT === 'true';
+  if (!useContextEndpoint) return fallback;
+
   try {
     return await apiFetch<DefaultContext>('/context/default');
   } catch {
-    return {
-      workspaceId: '00000000-0000-4000-8000-000000000001',
-      repoId: 'mock-repo',
-      branchId: 'mock-branch',
-    };
+    return fallback;
   }
 }
 

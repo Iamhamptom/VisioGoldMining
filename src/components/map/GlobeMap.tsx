@@ -46,9 +46,10 @@ interface HoveredProject {
 interface Props {
   isSatellite?: boolean;
   showProjectMarkers?: boolean;
+  focusedProjectId?: string | null;
 }
 
-export default function GlobeMap({ isSatellite = false, showProjectMarkers = true }: Props) {
+export default function GlobeMap({ isSatellite = false, showProjectMarkers = true, focusedProjectId = null }: Props) {
   const mapRef = useRef<MapRef>(null);
   const { setMap } = useMapContext();
   const { setSelectedFeature } = useSelection();
@@ -97,31 +98,35 @@ export default function GlobeMap({ isSatellite = false, showProjectMarkers = tru
 
   // Initial map load — set globe, terrain, fly to DRC
   useEffect(() => {
-    if (mapLoaded && mapRef.current) {
-      const map = mapRef.current.getMap();
-      setMap(map);
-      applyMapSetup(map);
+    if (!mapLoaded || !mapRef.current) return;
 
-      // Re-apply setup when map style changes (satellite toggle)
-      map.on('style.load', () => {
-        applyMapSetup(map);
-      });
+    const map = mapRef.current.getMap();
+    setMap(map);
+    applyMapSetup(map);
 
-      // Fly to DRC on first load only
-      if (!initialFlyDone.current) {
-        initialFlyDone.current = true;
-        setTimeout(() => {
-          map.flyTo({
-            center: DRC_CENTER,
-            zoom: DRC_ZOOM,
-            pitch: 40,
-            speed: 0.6,
-            curve: 1.5,
-            essential: true,
-          });
-        }, 800);
-      }
+    const handleStyleLoad = () => applyMapSetup(map);
+    map.on('style.load', handleStyleLoad);
+
+    let flyTimer: ReturnType<typeof setTimeout> | undefined;
+    // Fly to DRC on first load only
+    if (!initialFlyDone.current) {
+      initialFlyDone.current = true;
+      flyTimer = setTimeout(() => {
+        map.flyTo({
+          center: DRC_CENTER,
+          zoom: DRC_ZOOM,
+          pitch: 40,
+          speed: 0.6,
+          curve: 1.5,
+          essential: true,
+        });
+      }, 800);
     }
+
+    return () => {
+      map.off('style.load', handleStyleLoad);
+      if (flyTimer) clearTimeout(flyTimer);
+    };
   }, [mapLoaded, setMap, applyMapSetup]);
 
   // Animated glow pulsing for data layers
@@ -199,6 +204,14 @@ export default function GlobeMap({ isSatellite = false, showProjectMarkers = tru
       },
     });
   }, [setSelectedFeature]);
+
+  // Support external project selection from search/list flows
+  useEffect(() => {
+    if (!focusedProjectId || !mapLoaded) return;
+    const project = DRC_PROJECTS.find((p) => p.projectId === focusedProjectId);
+    if (!project) return;
+    handleMarkerClick(project);
+  }, [focusedProjectId, mapLoaded, handleMarkerClick]);
 
   // Fetch an AI brief for the selected project
   const fetchAIBrief = useCallback(async (project: DRCProject) => {
@@ -375,6 +388,7 @@ export default function GlobeMap({ isSatellite = false, showProjectMarkers = tru
       onClick={handleMapClick}
       onMouseMove={handleMouseMove}
       mapStyle={currentMapStyle}
+      styleDiffing={false}
       maxPitch={85}
       attributionControl={false}
       style={{ width: '100%', height: '100%' }}
