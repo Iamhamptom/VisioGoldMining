@@ -155,6 +155,7 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
           <div className="flex items-center justify-between h-20">
             <div className="text-2xl font-display font-bold text-white">VG♦</div>
             <div className="hidden md:flex items-center space-x-8">
+              <a href="/mining" className="hover:text-gold-400 transition-colors">Mining Offers</a>
               <a onClick={() => smoothScroll('features')} className="cursor-pointer hover:text-gold-400 transition-colors">Features</a>
               <a href="/about" className="hover:text-gold-400 transition-colors">About</a>
               <a href="#contact" onClick={(e) => {e.preventDefault(); smoothScroll('footer');}} className="cursor-pointer hover:text-gold-400 transition-colors">Contact</a>
@@ -486,5 +487,4 @@ export default function LandingPage({ onEnter }: { onEnter: () => void }) {
     </div>
   );
 }
-
 

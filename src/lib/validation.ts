@@ -228,3 +228,88 @@ export const trackAnalyticsSchema = z.object({
   session_id: z.string().max(100).optional(),
   metadata: z.record(z.unknown()).optional(),
 });
+
+// ============================================================
+// Sales + Mining Intelligence Schemas
+// ============================================================
+
+export const salesLeadSchema = z.object({
+  source_page: z.string().min(1).max(255),
+  interest_area: z.string().min(1).max(255),
+  company_name: z.string().max(255).optional(),
+  contact_name: z.string().max(255).optional(),
+  email: z.string().email(),
+  phone: z.string().max(50).optional(),
+  company_size: z.string().max(100).optional(),
+  country: z.string().max(100).optional(),
+  stage: z.enum(['new', 'qualified', 'proposal', 'won', 'lost', 'waitlist']).optional(),
+  estimated_acv: z.number().min(0).optional(),
+  notes: z.string().optional(),
+  intent_tags: z.array(z.string()).optional(),
+  metadata: z.record(z.unknown()).optional(),
+});
+
+export const salesLeadUpdateSchema = salesLeadSchema.partial();
+
+export const proposalInputSchema = z.object({
+  name: z.string().min(1).max(255),
+  site_type: z.enum(['greenfield', 'brownfield', 'producing', 'multi_site']),
+  remoteness: z.enum(['low', 'medium', 'high', 'extreme']),
+  mine_stage: z.enum(['phase_0', 'phase_1', 'phase_2', 'phase_3', 'enterprise']),
+  data_maturity: z.enum(['low', 'medium', 'high']),
+  desired_bundle: z.string().max(100).optional(),
+  desired_phase: z.string().max(100).optional(),
+});
+
+export const targetScoringInputSchema = z.object({
+  name: z.string().min(1).max(255).default('Target Scoring Run'),
+  branch_id: z.string().uuid(),
+  targets: z.array(
+    z.object({
+      id: z.string().optional(),
+      name: z.string().min(1),
+      latitude: z.number().optional(),
+      longitude: z.number().optional(),
+      geochem_anomaly: z.number().min(0).max(100).default(50),
+      structure_score: z.number().min(0).max(100).default(50),
+      alteration_score: z.number().min(0).max(100).default(50),
+      occurrence_proximity_score: z.number().min(0).max(100).default(50),
+      access_score: z.number().min(0).max(100).default(50),
+      security_score: z.number().min(0).max(100).default(50),
+      data_completeness: z.number().min(0).max(100).default(50),
+      planned_meters: z.number().min(0).optional(),
+      estimated_cost: z.number().min(0).optional(),
+      metadata: z.record(z.unknown()).optional(),
+    })
+  ).min(1),
+  seed: z.number().int().optional(),
+});
+
+export const drillPlanInputSchema = z.object({
+  branch_id: z.string().uuid(),
+  score_run_id: z.string().uuid().optional(),
+  name: z.string().min(1).max(255).default('Drill Plan'),
+  target_ids: z.array(z.string().uuid()).optional(),
+  budget_min: z.number().min(0).optional(),
+  budget_max: z.number().min(0).optional(),
+});
+
+export const reportGenerationSchema = z.object({
+  branch_id: z.string().uuid(),
+  score_run_id: z.string().uuid().optional(),
+  drill_plan_id: z.string().uuid().optional(),
+  template_type: z.enum(['board_technical', 'investor_pack', 'gov_permit_community']),
+  output_formats: z.array(z.enum(['pdf', 'pptx'])).min(1),
+  title: z.string().max(500).optional(),
+  include_financials: z.boolean().optional().default(true),
+  include_maps: z.boolean().optional().default(true),
+});
+
+export const decisionLogSchema = z.object({
+  repo_id: z.string().uuid(),
+  branch_id: z.string().uuid(),
+  recommendation: z.enum(['STOP', 'CONTINUE', 'PIVOT']),
+  reasons: z.array(z.string()).default([]),
+  metrics: z.record(z.unknown()).default({}),
+  notes: z.string().optional(),
+});

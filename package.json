@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "migrate": "tsx scripts/migrate.ts",
+    "backfill:data-assets": "tsx scripts/backfill-data-assets.ts",
     "seed": "tsx scripts/seed.ts",
     "server:dev": "tsx watch server/src/index.ts",
     "test": "vitest run",
@@ -49,7 +50,14 @@
     "uuid": "^11.0.3",
     "zod": "^3.24.1"
   },
+  "optionalDependencies": {
+    "bullmq": "^5.58.0",
+    "ioredis": "^5.8.2",
+    "pptxgenjs": "^4.0.1",
+    "puppeteer": "^24.28.0"
+  },
   "devDependencies": {
+    "@rollup/rollup-darwin-arm64": "^4.59.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.6",

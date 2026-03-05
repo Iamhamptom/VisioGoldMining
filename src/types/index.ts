@@ -14,7 +14,10 @@ export type ArtifactType =
   | 'TASKS'
   | 'NOTE'
   | 'RISK_REGISTER'
-  | 'VENDOR_REPORT';
+  | 'VENDOR_REPORT'
+  | 'REPORT'
+  | 'INVESTOR_DECK'
+  | 'GOV_BRIEF';
 
 export type CommitArtifactAction = 'ADD' | 'UPDATE' | 'DELETE';
 
@@ -43,7 +46,13 @@ export type AuditAction =
   | 'LISTING_UPDATE'
   | 'LISTING_WORKFLOW'
   | 'CONSULTATION_UPDATE'
-  | 'REVENUE_CREATE';
+  | 'REVENUE_CREATE'
+  | 'DATA_INGEST'
+  | 'TARGET_SCORE_RUN'
+  | 'DRILL_PLAN_GENERATE'
+  | 'REPORT_GENERATE'
+  | 'PROPOSAL_CREATE'
+  | 'DECISION_LOG';
 
 // ============================================================
 // Database Row Types
