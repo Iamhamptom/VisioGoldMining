@@ -1,10 +1,11 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { Search, X } from 'lucide-react';
+import { Search, X, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ScreenType } from '@/lib/types/screen';
 import { DRC_PROJECTS } from '@/data/drc-projects';
 import { useMapContext } from '@/hooks/useMap';
 import { useLayers } from '@/hooks/useLayers';
+import { useExploreMode } from '@/hooks/useExploreMode';
 import GlobeMap from './map/GlobeMap';
 import MapControls from './map/MapControls';
 import LayerToggle from './map/LayerToggle';
@@ -24,6 +25,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) {
   const { map } = useMapContext();
+  const { isExploreMode, exitExploreMode } = useExploreMode();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<typeof DRC_PROJECTS>([]);
   const [showResults, setShowResults] = useState(false);
@@ -188,6 +190,22 @@ export default function MapArea({ activeScreen }: { activeScreen: ScreenType }) 
           </AnimatePresence>
         </div>
       </motion.div>
+
+      {/* Exit Explore Mode Pill */}
+      <AnimatePresence>
+        {isExploreMode && (
+          <motion.button
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            onClick={exitExploreMode}
+            className="absolute top-6 right-6 z-30 flex items-center gap-2 px-4 py-2 rounded-full bg-gold-400/15 border border-gold-400/40 text-gold-400 text-xs font-medium backdrop-blur-md hover:bg-gold-400/25 transition-colors shadow-lg"
+          >
+            <Minimize2 size={14} strokeWidth={1.5} />
+            EXIT EXPLORE MODE
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Bottom Right Legend */}
       <motion.div

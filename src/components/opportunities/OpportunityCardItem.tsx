@@ -1,5 +1,6 @@
-import { ChevronRight, Map, Pickaxe, Route, Shield, FileCheck, Database, Plus } from 'lucide-react';
+import { ChevronRight, Map, Pickaxe, Route, Shield, FileCheck, Database, Plus, ScanSearch } from 'lucide-react';
 import type { Opportunity } from '../../lib/types/opportunities';
+import { useDeepDive } from '@/hooks/useDeepDive';
 import ScoreBar from './ScoreBar';
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export default function OpportunityCardItem({ opportunity, onSelect, onEvaluate, onCreateRepo, compact }: Props) {
+  const { openDeepDive } = useDeepDive();
   const opp = opportunity;
 
   return (
@@ -48,8 +50,14 @@ export default function OpportunityCardItem({ opportunity, onSelect, onEvaluate,
 
           <div className="flex gap-2">
             <button
-              onClick={(e) => { e.stopPropagation(); onEvaluate ? onEvaluate() : onSelect?.(opp); }}
+              onClick={(e) => { e.stopPropagation(); openDeepDive({ type: 'opportunity', data: opp }); }}
               className="flex-1 py-2 bg-white/5 hover:bg-gold-400 hover:text-black text-gold-400 border border-gold-400/30 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5 group-hover:border-gold"
+            >
+              <ScanSearch size={14} strokeWidth={1} /> Deep Dive
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); onEvaluate ? onEvaluate() : onSelect?.(opp); }}
+              className="py-2 px-3 bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10 rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5"
             >
               Evaluate <ChevronRight size={14} strokeWidth={1} />
             </button>

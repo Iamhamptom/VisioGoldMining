@@ -1,10 +1,11 @@
 import { motion } from 'motion/react';
 import {
   Crosshair, MapPin, Pickaxe, Shield, Users, Truck,
-  AlertTriangle, Globe, ArrowRight, Mountain, Building,
+  AlertTriangle, Globe, ArrowRight, Mountain, Building, ScanSearch,
 } from 'lucide-react';
 import { DRC_PROJECTS } from '../../data/drc-projects';
 import { usePursuit } from '../../hooks/usePursuitContext';
+import { useDeepDive } from '@/hooks/useDeepDive';
 
 interface Props {
   properties: Record<string, unknown>;
@@ -12,6 +13,7 @@ interface Props {
 
 export default function ProjectCard({ properties }: Props) {
   const { startPursuit } = usePursuit();
+  const { openDeepDive } = useDeepDive();
 
   const projectId = (properties.projectId as string) || (properties.id as string) || (properties.name as string) || '';
   const project = DRC_PROJECTS.find(p =>
@@ -130,6 +132,25 @@ export default function ProjectCard({ properties }: Props) {
           </div>
         </div>
       )}
+
+      {/* Deep Dive Button */}
+      <motion.button
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={() => openDeepDive({ type: 'project', data: project })}
+        className="w-full p-4 rounded-xl bg-white/5 border border-white/10 hover:border-gold/40 transition-all duration-300 group flex items-center justify-between"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
+            <ScanSearch size={20} className="text-gold icon-shine" />
+          </div>
+          <div className="text-left">
+            <p className="text-sm font-semibold text-gold">Deep Dive</p>
+            <p className="text-[10px] text-gray-400">Full analysis, scores, AI chat</p>
+          </div>
+        </div>
+        <ArrowRight size={18} className="text-gray-500 group-hover:text-gold group-hover:translate-x-1 transition-all" />
+      </motion.button>
 
       {/* Pursue Button */}
       <motion.button

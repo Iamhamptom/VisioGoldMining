@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Crosshair, ZoomIn, ZoomOut, ChevronDown, Globe, Satellite, Map as MapIcon } from 'lucide-react';
+import { Crosshair, ZoomIn, ZoomOut, ChevronDown, Globe, Satellite, Map as MapIcon, Maximize2, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useMapContext } from '../../hooks/useMap';
+import { useExploreMode } from '../../hooks/useExploreMode';
 import { FLY_TO_PRESETS, DRC_CENTER, DRC_ZOOM } from '../../lib/map-config';
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function MapControls({ isSatellite, onToggleSatellite }: Props) {
+  const { isExploreMode, toggleExploreMode } = useExploreMode();
   const { map } = useMapContext();
   const [presetsOpen, setPresetsOpen] = useState(false);
 
@@ -70,6 +72,19 @@ export default function MapControls({ isSatellite, onToggleSatellite }: Props) {
             {isSatellite ? <MapIcon size={20} strokeWidth={1} className="icon-shine" /> : <Satellite size={20} strokeWidth={1} className="icon-shine" />}
           </button>
         )}
+
+        {/* Explore Mode toggle */}
+        <button
+          onClick={toggleExploreMode}
+          className={`p-2.5 rounded-lg transition-colors ${
+            isExploreMode
+              ? 'bg-gold-400/20 text-gold-400 border border-gold-400/30'
+              : 'bg-white/5 hover:bg-gold-400/15 hover:text-gold-400 text-gray-400'
+          }`}
+          title={isExploreMode ? 'Exit Explore Mode' : 'Explore Mode — Full Map'}
+        >
+          {isExploreMode ? <Minimize2 size={20} strokeWidth={1} className="icon-shine" /> : <Maximize2 size={20} strokeWidth={1} className="icon-shine" />}
+        </button>
 
         <div className="relative">
           <button

@@ -4,10 +4,11 @@ import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import Map, { Source, Layer, Marker, Popup, AttributionControl } from 'react-map-gl/maplibre';
 import type { MapRef, ViewStateChangeEvent, MapLayerMouseEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { Crosshair, Sparkles, Loader2 } from 'lucide-react';
+import { Crosshair, Sparkles, Loader2, ScanSearch } from 'lucide-react';
 import { useMapContext } from '../../hooks/useMap';
 import { useSelection } from '../../hooks/useFeatureSelection';
 import { usePursuit } from '../../hooks/usePursuitContext';
+import { useDeepDive } from '../../hooks/useDeepDive';
 import { DRC_PROJECTS } from '../../data/drc-projects';
 import type { DRCProject, ProjectStatus } from '../../data/drc-projects';
 import {
@@ -54,6 +55,7 @@ export default function GlobeMap({ isSatellite = false, showProjectMarkers = tru
   const { setMap } = useMapContext();
   const { setSelectedFeature } = useSelection();
   const { startPursuit } = usePursuit();
+  const { openDeepDive } = useDeepDive();
 
   const [viewState, setViewState] = useState({
     longitude: DRC_CENTER[0],
@@ -626,6 +628,13 @@ export default function GlobeMap({ isSatellite = false, showProjectMarkers = tru
             {/* Quick Action Buttons */}
             <div className="mt-3 pt-3 border-t border-white/10 flex gap-2">
               <button
+                onClick={() => { openDeepDive({ type: 'project', data: selectedProject }); setSelectedProject(null); }}
+                className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-gold-400/15 border border-gold-400/30 text-gold-400 text-[10px] font-medium hover:bg-gold-400/25 transition-colors"
+              >
+                <ScanSearch size={10} />
+                Deep Dive
+              </button>
+              <button
                 onClick={() => fetchAIBrief(selectedProject)}
                 disabled={aiBriefLoading}
                 className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-purple-500/15 border border-purple-500/30 text-purple-400 text-[10px] font-medium hover:bg-purple-500/25 transition-colors disabled:opacity-50"
@@ -635,7 +644,7 @@ export default function GlobeMap({ isSatellite = false, showProjectMarkers = tru
               </button>
               <button
                 onClick={() => startPursuit(selectedProject.projectId)}
-                className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-gold-400/15 border border-gold-400/30 text-gold-400 text-[10px] font-medium hover:bg-gold-400/25 transition-colors"
+                className="flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 text-[10px] font-medium hover:bg-white/10 transition-colors"
               >
                 <Crosshair size={10} />
                 Pursue

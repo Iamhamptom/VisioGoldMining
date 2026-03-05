@@ -1,5 +1,7 @@
-import { Pickaxe, Route, Shield, FileCheck, Database, MapPin, ChevronRight, Crosshair, Ruler, Gem } from 'lucide-react';
+import { Pickaxe, Route, Shield, FileCheck, Database, MapPin, ChevronRight, Crosshair, Ruler, Gem, ScanSearch } from 'lucide-react';
 import ScoreBar from '../opportunities/ScoreBar';
+import { useDeepDive } from '@/hooks/useDeepDive';
+import type { Opportunity } from '@/lib/types/opportunities';
 
 interface Props {
   properties: Record<string, unknown>;
@@ -7,6 +9,15 @@ interface Props {
 }
 
 export default function OpportunityDetailCard({ properties, onEvaluate }: Props) {
+  const { openDeepDive } = useDeepDive();
+
+  const handleDeepDive = () => {
+    // Reconstruct enough of the Opportunity to open the modal
+    openDeepDive({
+      type: 'opportunity',
+      data: properties as unknown as Opportunity,
+    });
+  };
   const title = String(properties.title || 'Unknown');
   const permitId = String(properties.permit_id || '');
   const province = String(properties.province || 'Unknown');
@@ -107,17 +118,18 @@ export default function OpportunityDetailCard({ properties, onEvaluate }: Props)
       {/* Action Buttons */}
       <div className="flex gap-2 pt-2">
         <button
-          onClick={onEvaluate}
+          onClick={handleDeepDive}
           className="flex-1 py-2.5 bg-white/5 hover:bg-gold-400 hover:text-black text-gold-400 border border-gold-400/30 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
         >
-          <FileCheck size={14} strokeWidth={1.5} />
-          Full Evaluation
+          <ScanSearch size={14} strokeWidth={1.5} />
+          Deep Dive
         </button>
         <button
-          className="flex-1 py-2.5 bg-gold-400/10 hover:bg-gold-400/20 text-gold-400 border border-gold-400/30 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
+          onClick={onEvaluate}
+          className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 border border-white/10 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
         >
-          <Crosshair size={14} strokeWidth={1.5} />
-          Pursue
+          <FileCheck size={14} strokeWidth={1.5} />
+          Evaluate
         </button>
       </div>
     </div>
